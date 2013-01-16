@@ -8,9 +8,13 @@ using namespace sf;
 namespace ssvsc
 {
 	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, int mWidth, int mHeight) :
-		world(mWorld), isStatic{mIsStatic}, position{mPosition}, halfSize{mWidth / 2, mHeight / 2} { }
+		world(mWorld), isStatic{mIsStatic}, position{mPosition}, previousPosition{position}, halfSize{mWidth / 2, mHeight / 2} { }
 
-	void Body::addGroups(const vector<string>& mGroups) { for(auto group : mGroups) groups.insert(group); }
+	void Body::addGroups(const vector<string>& mGroups)
+	{
+		for(auto group : mGroups) groups.insert(group);
+		checkCells(); recalculateCells();
+	}
 	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto group : mGroups) groupsToCheck.insert(group); }
 	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto group : mGroups) groupsNoResolve.insert(group); }
 
@@ -19,10 +23,7 @@ namespace ssvsc
 	{
 		if(isStatic) return;
 
-		int startX{getLeft() / world.cellSize + world.offset};
-		int startY{getTop() / world.cellSize + world.offset};
-		int endX{getRight() / world.cellSize + world.offset};
-		int endY{getBottom() / world.cellSize + world.offset};
+		
 
 		Vector2f tempVelocity{velocity.x * mFrameTime, velocity.y * mFrameTime};
 		Vector2f tempPosition{position.x + tempVelocity.x, position.y + tempVelocity.y};
@@ -62,21 +63,38 @@ namespace ssvsc
 			if(overlapX > overlapY) position.y += encrY; else position.x += encrX;
 		}
 
-		int startX2{getLeft() / world.cellSize + world.offset};
-		int startY2{getTop() / world.cellSize + world.offset};
-		int endX2{getRight() / world.cellSize + world.offset};
-		int endY2{getBottom() / world.cellSize + world.offset};
+		checkCells();
+	}
 
-		if(startX != startX2 || startY != startY2 || endX != endX2 || endY != endY2)
-		{
-			for(Cell* cell : cells) cell->del(this);
+	void Body::checkCells()
+	{
+		startX = getLeft() / world.cellSize;
+		startY = getTop() / world.cellSize;
+		endX = getRight() / world.cellSize;
+		endY = getBottom() / world.cellSize;
 
-			cells.clear();
-			if(startX2 < 0 || endX2 >= world.columns || startY2 < 0 || endY2 >= world.rows) { onOutOfBounds(); }
-			for(int iY{startY2}; iY <= endY2; iY++) for(int iX{startX2}; iX <= endX2; iX++) cells.insert(world.cells[{iX, iY}]);
+		previousStartX = (previousPosition.x - halfSize.x) / world.cellSize;
+		if(previousStartX != startX) { recalculateCells(); return; }
 
-			for(Cell* cell : cells) cell->add(this);
-		}
+		previousStartY = (previousPosition.y - halfSize.y) / world.cellSize;
+		if(previousStartY != startY) { recalculateCells(); return; }
+
+		previousEndX = (previousPosition.x + halfSize.x) / world.cellSize;
+		if(previousEndX != endX) { recalculateCells(); return; }
+
+		previousEndY = (previousPosition.y + halfSize.y)	/ world.cellSize;
+		if(previousEndY != endY) { recalculateCells(); return; }
+	}
+
+	void Body::recalculateCells()
+	{
+		for(Cell* cell : cells) cell->del(this);
+
+		cells.clear();
+		if(startX < 0 || endX >= world.columns || startY < 0 || endY >= world.rows) { onOutOfBounds(); }
+		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.insert(world.cells[{iX + world.offset, iY + world.offset}]);
+
+		for(Cell* cell : cells) cell->add(this);
 	}
 
 	unordered_set<Body*> Body::getBodiesToCheck()

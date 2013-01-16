@@ -22,9 +22,15 @@ namespace ssvsc
 			sf::Vector2i position, previousPosition, velocity, halfSize;
 			std::unordered_set<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
+
+			int previousStartX, previousStartY, previousEndX, previousEndY;
+			int startX, startY, endX, endY;			
 			
 		public:
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
+
+			void checkCells();
+			void recalculateCells();
 
 			// Callback delegates
 			ssvs::Delegate<void, CollisionInfo> onCollision;
