@@ -4,13 +4,7 @@
 namespace ssvsc
 {
 	class Body;
-
-	struct CollisionInfo
-    {
-        Body* body;
-        float frameTime;
-        void* userData;
-    };
+	struct CollisionInfo { Body* body; float frameTime; void* userData; };
 }
 
 #endif // COLLISIONINFO_H

@@ -19,21 +19,21 @@ namespace ssvsc
 	{
 		if(isStatic) return;
 
-		previousPosition = position;
+		int startX{getLeft() / world.cellSize + world.offset};
+		int startY{getTop() / world.cellSize + world.offset};
+		int endX{getRight() / world.cellSize + world.offset};
+		int endY{getBottom() / world.cellSize + world.offset};
 
 		Vector2f tempVelocity{velocity.x * mFrameTime, velocity.y * mFrameTime};
 		Vector2f tempPosition{position.x + tempVelocity.x, position.y + tempVelocity.y};
-
+		previousPosition = position;
 		position = Vector2i(tempPosition.x, tempPosition.y);
 
 		unordered_set<Body*> checkedBodies{this};
 
-
 		// auto comp = [](Body* mBodyA, Body* mBodyB) -> bool { return mBodyA->getVelocity().x > 0 ? mBodyA->getX() > mBodyB->getX() : -mBodyA->getX() > mBodyB->getX(); };
 		// set<Body*, decltype(comp)> bodiesToCheck(comp);
 		// for(Body* body : getBodiesToCheck()) bodiesToCheck.insert(body);
-		
-		//sort bodies
 		//bodiesToCheck.OrderBy(x => Velocity.X > 0 ? x.X : -x.X)
 
 		for(Body* body : getBodiesToCheck())
@@ -43,9 +43,6 @@ namespace ssvsc
 
 			if(!isOverlapping(body)) continue;
 
-			cout << "collision" << endl;
-
-			// Collision callback delegates
 			onCollision({body, mFrameTime, body->getUserData()});
 			body->onCollision({this, mFrameTime, userData});
 
@@ -65,10 +62,21 @@ namespace ssvsc
 			if(overlapX > overlapY) position.y += encrY; else position.x += encrX;
 		}
 
-		// Update cells
-		for(Cell* cell : cells) cell->del(this);
-		cells = world.calculateCells(this);
-		for(Cell* cell : cells) cell->add(this);
+		int startX2{getLeft() / world.cellSize + world.offset};
+		int startY2{getTop() / world.cellSize + world.offset};
+		int endX2{getRight() / world.cellSize + world.offset};
+		int endY2{getBottom() / world.cellSize + world.offset};
+
+		if(startX != startX2 || startY != startY2 || endX != endX2 || endY != endY2)
+		{
+			for(Cell* cell : cells) cell->del(this);
+
+			cells.clear();
+			if(startX2 < 0 || endX2 >= world.columns || startY2 < 0 || endY2 >= world.rows) { onOutOfBounds(); }
+			for(int iY{startY2}; iY <= endY2; iY++) for(int iX{startX2}; iX <= endX2; iX++) cells.insert(world.cells[{iX, iY}]);
+
+			for(Cell* cell : cells) cell->add(this);
+		}
 	}
 
 	unordered_set<Body*> Body::getBodiesToCheck()
