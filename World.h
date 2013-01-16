@@ -1,6 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include <vector>
 #include <map>
 #include <unordered_set>
 
@@ -13,14 +14,17 @@ namespace ssvsc
 	{
 		private:
 			int columns, rows, cellSize, offset;
-			std::map<std::pair<int, int>, Cell*> cells;
+			std::vector<Body*> bodies; // owned
+			std::map<std::pair<int, int>, Cell*> cells; // TODO: multidimensional array
 
 		public:
-			World(int mColumns, int mRows, int mCellSize, int mOffset = 0);			
+			World(int mColumns, int mRows, int mCellSize, int mOffset = 0);
+			~World();
 
-			void addBody(Body* mBody);
-			void delBody(Body* mBody);
-			void updateBody(Body* mBody);
+			void add(Body* mBody);
+			void del(Body* mBody);
+			void update(float mFrameTime);
+
 			std::unordered_set<Cell*> calculateCells(Body* mBody);
 			std::unordered_set<Body*> getBodies(Body* mBody);
 	};

@@ -13,17 +13,17 @@ namespace ssvsc
 	{
 		private:
 			int left, right, top, bottom;
-			std::map<std::string, std::vector<Body*>> groupedBodies;
+			std::map<std::string, std::vector<Body*>> bodies;
 
 		public:
 			Cell(int mLeft, int mRight, int mTop, int mBottom);			
 
-			void addBody(Body* mBody);
-			void delBody(Body* mBody);
+			void add(Body* mBody);
+			void del(Body* mBody);
 			bool hasGroup(const std::string& mGroup);
 
-			// Getters
-			std::vector<Body*> getGroupedBodies(std::string mGroup);
+			// Properties
+			std::vector<Body*> getBodies(std::string mGroup);
 			int getLeft();
 			int getRight();
 			int getTop();
