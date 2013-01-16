@@ -16,7 +16,11 @@ namespace ssvsc
 				cells[{iX, iY}] = new Cell{left, right, top, bottom};
 			}
 	}
-	World::~World() { for(Body* body : bodies) delete body; }
+	World::~World()
+	{
+		for(Body* body : bodies) delete body;
+		for(auto& pair : cells) delete pair.second;
+	}
 
 	void World::add(Body* mBody) { bodies.push_back(mBody); }
 	void World::del(Body* mBody) { eraseFromVector(bodies, mBody); delete mBody; }

@@ -18,19 +18,20 @@ namespace ssvsc
 		private:
 			World& world;
 			bool isStatic;
-			std::unordered_set<Cell*> cells;
+			std::vector<Cell*> cells;
 			sf::Vector2i position, previousPosition, velocity, halfSize;
-			std::unordered_set<std::string> groups, groupsToCheck, groupsNoResolve;
+			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
 			int previousStartX, previousStartY, previousEndX, previousEndY;
 			int startX, startY, endX, endY;			
-			
+			void checkCells();
+			void recalculateCells();
+
 		public:
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
 
-			void checkCells();
-			void recalculateCells();
+			
 
 			// Callback delegates
 			ssvs::Delegate<void, CollisionInfo> onCollision;
@@ -43,12 +44,12 @@ namespace ssvsc
 
 			bool isOverlapping(Body* mBody);
 			void update(float mFrameTime);
-			std::unordered_set<Body*> getBodiesToCheck();
+			std::vector<Body*> getBodiesToCheck();
 
 			// Properties
 			void setPosition(sf::Vector2i mPosition);
 			void setVelocity(sf::Vector2i mVelocity);
-			std::unordered_set<std::string> getGroups();
+			const std::vector<std::string>& getGroups();
 			sf::Vector2i getPosition();
 			sf::Vector2i getVelocity();
 			void* getUserData();

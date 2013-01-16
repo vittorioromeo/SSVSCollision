@@ -13,10 +13,10 @@ namespace ssvsc
 	bool Cell::hasGroup(const string& mGroup) { return bodies.count(mGroup) > 0; }
 
 	// Properties
-	vector<Body*> Cell::getBodies(string mGroup) 	{ return bodies[mGroup]; }
-	int Cell::getLeft() 							{ return left; }
-	int Cell::getRight() 							{ return right; }
-	int Cell::getTop() 								{ return top; }
-	int Cell::getBottom() 							{ return bottom; }
+	const vector<Body*>& Cell::getBodies(const string& mGroup) { return bodies[mGroup]; }
+	int Cell::getLeft() 	{ return left; }
+	int Cell::getRight() 	{ return right; }
+	int Cell::getTop() 		{ return top; }
+	int Cell::getBottom() 	{ return bottom; }
 }
 

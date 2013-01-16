@@ -12,18 +12,16 @@ namespace ssvsc
 
 	void Body::addGroups(const vector<string>& mGroups)
 	{
-		for(auto group : mGroups) groups.insert(group);
+		for(auto& group : mGroups) groups.push_back(group);
 		checkCells(); recalculateCells();
 	}
-	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto group : mGroups) groupsToCheck.insert(group); }
-	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto group : mGroups) groupsNoResolve.insert(group); }
+	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); }
+	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto& group : mGroups) groupsNoResolve.push_back(group); }
 
 	bool Body::isOverlapping(Body* mBody) { return getRight() > mBody->getLeft() && getLeft() < mBody->getRight() && (getBottom() > mBody->getTop() && getTop() < mBody->getBottom()); }
 	void Body::update(float mFrameTime)
 	{
 		if(isStatic) return;
-
-		
 
 		Vector2f tempVelocity{velocity.x * mFrameTime, velocity.y * mFrameTime};
 		Vector2f tempPosition{position.x + tempVelocity.x, position.y + tempVelocity.y};
@@ -47,7 +45,7 @@ namespace ssvsc
 			onCollision({body, mFrameTime, body->getUserData()});
 			body->onCollision({this, mFrameTime, userData});
 
-			for(auto g : groupsNoResolve) if(body->getGroups().find(g) != body->getGroups().end()) continue;
+			for(auto& g : groupsNoResolve) if(find(begin(body->getGroups()), end(body->getGroups()), g) != end(body->getGroups())) continue;
 
 			int encrX{0}, encrY{0};
 
@@ -92,22 +90,22 @@ namespace ssvsc
 
 		cells.clear();
 		if(startX < 0 || endX >= world.columns || startY < 0 || endY >= world.rows) { onOutOfBounds(); }
-		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.insert(world.cells[{iX + world.offset, iY + world.offset}]);
+		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(world.cells[{iX + world.offset, iY + world.offset}]);
 
 		for(Cell* cell : cells) cell->add(this);
 	}
 
-	unordered_set<Body*> Body::getBodiesToCheck()
+	vector<Body*> Body::getBodiesToCheck()
 	{
-		unordered_set<Body*> result;
-		for(Cell* cell : cells) for(auto group : groupsToCheck) for(Body* body : cell->getBodies(group)) result.insert(body);
+		vector<Body*> result;
+		for(Cell* cell : cells) for(auto& group : groupsToCheck) for(Body* body : cell->getBodies(group)) result.push_back(body);
 		return result;
 	}
 
 	// Properties
 	void Body::setPosition(Vector2i mPosition) 			{ position = mPosition; }
 	void Body::setVelocity(Vector2i mVelocity) 			{ velocity = mVelocity; }
-	unordered_set<string> Body::getGroups()				{ return groups; }
+	const vector<string>& Body::getGroups()				{ return groups; }
 	Vector2i Body::getPosition() 						{ return position; }
 	Vector2i Body::getVelocity() 						{ return velocity; }
 	void* Body::getUserData()							{ return userData; }

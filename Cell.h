@@ -2,6 +2,7 @@
 #define CELL_H
 
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <string>
 
@@ -13,7 +14,7 @@ namespace ssvsc
 	{
 		private:
 			int left, right, top, bottom;
-			std::map<std::string, std::vector<Body*>> bodies;
+			std::unordered_map<std::string, std::vector<Body*>> bodies;
 
 		public:
 			Cell(int mLeft, int mRight, int mTop, int mBottom);			
@@ -23,7 +24,7 @@ namespace ssvsc
 			bool hasGroup(const std::string& mGroup);
 
 			// Properties
-			std::vector<Body*> getBodies(std::string mGroup);
+			const std::vector<Body*>& getBodies(const std::string& mGroup);
 			int getLeft();
 			int getRight();
 			int getTop();
