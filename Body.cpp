@@ -15,7 +15,11 @@ namespace ssvsc
 		for(auto& group : mGroups) groups.push_back(group);
 		checkCells(); recalculateCells();
 	}
-	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); }
+	void Body::addGroupsToCheck(const vector<string>& mGroups)
+	{
+		for(auto& group : mGroups) groupsToCheck.push_back(group);
+		checkCells(); recalculateCells();
+	}
 	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto& group : mGroups) groupsNoResolve.push_back(group); }
 
 	bool Body::isOverlapping(Body* mBody) { return getRight() > mBody->getLeft() && getLeft() < mBody->getRight() && (getBottom() > mBody->getTop() && getTop() < mBody->getBottom()); }
@@ -90,6 +94,7 @@ namespace ssvsc
 	void Body::clearCells()
 	{
 		for(auto& cell : cells) cell->del(this); cells.clear();
+		queries.clear();
 	}
 	void Body::recalculateCells()
 	{

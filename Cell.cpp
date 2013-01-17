@@ -16,7 +16,7 @@ namespace ssvsc
 	void Cell::del(Body* mBody)
 	{
 		for(auto group : mBody->getGroups()) eraseFromVector(bodies[group], mBody);
-		for(auto group : mBody->getGroupsToCheck()) eraseFromVector(mBody->queries, &bodies[group]);
+		//for(auto group : mBody->getGroupsToCheck()) eraseFromVector(mBody->queries, &bodies[group]);
 	}
 	bool Cell::hasGroup(const string& mGroup) { return bodies.count(mGroup) > 0; }
 
