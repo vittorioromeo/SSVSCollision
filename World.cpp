@@ -18,12 +18,18 @@ namespace ssvsc
 	}
 	World::~World()
 	{
-		for(Body* body : bodies) delete body;
+		for(auto& body : bodies) delete body;
 		for(auto& pair : cells) delete pair.second;
 	}
 
 	void World::add(Body* mBody) { bodies.push_back(mBody); }
-	void World::del(Body* mBody) { eraseFromVector(bodies, mBody); delete mBody; }
-	void World::update(float mFrameTime) { for(Body* body : bodies) body->update(mFrameTime); }
+	void World::del(Body* mBody) { bodiesToDel.insert(mBody); }
+	void World::update(float mFrameTime)
+	{
+		for(auto& body : bodiesToDel) { body->clearCells(); eraseFromVector(bodies, body); delete body; }
+		bodiesToDel.clear();
+
+		for(auto& body : bodies) body->update(mFrameTime);
+	}
 }
 

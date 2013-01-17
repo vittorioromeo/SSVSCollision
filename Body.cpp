@@ -84,21 +84,21 @@ namespace ssvsc
 		if(previousEndY != endY) { recalculateCells(); return; }
 	}
 
+	void Body::clearCells() { for(auto& cell : cells) cell->del(this); cells.clear(); }
 	void Body::recalculateCells()
 	{
-		for(Cell* cell : cells) cell->del(this);
-
-		cells.clear();
+		clearCells();
+		
 		if(startX < 0 || endX >= world.columns || startY < 0 || endY >= world.rows) { onOutOfBounds(); }
 		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(world.cells[{iX + world.offset, iY + world.offset}]);
 
-		for(Cell* cell : cells) cell->add(this);
+		for(auto& cell : cells) cell->add(this);
 	}
 
 	vector<Body*> Body::getBodiesToCheck()
 	{
 		vector<Body*> result;
-		for(Cell* cell : cells) for(auto& group : groupsToCheck) for(Body* body : cell->getBodies(group)) result.push_back(body);
+		for(auto& cell : cells) for(auto& group : groupsToCheck) for(auto& body : cell->getBodies(group)) result.push_back(body);
 		return result;
 	}
 

@@ -31,7 +31,7 @@ namespace ssvsc
 		public:
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
 
-			
+			void clearCells();
 
 			// Callback delegates
 			ssvs::Delegate<void, CollisionInfo> onCollision;

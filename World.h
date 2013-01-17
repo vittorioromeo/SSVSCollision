@@ -14,7 +14,7 @@ namespace ssvsc
 	{
 		private:
 			std::vector<Body*> bodies; // owned
-
+			std::unordered_set<Body*> bodiesToDel;
 			
 		public:
 			int columns, rows, cellSize, offset; // TODO: private
