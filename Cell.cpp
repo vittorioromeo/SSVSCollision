@@ -8,8 +8,16 @@ namespace ssvsc
 {
 	Cell::Cell(int mLeft, int mRight, int mTop, int mBottom) : left{mLeft}, right{mRight}, top{mTop}, bottom{mBottom} { }
 
-	void Cell::add(Body* mBody) { for(auto group : mBody->getGroups()) bodies[group].push_back(mBody); }
-	void Cell::del(Body* mBody) { for(auto group : mBody->getGroups()) eraseFromVector(bodies[group], mBody); }
+	void Cell::add(Body* mBody)
+	{
+		for(auto group : mBody->getGroups()) bodies[group].push_back(mBody);
+		for(auto group : mBody->getGroupsToCheck()) mBody->queries.push_back(&bodies[group]); 
+	}
+	void Cell::del(Body* mBody)
+	{
+		for(auto group : mBody->getGroups()) eraseFromVector(bodies[group], mBody);
+		for(auto group : mBody->getGroupsToCheck()) eraseFromVector(mBody->queries, &bodies[group]);
+	}
 	bool Cell::hasGroup(const string& mGroup) { return bodies.count(mGroup) > 0; }
 
 	// Properties

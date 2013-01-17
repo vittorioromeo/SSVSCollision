@@ -35,7 +35,10 @@ namespace ssvsc
 		// for(Body* body : getBodiesToCheck()) bodiesToCheck.insert(body);
 		//bodiesToCheck.OrderBy(x => Velocity.X > 0 ? x.X : -x.X)
 
-		for(Body* body : getBodiesToCheck())
+		vector<Body*> bodiesToCheck;
+		for(auto& query : queries) for(auto& body : *query) bodiesToCheck.push_back(body);
+
+		for(auto& body : bodiesToCheck)
 		{
 			if(checkedBodies.find(body) != checkedBodies.end()) continue;
 			checkedBodies.insert(body);
@@ -84,7 +87,10 @@ namespace ssvsc
 		if(previousEndY != endY) { recalculateCells(); return; }
 	}
 
-	void Body::clearCells() { for(auto& cell : cells) cell->del(this); cells.clear(); }
+	void Body::clearCells()
+	{
+		for(auto& cell : cells) cell->del(this); cells.clear();
+	}
 	void Body::recalculateCells()
 	{
 		clearCells();
@@ -106,6 +112,7 @@ namespace ssvsc
 	void Body::setPosition(Vector2i mPosition) 			{ position = mPosition; }
 	void Body::setVelocity(Vector2i mVelocity) 			{ velocity = mVelocity; }
 	const vector<string>& Body::getGroups()				{ return groups; }
+	const vector<string>& Body::getGroupsToCheck()		{ return groupsToCheck; }
 	Vector2i Body::getPosition() 						{ return position; }
 	Vector2i Body::getVelocity() 						{ return velocity; }
 	void* Body::getUserData()							{ return userData; }

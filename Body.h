@@ -31,6 +31,7 @@ namespace ssvsc
 		public:
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
 
+			std::vector<std::vector<Body*>*> queries;
 			void clearCells();
 
 			// Callback delegates
@@ -50,6 +51,7 @@ namespace ssvsc
 			void setPosition(sf::Vector2i mPosition);
 			void setVelocity(sf::Vector2i mVelocity);
 			const std::vector<std::string>& getGroups();
+			const std::vector<std::string>& getGroupsToCheck();
 			sf::Vector2i getPosition();
 			sf::Vector2i getVelocity();
 			void* getUserData();
