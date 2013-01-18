@@ -53,9 +53,11 @@ namespace ssvsc
 			onCollision({body, mFrameTime, body->getUserData()});
 			body->onCollision({this, mFrameTime, userData}); // ? Y/N
 
+			bool mustResolve{true};
 			for(auto& group : groupsNoResolve)
-				if(!(find(begin(body->getGroups()), end(body->getGroups()), group) != end(body->getGroups())))
-					resolve(body);
+				if(find(begin(body->getGroups()), end(body->getGroups()), group) != end(body->getGroups())) { mustResolve = false; break; }
+
+			if(mustResolve) resolve(body);
 		}
 
 		checkCells();
