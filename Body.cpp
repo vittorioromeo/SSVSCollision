@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace sf;
+using namespace google;
 
 namespace ssvsc
 {
@@ -34,26 +35,17 @@ namespace ssvsc
 		previousPosition = position;
 		position = Vector2i(tempPosition.x, tempPosition.y);
 
-		//unordered_set<Body*> checkedBodies;
-
 		// auto comp = [](Body* mBodyA, Body* mBodyB) -> bool { return mBodyA->getVelocity().x > 0 ? mBodyA->getX() > mBodyB->getX() : -mBodyA->getX() > mBodyB->getX(); };
 		// set<Body*, decltype(comp)> bodiesToCheck(comp);
 		// for(Body* body : getBodiesToCheck()) bodiesToCheck.insert(body);
 		//bodiesToCheck.OrderBy(x => Velocity.X > 0 ? x.X : -x.X)
 
-		google::dense_hash_set<Body*> bodiesToCheck;
-		bodiesToCheck.set_empty_key(nullptr);
-		//vector<Body*> bodiesToCheck;
+		dense_hash_set<Body*> bodiesToCheck; bodiesToCheck.set_empty_key(nullptr);
 		for(auto& query : queries) for(auto& body : *query) bodiesToCheck.insert(body);
 
 		for(auto& body : bodiesToCheck)
 		{
-			if(body == this) continue;
-
-			//if(checkedBodies.find(body) != checkedBodies.end()) { cout << "dick" << endl; continue; }
-			//checkedBodies.insert(body);
-
-			if(!isOverlapping(body)) continue;
+			if(body == this || !isOverlapping(body)) continue;
 
 			onCollision({body, mFrameTime, body->getUserData()});
 			body->onCollision({this, mFrameTime, userData}); // ? Y/N how about "oncollidedby"
