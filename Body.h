@@ -23,15 +23,17 @@ namespace ssvsc
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
+			std::vector<std::vector<Body*>*> queries;
 			int previousStartX, previousStartY, previousEndX, previousEndY;
-			int startX, startY, endX, endY;			
+			int startX, startY, endX, endY;
+			bool mustRecalculate{false}; // IF TRUE CRASHES ON START - FIX
 			void checkCells();
 			void recalculateCells();
+			void resolve(Body* mBody);
 
 		public:
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
 
-			std::vector<std::vector<Body*>*> queries;
 			void clearCells();
 
 			// Callback delegates

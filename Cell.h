@@ -24,7 +24,7 @@ namespace ssvsc
 			bool hasGroup(const std::string& mGroup);
 
 			// Properties
-			const std::vector<Body*>& getBodies(const std::string& mGroup);
+			std::vector<Body*>* getQuery(const std::string& mGroup);
 			int getLeft();
 			int getRight();
 			int getTop();

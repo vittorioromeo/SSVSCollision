@@ -13,18 +13,19 @@ namespace ssvsc
 	void Body::addGroups(const vector<string>& mGroups)
 	{
 		for(auto& group : mGroups) groups.push_back(group);
-		checkCells(); recalculateCells();
+		mustRecalculate = true;
 	}
 	void Body::addGroupsToCheck(const vector<string>& mGroups)
 	{
 		for(auto& group : mGroups) groupsToCheck.push_back(group);
-		checkCells(); recalculateCells();
+		mustRecalculate = true;
 	}
 	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto& group : mGroups) groupsNoResolve.push_back(group); }
 
 	bool Body::isOverlapping(Body* mBody) { return getRight() > mBody->getLeft() && getLeft() < mBody->getRight() && (getBottom() > mBody->getTop() && getTop() < mBody->getBottom()); }
 	void Body::update(float mFrameTime)
 	{
+		if(mustRecalculate) { checkCells(); recalculateCells(); }
 		if(isStatic) return;
 
 		Vector2f tempVelocity{velocity.x * mFrameTime, velocity.y * mFrameTime};
@@ -50,67 +51,71 @@ namespace ssvsc
 			if(!isOverlapping(body)) continue;
 
 			onCollision({body, mFrameTime, body->getUserData()});
-			body->onCollision({this, mFrameTime, userData});
+			body->onCollision({this, mFrameTime, userData}); // ? Y/N
 
-			for(auto& g : groupsNoResolve) if(find(begin(body->getGroups()), end(body->getGroups()), g) != end(body->getGroups())) continue;
-
-			int encrX{0}, encrY{0};
-
-			if (getBottom() < body->getBottom() && getBottom() >= body->getTop()) encrY = body->getTop() - getBottom();
-			else if (getTop() > body->getTop() && getTop() <= body->getBottom()) encrY = body->getBottom() - getTop();
-
-			if (getLeft() < body->getLeft() && getRight() >= body->getLeft()) encrX = body->getLeft() - getRight();
-			else if (getRight() > body->getRight() && getLeft() <= body->getRight()) encrX = body->getRight() - getLeft();
-
-			int overlapX{getLeft() < body->getLeft() ? getRight() - body->getLeft() : body->getRight() - getLeft()};
-			int overlapY{getTop() < body->getTop() ? getBottom() - body->getTop() : body->getBottom() - getTop()};
-
-			if(overlapX > overlapY) position.y += encrY; else position.x += encrX;
+			for(auto& group : groupsNoResolve)
+				if(!(find(begin(body->getGroups()), end(body->getGroups()), group) != end(body->getGroups())))
+					resolve(body);
 		}
 
 		checkCells();
 	}
 
+	void Body::resolve(Body* mBody)
+	{
+		int encrX{0}, encrY{0};
+
+		if (getBottom() < mBody->getBottom() && getBottom() >= mBody->getTop()) encrY = mBody->getTop() - getBottom();
+		else if (getTop() > mBody->getTop() && getTop() <= mBody->getBottom()) encrY = mBody->getBottom() - getTop();
+
+		if (getLeft() < mBody->getLeft() && getRight() >= mBody->getLeft()) encrX = mBody->getLeft() - getRight();
+		else if (getRight() > mBody->getRight() && getLeft() <= mBody->getRight()) encrX = mBody->getRight() - getLeft();
+
+		int overlapX{getLeft() < mBody->getLeft() ? getRight() - mBody->getLeft() : mBody->getRight() - getLeft()};
+		int overlapY{getTop() < mBody->getTop() ? getBottom() - mBody->getTop() : mBody->getBottom() - getTop()};
+
+		if(overlapX > overlapY) position.y += encrY; else position.x += encrX;
+	}
+
 	void Body::checkCells()
 	{
-		startX = getLeft() / world.cellSize;
-		startY = getTop() / world.cellSize;
-		endX = getRight() / world.cellSize;
-		endY = getBottom() / world.cellSize;
+		startX = getLeft() / world.getCellSize();
+		startY = getTop() / world.getCellSize();
+		endX = getRight() / world.getCellSize();
+		endY = getBottom() / world.getCellSize();
 
-		previousStartX = (previousPosition.x - halfSize.x) / world.cellSize;
+		previousStartX = (previousPosition.x - halfSize.x) / world.getCellSize();
 		if(previousStartX != startX) { recalculateCells(); return; }
 
-		previousStartY = (previousPosition.y - halfSize.y) / world.cellSize;
+		previousStartY = (previousPosition.y - halfSize.y) / world.getCellSize();
 		if(previousStartY != startY) { recalculateCells(); return; }
 
-		previousEndX = (previousPosition.x + halfSize.x) / world.cellSize;
+		previousEndX = (previousPosition.x + halfSize.x) / world.getCellSize();
 		if(previousEndX != endX) { recalculateCells(); return; }
 
-		previousEndY = (previousPosition.y + halfSize.y)	/ world.cellSize;
+		previousEndY = (previousPosition.y + halfSize.y) / world.getCellSize();
 		if(previousEndY != endY) { recalculateCells(); return; }
 	}
 
 	void Body::clearCells()
 	{
-		for(auto& cell : cells) cell->del(this); cells.clear();
-		queries.clear();
+		for(auto& cell : cells) cell->del(this);
+		cells.clear(); queries.clear();
 	}
 	void Body::recalculateCells()
 	{
 		clearCells();
 		
-		if(startX < 0 || endX >= world.columns || startY < 0 || endY >= world.rows) { onOutOfBounds(); }
-		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(world.cells[{iX + world.offset, iY + world.offset}]);
+		if(startX < 0 || endX >= world.getColumns() || startY < 0 || endY >= world.getRows()) { onOutOfBounds(); }
+		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(world.getCell(iX + world.getOffset(), iY + world.getOffset()));
 
-		for(auto& cell : cells) cell->add(this);
-	}
-
-	vector<Body*> Body::getBodiesToCheck()
-	{
-		vector<Body*> result;
-		for(auto& cell : cells) for(auto& group : groupsToCheck) for(auto& body : cell->getBodies(group)) result.push_back(body);
-		return result;
+		for(auto& cell : cells)
+		{
+			cell->add(this);
+			for(auto& group : groupsToCheck) queries.push_back(cell->getQuery(group));
+		}
+		
+		mustRecalculate = false;
 	}
 
 	// Properties

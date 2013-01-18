@@ -10,16 +10,19 @@ namespace ssvsc
 	World::World(int mColumns, int mRows, int mCellSize, int mOffset) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset}
 	{
 		for(int iX{0}; iX < columns; iX++)
+		{
+			cells.push_back(vector<Cell*>(rows));
 			for(int iY{0}; iY < rows; iY++)
 			{
 				int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
-				cells[{iX, iY}] = new Cell{left, right, top, bottom};
+				cells[iX][iY] = new Cell{left, right, top, bottom};
 			}
+		}
 	}
 	World::~World()
 	{
 		for(auto& body : bodies) delete body;
-		for(auto& pair : cells) delete pair.second;
+		for(auto& vector : cells) for(auto& cell : vector) delete cell;
 	}
 
 	void World::add(Body* mBody) { bodies.push_back(mBody); }
@@ -32,5 +35,11 @@ namespace ssvsc
 
 		for(auto& body : bodies) body->update(mFrameTime);
 	}
+
+	Cell* World::getCell(int mX, int mY) { return cells[mX][mY]; }
+	int World::getColumns()		{ return columns; }
+	int World::getRows()		{ return rows; }
+	int World::getCellSize()	{ return cellSize; }
+	int World::getOffset() 		{ return offset; }	
 }
 
