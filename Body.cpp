@@ -1,6 +1,7 @@
 #include "Body.h"
 #include "World.h"
 #include "Cell.h"
+#include <sparsehash/dense_hash_set>
 
 using namespace std;
 using namespace sf;
@@ -33,29 +34,32 @@ namespace ssvsc
 		previousPosition = position;
 		position = Vector2i(tempPosition.x, tempPosition.y);
 
-		unordered_set<Body*> checkedBodies{this};
+		//unordered_set<Body*> checkedBodies;
 
 		// auto comp = [](Body* mBodyA, Body* mBodyB) -> bool { return mBodyA->getVelocity().x > 0 ? mBodyA->getX() > mBodyB->getX() : -mBodyA->getX() > mBodyB->getX(); };
 		// set<Body*, decltype(comp)> bodiesToCheck(comp);
 		// for(Body* body : getBodiesToCheck()) bodiesToCheck.insert(body);
 		//bodiesToCheck.OrderBy(x => Velocity.X > 0 ? x.X : -x.X)
 
-		vector<Body*> bodiesToCheck;
-		for(auto& query : queries) for(auto& body : *query) bodiesToCheck.push_back(body);
+		google::dense_hash_set<Body*> bodiesToCheck;
+		bodiesToCheck.set_empty_key(nullptr);
+		//vector<Body*> bodiesToCheck;
+		for(auto& query : queries) for(auto& body : *query) bodiesToCheck.insert(body);
 
 		for(auto& body : bodiesToCheck)
 		{
-			if(checkedBodies.find(body) != checkedBodies.end()) continue;
-			checkedBodies.insert(body);
+			if(body == this) continue;
+
+			//if(checkedBodies.find(body) != checkedBodies.end()) { cout << "dick" << endl; continue; }
+			//checkedBodies.insert(body);
 
 			if(!isOverlapping(body)) continue;
 
 			onCollision({body, mFrameTime, body->getUserData()});
-			body->onCollision({this, mFrameTime, userData}); // ? Y/N
+			body->onCollision({this, mFrameTime, userData}); // ? Y/N how about "oncollidedby"
 
 			bool mustResolve{true};
-			for(auto& group : groupsNoResolve)
-				if(find(begin(body->getGroups()), end(body->getGroups()), group) != end(body->getGroups())) { mustResolve = false; break; }
+			for(auto& group : groupsNoResolve) if(find(begin(body->getGroups()), end(body->getGroups()), group) != end(body->getGroups())) { mustResolve = false; break; }
 
 			if(mustResolve) resolve(body);
 		}
