@@ -1,7 +1,6 @@
 #ifndef BODY_H
 #define BODY_H
 
-#include <unordered_set>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -23,12 +22,13 @@ namespace ssvsc
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
-			std::vector<std::vector<Body*>*> queries;
-			int previousStartX, previousStartY, previousEndX, previousEndY;
-			int startX, startY, endX, endY;
-			bool mustRecalculate{false}; // IF TRUE CRASHES ON START - FIX
-			void checkCells();
-			void recalculateCells();
+			std::vector<std::vector<Body*>*> queries; // Cell vector ptrs to query
+			int startX, startY, endX, endY; // Edge cell positions
+			bool mustRecalculate{false}; // IF TRUE CRASHES ON START - MUST FIX
+
+			void recalcEdges(); // Sets startX, startY, endX, endY
+			void checkOldEdges(); // Checks if startXY... is different from previousStartXY... - if so, recalculates
+			void recalcCells(); // Clears cells/queries and gets new ones
 			void resolve(Body* mBody);
 
 		public:

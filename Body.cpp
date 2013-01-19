@@ -27,7 +27,7 @@ namespace ssvsc
 	bool Body::isOverlapping(Body* mBody) { return getRight() > mBody->getLeft() && getLeft() < mBody->getRight() && (getBottom() > mBody->getTop() && getTop() < mBody->getBottom()); }
 	void Body::update(float mFrameTime)
 	{
-		if(mustRecalculate) { checkCells(); recalculateCells(); }
+		if(mustRecalculate) { recalcEdges(); recalcCells(); }
 		if(isStatic) return;
 
 		Vector2f tempVelocity{velocity.x * mFrameTime, velocity.y * mFrameTime};
@@ -56,7 +56,8 @@ namespace ssvsc
 			if(mustResolve) resolve(body);
 		}
 
-		checkCells();
+		recalcEdges();
+		checkOldEdges();
 	}
 
 	void Body::resolve(Body* mBody)
@@ -75,24 +76,20 @@ namespace ssvsc
 		if(overlapX > overlapY) position.y += encrY; else position.x += encrX;
 	}
 
-	void Body::checkCells()
+	void Body::recalcEdges()
 	{
-		startX = getLeft() / world.getCellSize();
-		startY = getTop() / world.getCellSize();
-		endX = getRight() / world.getCellSize();
-		endY = getBottom() / world.getCellSize();
+		startX = world.getIndex(getLeft());
+		startY = world.getIndex(getTop());
+		endX = world.getIndex(getRight());
+		endY = world.getIndex(getBottom());
+	}
 
-		previousStartX = (previousPosition.x - halfSize.x) / world.getCellSize();
-		if(previousStartX != startX) { recalculateCells(); return; }
-
-		previousStartY = (previousPosition.y - halfSize.y) / world.getCellSize();
-		if(previousStartY != startY) { recalculateCells(); return; }
-
-		previousEndX = (previousPosition.x + halfSize.x) / world.getCellSize();
-		if(previousEndX != endX) { recalculateCells(); return; }
-
-		previousEndY = (previousPosition.y + halfSize.y) / world.getCellSize();
-		if(previousEndY != endY) { recalculateCells(); return; }
+	void Body::checkOldEdges()
+	{
+		if(world.getIndex(previousPosition.x - halfSize.x) != startX) { recalcCells(); return; }
+		if(world.getIndex(previousPosition.y - halfSize.y) != startY) { recalcCells(); return; }
+		if(world.getIndex(previousPosition.x + halfSize.x) != endX) { recalcCells(); return; }
+		if(world.getIndex(previousPosition.y + halfSize.y) != endY) { recalcCells(); return; }
 	}
 
 	void Body::clearCells()
@@ -100,12 +97,12 @@ namespace ssvsc
 		for(auto& cell : cells) cell->del(this);
 		cells.clear(); queries.clear();
 	}
-	void Body::recalculateCells()
+	void Body::recalcCells()
 	{
 		clearCells();
 		
-		if(startX < 0 || endX >= world.getColumns() || startY < 0 || endY >= world.getRows()) { onOutOfBounds(); }
-		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(world.getCell(iX + world.getOffset(), iY + world.getOffset()));
+		if(world.isOutside(startX, startY, endX, endY)) onOutOfBounds();
+		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(world.getCell(iX, iY));
 
 		for(auto& cell : cells)
 		{

@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <map>
-#include <unordered_set>
 #include <array>
+#include <sparsehash/dense_hash_set>
 
 namespace ssvsc
 {
@@ -15,8 +15,8 @@ namespace ssvsc
 	{
 		private:
 			std::vector<Body*> bodies; // owned
-			std::unordered_set<Body*> bodiesToDel;
-			std::vector<std::vector<Cell*>> cells;
+			std::vector<std::vector<Cell*>> cells; // owned
+			google::dense_hash_set<Body*> bodiesToDel;			
 			int columns, rows, cellSize, offset;
 
 		public:
@@ -25,13 +25,11 @@ namespace ssvsc
 
 			void add(Body* mBody);
 			void del(Body* mBody);
-			void update(float mFrameTime);
+			void update(float mFrameTime);			
 
 			Cell* getCell(int mX, int mY);
-			int getColumns();
-			int getRows();
-			int getCellSize();
-			int getOffset();
+			int getIndex(int mValue);
+			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY);
 	};
 }
 

@@ -9,6 +9,8 @@ namespace ssvsc
 {
 	World::World(int mColumns, int mRows, int mCellSize, int mOffset) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset}
 	{
+		bodiesToDel.set_empty_key(nullptr);
+
 		for(int iX{0}; iX < columns; iX++)
 		{
 			cells.push_back(vector<Cell*>(rows));
@@ -36,10 +38,8 @@ namespace ssvsc
 		for(auto& body : bodies) body->update(mFrameTime);
 	}
 
-	Cell* World::getCell(int mX, int mY) { return cells[mX][mY]; }
-	int World::getColumns()		{ return columns; }
-	int World::getRows()		{ return rows; }
-	int World::getCellSize()	{ return cellSize; }
-	int World::getOffset() 		{ return offset; }	
+	Cell* World::getCell(int mX, int mY) { return cells[mX + offset][mY + offset]; }
+	int World::getIndex(int mValue) { return mValue / cellSize; }
+	bool World::isOutside(int mStartX, int mStartY, int mEndX, int mEndY) { return mStartX < 0 || mEndX >= columns || mStartY < 0 || mEndY >= rows; }
 }
 
