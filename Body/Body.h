@@ -25,23 +25,21 @@ namespace ssvsc
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
+			bool isOverlapping(Body* mBody);
 			void resolve(Body* mBody);
 
 		public:
-			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
-
-			// Callback delegates
 			ssvs::Delegate<void, CollisionInfo> onCollision;
+			ssvs::Delegate<void, CollisionInfo> onCollidedBy;
 			ssvs::Delegate<void> onOutOfBounds;
 
-			// Group-related methods
+			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
+			
 			void addGroups(const std::vector<std::string>& mGroups);
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
 			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
 
-			bool isOverlapping(Body* mBody);
 			void update(float mFrameTime);
-			std::vector<Body*> getBodiesToCheck();
 
 			// Properties
 			void setPosition(sf::Vector2i mPosition);

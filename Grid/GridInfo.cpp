@@ -44,11 +44,11 @@ namespace ssvsc
 			for(auto& group : body.getGroupsToCheck()) queries.push_back(cell->getQuery(group));
 		}
 
-		mustCalc = false;
+		invalid = false;
 	}
 
-	void GridInfo::changedGroups() { mustCalc = true; }
-	void GridInfo::preUpdate() { if(mustCalc) { calcEdges(); calcCells(); } }
+	void GridInfo::invalidate() { invalid = true; }
+	void GridInfo::preUpdate() { if(invalid) { calcEdges(); calcCells(); } }
 	void GridInfo::postUpdate() { calcEdges(); checkEdges(); }
 	dense_hash_set<Body*> GridInfo::getBodiesToCheck()
 	{

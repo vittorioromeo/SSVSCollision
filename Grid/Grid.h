@@ -17,8 +17,6 @@ namespace ssvsc
 			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0);
 			~Grid();
 
-			void update(float mFrameTime);
-
 			Cell* getCell(int mX, int mY);
 			int getIndex(int mValue);
 			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY);

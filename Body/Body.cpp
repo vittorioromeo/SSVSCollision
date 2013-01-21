@@ -12,19 +12,10 @@ namespace ssvsc
 	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, int mWidth, int mHeight) : world(mWorld), grid(world.getGrid()),
 		gridInfo{grid, *this}, isStatic{mIsStatic}, position{mPosition}, oldPosition{position}, halfSize{mWidth / 2, mHeight / 2} { }
 
-	void Body::addGroups(const vector<string>& mGroups)
-	{
-		for(auto& group : mGroups) groups.push_back(group);
-		gridInfo.changedGroups();
-	}
-	void Body::addGroupsToCheck(const vector<string>& mGroups)
-	{
-		for(auto& group : mGroups) groupsToCheck.push_back(group);
-		gridInfo.changedGroups();
-	}
+	void Body::addGroups(const vector<string>& mGroups) { for(auto& group : mGroups) groups.push_back(group); gridInfo.invalidate(); }
+	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); gridInfo.invalidate(); }
 	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto& group : mGroups) groupsNoResolve.push_back(group); }
 
-	bool Body::isOverlapping(Body* mBody) { return getRight() > mBody->getLeft() && getLeft() < mBody->getRight() && (getBottom() > mBody->getTop() && getTop() < mBody->getBottom()); }
 	void Body::update(float mFrameTime)
 	{
 		gridInfo.preUpdate();
@@ -45,7 +36,7 @@ namespace ssvsc
 			if(body == this || !isOverlapping(body)) continue;
 
 			onCollision({body, mFrameTime, body->getUserData()});
-			body->onCollision({this, mFrameTime, userData}); // ? Y/N how about "oncollidedby"
+			body->onCollidedBy({this, mFrameTime, userData});
 
 			bool mustResolve{true};
 			for(auto& group : groupsNoResolve) if(find(begin(body->getGroups()), end(body->getGroups()), group) != end(body->getGroups())) { mustResolve = false; break; }
@@ -56,6 +47,7 @@ namespace ssvsc
 		gridInfo.postUpdate();
 	}
 
+	bool Body::isOverlapping(Body* mBody) { return getRight() > mBody->getLeft() && getLeft() < mBody->getRight() && (getBottom() > mBody->getTop() && getTop() < mBody->getBottom()); }
 	void Body::resolve(Body* mBody)
 	{
 		int encrX{0}, encrY{0};

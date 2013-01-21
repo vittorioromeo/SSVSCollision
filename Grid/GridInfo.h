@@ -19,7 +19,7 @@ namespace ssvsc
 			std::vector<Cell*> cells;
 			std::vector<std::vector<Body*>*> queries; // Cell vector ptrs to query
 			int startX, startY, endX, endY; // Edge cell positions
-			bool mustCalc{false}; // IF TRUE CRASHES ON START - MUST FIX!!!
+			bool invalid{false}; // IF TRUE CRASHES ON START - MUST FIX!!!
 
 			void calcEdges(); // Sets startX, startY, endX, endY
 			void checkEdges(); // Checks if startXY... is different from previousStartXY... - if so, recalculates
@@ -30,7 +30,7 @@ namespace ssvsc
 			GridInfo(Grid& mGrid, Body& mBody);
 			~GridInfo();
 
-			void changedGroups();
+			void invalidate();
 			void preUpdate();
 			void postUpdate();
 			google::dense_hash_set<Body*> getBodiesToCheck();
