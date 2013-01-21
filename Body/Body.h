@@ -6,35 +6,29 @@
 #include <SFML/Window.hpp>
 #include <SSVStart.h>
 #include "CollisionInfo.h"
+#include "Grid/GridInfo.h"
 
 namespace ssvsc
 {
 	class World;
+	class Grid;
 	class Cell;
 
 	class Body
 	{
 		private:
 			World& world;
+			Grid& grid;
+			GridInfo gridInfo;
 			bool isStatic;
-			std::vector<Cell*> cells;
-			sf::Vector2i position, previousPosition, velocity, halfSize;
+			sf::Vector2i position, oldPosition, velocity, halfSize;
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
-			std::vector<std::vector<Body*>*> queries; // Cell vector ptrs to query
-			int startX, startY, endX, endY; // Edge cell positions
-			bool mustRecalculate{false}; // IF TRUE CRASHES ON START - MUST FIX
-
-			void recalcEdges(); // Sets startX, startY, endX, endY
-			void checkOldEdges(); // Checks if startXY... is different from previousStartXY... - if so, recalculates
-			void recalcCells(); // Clears cells/queries and gets new ones
 			void resolve(Body* mBody);
 
 		public:
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
-
-			void clearCells();
 
 			// Callback delegates
 			ssvs::Delegate<void, CollisionInfo> onCollision;
@@ -63,6 +57,12 @@ namespace ssvsc
 			int getRight();
 			int getTop();
 			int getBottom();
+			int getOldX();
+			int getOldY();
+			int getOldLeft();
+			int getOldRight();
+			int getOldTop();
+			int getOldBottom();
 			int getHalfWidth();
 			int getHalfHeight();
 			int getWidth();
