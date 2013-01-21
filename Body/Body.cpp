@@ -15,19 +15,19 @@ namespace ssvsc
 	void Body::addGroups(const vector<string>& mGroups)
 	{
 		for(auto& group : mGroups) groups.push_back(group);
-		gridInfo.groupsChanged();
+		gridInfo.changedGroups();
 	}
 	void Body::addGroupsToCheck(const vector<string>& mGroups)
 	{
 		for(auto& group : mGroups) groupsToCheck.push_back(group);
-		gridInfo.groupsChanged();
+		gridInfo.changedGroups();
 	}
 	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto& group : mGroups) groupsNoResolve.push_back(group); }
 
 	bool Body::isOverlapping(Body* mBody) { return getRight() > mBody->getLeft() && getLeft() < mBody->getRight() && (getBottom() > mBody->getTop() && getTop() < mBody->getBottom()); }
 	void Body::update(float mFrameTime)
 	{
-		gridInfo.beforeUpdate();
+		gridInfo.preUpdate();
 		if(isStatic) return;
 
 		Vector2f tempVelocity{velocity.x * mFrameTime, velocity.y * mFrameTime};
@@ -53,7 +53,7 @@ namespace ssvsc
 			if(mustResolve) resolve(body);
 		}
 
-		gridInfo.afterUpdate();
+		gridInfo.postUpdate();
 	}
 
 	void Body::resolve(Body* mBody)

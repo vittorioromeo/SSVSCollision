@@ -8,9 +8,9 @@ using namespace google;
 namespace ssvsc
 {
 	GridInfo::GridInfo(Grid& mGrid, Body& mBody) : grid(mGrid), body(mBody) { }
-	GridInfo::~GridInfo() { clearCells(); }
+	GridInfo::~GridInfo() { clear(); }
 
-	void GridInfo::recalcEdges()
+	void GridInfo::calcEdges()
 	{
 		startX = grid.getIndex(body.getLeft());
 		startY = grid.getIndex(body.getTop());
@@ -18,22 +18,22 @@ namespace ssvsc
 		endY = grid.getIndex(body.getBottom());
 	}
 
-	void GridInfo::checkOldEdges()
+	void GridInfo::checkEdges()
 	{
-		if(grid.getIndex(body.getOldLeft()) != startX) { recalcCells(); return; }
-		if(grid.getIndex(body.getOldTop()) != startY) { recalcCells(); return; }
-		if(grid.getIndex(body.getOldRight()) != endX) { recalcCells(); return; }
-		if(grid.getIndex(body.getOldBottom()) != endY) { recalcCells(); return; }
+		if(grid.getIndex(body.getOldLeft()) != startX) { calcCells(); return; }
+		if(grid.getIndex(body.getOldRight()) != endX) { calcCells(); return; }
+		if(grid.getIndex(body.getOldTop()) != startY) { calcCells(); return; }
+		if(grid.getIndex(body.getOldBottom()) != endY) { calcCells(); return; }
 	}
 
-	void GridInfo::clearCells()
+	void GridInfo::clear()
 	{
 		for(auto& cell : cells) cell->del(&body);
 		cells.clear(); queries.clear();
 	}
-	void GridInfo::recalcCells()
+	void GridInfo::calcCells()
 	{
-		clearCells();
+		clear();
 
 		if(grid.isOutside(startX, startY, endX, endY)) body.onOutOfBounds();
 		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(grid.getCell(iX, iY));
@@ -44,16 +44,15 @@ namespace ssvsc
 			for(auto& group : body.getGroupsToCheck()) queries.push_back(cell->getQuery(group));
 		}
 
-		mustRecalculate = false;
+		mustCalc = false;
 	}
 
-	void GridInfo::groupsChanged() { mustRecalculate = true; }
-	void GridInfo::beforeUpdate() { if(mustRecalculate) { recalcEdges(); recalcCells(); } }
-	void GridInfo::afterUpdate() { recalcEdges(); checkOldEdges(); }
+	void GridInfo::changedGroups() { mustCalc = true; }
+	void GridInfo::preUpdate() { if(mustCalc) { calcEdges(); calcCells(); } }
+	void GridInfo::postUpdate() { calcEdges(); checkEdges(); }
 	dense_hash_set<Body*> GridInfo::getBodiesToCheck()
 	{
-		dense_hash_set<Body*> result;
-		result.set_empty_key(nullptr);
+		dense_hash_set<Body*> result; result.set_empty_key(nullptr);
 		for(auto& query : queries) for(auto& body : *query) result.insert(body);
 		return result;
 	}

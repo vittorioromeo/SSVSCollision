@@ -19,20 +19,20 @@ namespace ssvsc
 			std::vector<Cell*> cells;
 			std::vector<std::vector<Body*>*> queries; // Cell vector ptrs to query
 			int startX, startY, endX, endY; // Edge cell positions
-			bool mustRecalculate{false}; // IF TRUE CRASHES ON START - MUST FIX
+			bool mustCalc{false}; // IF TRUE CRASHES ON START - MUST FIX!!!
 
-			void recalcEdges(); // Sets startX, startY, endX, endY
-			void checkOldEdges(); // Checks if startXY... is different from previousStartXY... - if so, recalculates
-			void recalcCells(); // Clears cells/queries and gets new ones
-			void clearCells();
+			void calcEdges(); // Sets startX, startY, endX, endY
+			void checkEdges(); // Checks if startXY... is different from previousStartXY... - if so, recalculates
+			void calcCells(); // Clears cells/queries and gets new ones
+			void clear();
 
 		public:
 			GridInfo(Grid& mGrid, Body& mBody);
 			~GridInfo();
 
-			void groupsChanged();
-			void beforeUpdate();
-			void afterUpdate();
+			void changedGroups();
+			void preUpdate();
+			void postUpdate();
 			google::dense_hash_set<Body*> getBodiesToCheck();
 	};
 }
