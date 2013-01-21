@@ -36,7 +36,7 @@ namespace ssvsc
 			if(body == this || !isOverlapping(body)) continue;
 
 			onCollision({body, mFrameTime, body->getUserData()});
-			body->onCollidedBy({this, mFrameTime, userData});
+			body->onCollision({this, mFrameTime, userData});
 
 			bool mustResolve{true};
 			for(auto& group : groupsNoResolve) if(find(begin(body->getGroups()), end(body->getGroups()), group) != end(body->getGroups())) { mustResolve = false; break; }
