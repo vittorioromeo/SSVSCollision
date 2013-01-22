@@ -1,11 +1,13 @@
 #include "Body.h"
-#include "World/World.h"
 #include "Grid/Cell.h"
+#include "Utils/Utils.h"
+#include "World/World.h"
 #include <sparsehash/dense_hash_set>
 
 using namespace std;
 using namespace sf;
 using namespace google;
+using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
@@ -38,10 +40,7 @@ namespace ssvsc
 			onCollision({body, mFrameTime, body->getUserData()});
 			body->onCollision({this, mFrameTime, userData});
 
-			bool mustResolve{true};
-			for(auto& group : groupsNoResolve) if(find(begin(body->getGroups()), end(body->getGroups()), group) != end(body->getGroups())) { mustResolve = false; break; }
-
-			if(mustResolve) resolve(body);
+			if(!containsAny(body->getGroups(), groupsNoResolve)) resolve(body);
 		}
 
 		gridInfo.postUpdate();

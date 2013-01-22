@@ -1,8 +1,9 @@
-#include "Cell.h"
 #include "Body/Body.h"
+#include "Cell.h"
+#include "Utils/Utils.h"
 
 using namespace std;
-using namespace ssvs::Utils;
+using namespace ssvsc::Utils;
 
 namespace ssvsc
 {

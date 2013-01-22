@@ -37,10 +37,8 @@ namespace ssvsc
 			void addGroups(const std::vector<std::string>& mGroups);
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
 			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
-
 			void update(float mFrameTime);
 
-			// Properties
 			void setPosition(sf::Vector2i mPosition);
 			void setVelocity(sf::Vector2i mVelocity);
 			const std::vector<std::string>& getGroups();
