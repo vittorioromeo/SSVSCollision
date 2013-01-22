@@ -18,7 +18,7 @@ namespace ssvsc
 
 			std::vector<Cell*> cells;
 			std::vector<std::vector<Body*>*> queries; // Cell vector ptrs to query
-			int startX, startY, endX, endY; // Edge cell positions
+			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
 			bool invalid{false}; // IF TRUE CRASHES ON START - MUST FIX!!!
 
 			void calcEdges(); // Sets startX, startY, endX, endY
