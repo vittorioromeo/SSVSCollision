@@ -1,8 +1,9 @@
 #include "World.h"
 #include "Body/Body.h"
+#include "Utils/Utils.h"
 
 using namespace std;
-using namespace ssvs::Utils;
+using namespace ssvsc::Utils;
 
 namespace ssvsc
 {

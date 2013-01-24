@@ -7,9 +7,9 @@ namespace ssvsc
 {
 	namespace Utils
 	{
-		template<typename T> bool contains(const std::vector<T>& mVector, const T& mValue) { return find(begin(mVector), end(mVector), mValue) != end(mVector); }
-		template<typename T> bool containsAny(const std::vector<T>& mVector, const std::vector<T>& mValues) { for(auto& value : mValues) if(contains(mVector, value)) return true; return false; }
-		template<typename T> void eraseFromVector(std::vector<T>& mVector, const T& mItem) { mVector.erase(std::remove(std::begin(mVector), std::end(mVector), mItem), std::end(mVector)); }
+		template<typename T, typename V> bool contains(const T& mVector, const V& mValue) { return std::find(std::begin(mVector),std::end(mVector), mValue) != std::end(mVector); }
+		template<typename T, typename T2> bool containsAny(T& mVector, const T2& mValues) { for(auto& value : mValues) if(contains(mVector, value)) return true; return false; }
+		template<typename T, typename V> void eraseFromVector(T& mVector, const V& mItem) { mVector.erase(std::remove(std::begin(mVector), std::end(mVector), mItem), std::end(mVector)); }
 	}
 }
 
