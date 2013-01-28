@@ -12,7 +12,7 @@ namespace ssvsc
 	class World
 	{
 		private:
-			std::vector<Body*> bodies; // owned
+			std::vector<Body*> bodies; // owned			
 			google::dense_hash_set<Body*> bodiesToDel;
 			Grid grid;
 

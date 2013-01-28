@@ -2,14 +2,23 @@
 #define UTILS_H
 
 #include <vector>
+#include <algorithm>
+#include "Body/Body.h"
 
 namespace ssvsc
 {
 	namespace Utils
 	{
-		template<typename T, typename V> bool contains(const T& mVector, const V& mValue) { return std::find(std::begin(mVector),std::end(mVector), mValue) != std::end(mVector); }
-		template<typename T, typename T2> bool containsAny(T& mVector, const T2& mValues) { for(auto& value : mValues) if(contains(mVector, value)) return true; return false; }
-		template<typename T, typename V> void eraseFromVector(T& mVector, const V& mItem) { mVector.erase(std::remove(std::begin(mVector), std::end(mVector), mItem), std::end(mVector)); }
+		template<typename T, typename V> bool contains(const T& mItems, const V& mValue) { return std::find(std::begin(mItems),std::end(mItems), mValue) != std::end(mItems); }
+		template<typename T, typename T2> bool containsAny(T& mItems, const T2& mValues) { for(auto& value : mValues) if(contains(mItems, value)) return true; return false; }
+		template<typename T, typename V> void eraseRemove(T& mItems, const V& mValue) { mItems.erase(std::remove(std::begin(mItems), std::end(mItems), mValue), std::end(mItems)); }
+		template<typename T, typename P> void sort(T& mItems, P mPredicate) { std::sort(std::begin(mItems), std::end(mItems), mPredicate); }
+
+		int getOverlapX(Body* mA, Body* mB);
+		int getOverlapY(Body* mA, Body* mB);
+		int getOverlapArea(Body* mA, Body* mB);
+		bool overlapAreaComparer(Body* mBody, Body* mA, Body* mB);
+		bool isOverlapping(Body* mA, Body* mB);
 	}
 }
 

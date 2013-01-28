@@ -14,7 +14,7 @@ namespace ssvsc
 	void World::del(Body* mBody) { bodiesToDel.insert(mBody); }
 	void World::update(float mFrameTime)
 	{
-		for(auto& body : bodiesToDel) { eraseFromVector(bodies, body); delete body; }
+		for(auto& body : bodiesToDel) { eraseRemove(bodies, body); delete body; }
 		bodiesToDel.clear();
 
 		for(auto& body : bodies) body->update(mFrameTime);

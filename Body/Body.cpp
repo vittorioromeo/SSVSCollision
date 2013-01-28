@@ -28,25 +28,24 @@ namespace ssvsc
 		oldPosition = position;
 		position = Vector2i(tempPosition.x, tempPosition.y);
 
-		// auto comp = [](Body* mBodyA, Body* mBodyB) -> bool { return mBodyA->getVelocity().x > 0 ? mBodyA->getX() > mBodyB->getX() : -mBodyA->getX() > mBodyB->getX(); };
-		// set<Body*, decltype(comp)> bodiesToCheck(comp);
-		// for(Body* body : getBodiesToCheck()) bodiesToCheck.insert(body);
-		//bodiesToCheck.OrderBy(x => Velocity.X > 0 ? x.X : -x.X)
+		vector<Body*> bodiesToResolve;
 
 		for(auto& body : gridInfo.getBodiesToCheck())
 		{
-			if(body == this || !isOverlapping(body)) continue;
+			if(body == this || !isOverlapping(this, body)) continue;
 
 			onCollision({body, mFrameTime, body->getUserData()});
 			body->onCollision({this, mFrameTime, userData});
 
-			if(!containsAny(body->getGroups(), groupsNoResolve)) resolve(body);
+			if(!containsAny(body->getGroups(), groupsNoResolve)) bodiesToResolve.push_back(body);
 		}
 
+		sort(bodiesToResolve, [&](Body* mBodyA, Body* mBodyB){ return overlapAreaComparer(this, mBodyA, mBodyB); });
+
+		for(auto& body : bodiesToResolve) resolve(body);
 		gridInfo.postUpdate();
 	}
-
-	bool Body::isOverlapping(Body* mBody) { return getRight() > mBody->getLeft() && getLeft() < mBody->getRight() && (getBottom() > mBody->getTop() && getTop() < mBody->getBottom()); }
+	
 	void Body::resolve(Body* mBody)
 	{
 		int encrX{0}, encrY{0};
@@ -57,10 +56,6 @@ namespace ssvsc
 		if (getLeft() < mBody->getLeft() && getRight() >= mBody->getLeft()) encrX = mBody->getLeft() - getRight();
 		else if (getRight() > mBody->getRight() && getLeft() <= mBody->getRight()) encrX = mBody->getRight() - getLeft();
 
-		int overlapX{getLeft() < mBody->getLeft() ? getRight() - mBody->getLeft() : mBody->getRight() - getLeft()};
-		int overlapY{getTop() < mBody->getTop() ? getBottom() - mBody->getTop() : mBody->getBottom() - getTop()};
-
-		if(overlapX > overlapY) position.y += encrY; else position.x += encrX;
+		if(getOverlapX(this, mBody) > getOverlapY(this, mBody)) position.y += encrY; else position.x += encrX;
 	}
 }
-

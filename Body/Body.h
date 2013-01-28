@@ -25,7 +25,6 @@ namespace ssvsc
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
-			bool isOverlapping(Body* mBody);
 			void resolve(Body* mBody);
 
 		public:
