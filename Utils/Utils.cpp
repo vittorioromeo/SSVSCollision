@@ -4,10 +4,17 @@ namespace ssvsc
 {
 	namespace Utils
 	{
-		int getOverlapX(Body* mA, Body* mB) { return mA->getLeft() < mB->getLeft() ? mA->getRight() - mB->getLeft() : mB->getRight() - mA->getLeft(); }
-		int getOverlapY(Body* mA, Body* mB) { return mA->getTop() < mB->getTop() ? mA->getBottom() - mB->getTop() : mB->getBottom() - mA->getTop(); }
-		int getOverlapArea(Body* mA, Body* mB) { return getOverlapX(mA, mB) * getOverlapY(mA, mB); }
-		bool overlapAreaComparer(Body* mBody, Body* mA, Body* mB) { return getOverlapArea(mBody, mA) > getOverlapArea(mBody, mB); }
+		int getIntersectionX(Body* mA, Body* mB)
+		{
+			int left{mB->getLeft() - mA->getRight()}, right{mB->getRight() - mA->getLeft()};
+			return abs(left) < abs(right) ? left : right;
+		}
+		int getIntersectionY(Body* mA, Body* mB)
+		{
+			int top{mB->getTop() - mA->getBottom()}, bottom{mB->getBottom() - mA->getTop()};
+			return abs(top) < abs(bottom) ? top : bottom;
+		}
+		int getOverlapArea(Body* mA, Body* mB) { return abs(getIntersectionX(mA, mB)) * abs(getIntersectionY(mA, mB)); }
 		bool isOverlapping(Body* mA, Body* mB) { return mA->getRight() > mB->getLeft() && mA->getLeft() < mB->getRight() && (mA->getBottom() > mB->getTop() && mA->getTop() < mB->getBottom()); }
 	}
 }

@@ -7,6 +7,7 @@ namespace ssvsc
 {
 	void Body::setPosition(Vector2i mPosition) 			{ position = mPosition; }
 	void Body::setVelocity(Vector2i mVelocity) 			{ velocity = mVelocity; }
+	void Body::setStatic(bool mStatic) 					{ isStatic = mStatic; }
 	const vector<string>& Body::getGroups()				{ return groups; }
 	const vector<string>& Body::getGroupsToCheck()		{ return groupsToCheck; }
 	Vector2i Body::getPosition() 						{ return position; }
@@ -28,4 +29,5 @@ namespace ssvsc
 	int Body::getHalfHeight() 							{ return halfSize.y; }
 	int Body::getWidth() 								{ return halfSize.x * 2; }
 	int Body::getHeight() 								{ return halfSize.y * 2; }
+	bool Body::getStatic() 								{ return isStatic; }
 }

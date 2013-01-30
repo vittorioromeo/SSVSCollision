@@ -25,6 +25,7 @@ namespace ssvsc
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
+			void integrate(float mFrameTime);
 			void resolve(Body* mBody);
 
 		public:
@@ -40,6 +41,7 @@ namespace ssvsc
 
 			void setPosition(sf::Vector2i mPosition);
 			void setVelocity(sf::Vector2i mVelocity);
+			void setStatic(bool mStatic);
 			const std::vector<std::string>& getGroups();
 			const std::vector<std::string>& getGroupsToCheck();
 			sf::Vector2i getPosition();
@@ -61,6 +63,7 @@ namespace ssvsc
 			int getHalfHeight();
 			int getWidth();
 			int getHeight();
+			bool getStatic();
 	};
 }
 
