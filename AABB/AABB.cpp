@@ -18,5 +18,7 @@ namespace ssvsc
 	int AABB::getHalfHeight() const 			{ return halfSize.y; }
 	int AABB::getWidth() const 					{ return halfSize.x * 2; }
 	int AABB::getHeight() const 				{ return halfSize.y * 2; }
+
+	bool AABB::operator==(const AABB& mOther) const { return position == mOther.position && halfSize == mOther.halfSize; }
 }
 

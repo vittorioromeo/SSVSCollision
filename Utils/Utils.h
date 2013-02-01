@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <SFML/Graphics.hpp>
 #include "Body/Body.h"
 #include "AABB/AABB.h"
 
@@ -17,8 +18,17 @@ namespace ssvsc
 
 		int getIntersectionX(const AABB& mA, const AABB& mB);
 		int getIntersectionY(const AABB& mA, const AABB& mB);
+		sf::Vector2i getMinIntersection(const AABB& mA, const AABB& mB);
 		int getOverlapArea(const AABB& mA, const AABB& mB);
 		bool isOverlapping(const AABB& mA, const AABB& mB);
+
+		AABB getMergedAABBHorizontally(const AABB& mA, const AABB& mB);
+		AABB getMergedAABBVertically(const AABB& mA, const AABB& mB);
+
+		std::vector<AABB> getMergedAABBSLeft(std::vector<AABB> mSource);
+		std::vector<AABB> getMergedAABBSRight(std::vector<AABB> mSource);
+		std::vector<AABB> getMergedAABBSTop(std::vector<AABB> mSource);
+		std::vector<AABB> getMergedAABBSBottom(std::vector<AABB> mSource);
 	}
 }
 

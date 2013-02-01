@@ -28,7 +28,6 @@ namespace ssvsc
 			void* userData;
 
 			void integrate(float mFrameTime);
-			void resolve(const AABB& mShape);
 
 		public:
 			ssvs::Delegate<void, CollisionInfo> onCollision;

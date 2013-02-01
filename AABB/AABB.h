@@ -25,6 +25,8 @@ namespace ssvsc
 			int getHalfHeight() const;
 			int getWidth() const;
 			int getHeight() const;
+
+			bool operator==(const AABB& mOther) const;
 	};
 }
 

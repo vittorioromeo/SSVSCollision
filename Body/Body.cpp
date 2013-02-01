@@ -1,8 +1,10 @@
+#include <algorithm>
+#include <sparsehash/dense_hash_set>
+#include <stack>
 #include "Body.h"
 #include "Grid/Cell.h"
 #include "Utils/Utils.h"
 #include "World/World.h"
-#include <sparsehash/dense_hash_set>
 
 using namespace std;
 using namespace sf;
@@ -36,8 +38,25 @@ namespace ssvsc
 			if(!containsAny(body->getGroups(), groupsNoResolve)) shapesToResolve.push_back(body->getShape());
 		}
 
-		sort(shapesToResolve, [&](const AABB& mA, const AABB& mB){ return getOverlapArea(shape, mA) > getOverlapArea(shape, mB); });
-		for(auto& shape : shapesToResolve) resolve(shape);
+		if(false)
+		{
+			sort(shapesToResolve, [&](const AABB& mA, const AABB& mB){ return getOverlapArea(shape, mA) > getOverlapArea(shape, mB); });
+			for(auto& s : shapesToResolve) shape.setPosition(shape.getPosition() + getMinIntersection(shape, s));
+		}
+		else
+		{
+			vector<AABB> finalToResolve = shapesToResolve;
+
+			if(oldShape.getX() > shape.getX()) finalToResolve = getMergedAABBSLeft(finalToResolve);
+			else if(oldShape.getX() < shape.getX()) finalToResolve = getMergedAABBSRight(finalToResolve);
+
+			if(oldShape.getY() > shape.getY()) finalToResolve = getMergedAABBSTop(finalToResolve);
+			else if(oldShape.getY() < shape.getY()) finalToResolve = getMergedAABBSBottom(finalToResolve);
+
+			vector<Vector2i> rVecs;
+			for(auto& s : finalToResolve) rVecs.push_back(getMinIntersection(shape, s));
+			if(!rVecs.empty()) shape.setPosition(shape.getPosition() + accumulate(begin(rVecs), end(rVecs), Vector2i{0, 0}) / (int) rVecs.size());
+		}
 
 		gridInfo.postUpdate();
 	}
@@ -48,12 +67,6 @@ namespace ssvsc
 		Vector2f tempPosition{shape.getX() + tempVelocity.x, shape.getY() + tempVelocity.y};
 		oldShape = shape;
 		shape.setPosition(Vector2i(tempPosition.x, tempPosition.y));
-	}
-
-	void Body::resolve(const AABB& mShape)
-	{
-		int iX{getIntersectionX(shape, mShape)}, iY{getIntersectionY(shape, mShape)};
-		if(abs(iX) > abs(iY)) shape.setPosition(shape.getPosition() + Vector2i{0, iY}); else shape.setPosition(shape.getPosition() + Vector2i{iX, 0});
 	}
 }
 
