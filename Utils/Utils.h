@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include "Body/Body.h"
+#include "AABB/AABB.h"
 
 namespace ssvsc
 {
@@ -14,10 +15,10 @@ namespace ssvsc
 		template<typename T, typename V> void eraseRemove(T& mItems, const V& mValue) { mItems.erase(std::remove(std::begin(mItems), std::end(mItems), mValue), std::end(mItems)); }
 		template<typename T, typename P> void sort(T& mItems, P mPredicate) { std::sort(std::begin(mItems), std::end(mItems), mPredicate); }
 
-		int getIntersectionX(Body* mA, Body* mB);
-		int getIntersectionY(Body* mA, Body* mB);
-		int getOverlapArea(Body* mA, Body* mB);
-		bool isOverlapping(Body* mA, Body* mB);
+		int getIntersectionX(const AABB& mA, const AABB& mB);
+		int getIntersectionY(const AABB& mA, const AABB& mB);
+		int getOverlapArea(const AABB& mA, const AABB& mB);
+		bool isOverlapping(const AABB& mA, const AABB& mB);
 	}
 }
 

@@ -12,18 +12,20 @@ namespace ssvsc
 
 	void GridInfo::calcEdges()
 	{
-		startX = grid.getIndex(body.getLeft());
-		startY = grid.getIndex(body.getTop());
-		endX = grid.getIndex(body.getRight());
-		endY = grid.getIndex(body.getBottom());
+		AABB& shape = body.getShape();
+		startX = grid.getIndex(shape.getLeft());
+		startY = grid.getIndex(shape.getTop());
+		endX = grid.getIndex(shape.getRight());
+		endY = grid.getIndex(shape.getBottom());
 	}
 
 	void GridInfo::checkEdges()
 	{
-		if(grid.getIndex(body.getOldLeft()) != startX) { calcCells(); return; }
-		if(grid.getIndex(body.getOldRight()) != endX) { calcCells(); return; }
-		if(grid.getIndex(body.getOldTop()) != startY) { calcCells(); return; }
-		if(grid.getIndex(body.getOldBottom()) != endY) { calcCells(); return; }
+		AABB& oldShape = body.getOldShape();
+		if(grid.getIndex(oldShape.getLeft()) != startX) { calcCells(); return; }
+		if(grid.getIndex(oldShape.getRight()) != endX) { calcCells(); return; }
+		if(grid.getIndex(oldShape.getTop()) != startY) { calcCells(); return; }
+		if(grid.getIndex(oldShape.getBottom()) != endY) { calcCells(); return; }
 	}
 
 	void GridInfo::clear()

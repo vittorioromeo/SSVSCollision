@@ -12,7 +12,7 @@ using namespace ssvsc::Utils;
 namespace ssvsc
 {
 	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, int mWidth, int mHeight) : world(mWorld), grid(world.getGrid()),
-		gridInfo{grid, *this}, isStatic{mIsStatic}, position{mPosition}, oldPosition{position}, halfSize{mWidth / 2, mHeight / 2} { }
+		gridInfo{grid, *this}, shape{mPosition, {mWidth / 2, mHeight / 2}}, oldShape{shape}, isStatic{mIsStatic} { }
 
 	void Body::addGroups(const vector<string>& mGroups) { for(auto& group : mGroups) groups.push_back(group); gridInfo.invalidate(); }
 	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); gridInfo.invalidate(); }
@@ -24,20 +24,20 @@ namespace ssvsc
 
 		if(isStatic) return;
 		integrate(mFrameTime);
-		vector<Body*> bodiesToResolve;
+		vector<AABB> shapesToResolve;
 
 		for(auto& body : gridInfo.getBodiesToCheck())
 		{
-			if(body == this || !isOverlapping(this, body)) continue;
+			if(body == this || !isOverlapping(shape, body->getShape())) continue;
 
 			onCollision({body, mFrameTime, body->getUserData()});
 			body->onCollision({this, mFrameTime, userData});
 
-			if(!containsAny(body->getGroups(), groupsNoResolve)) bodiesToResolve.push_back(body);
+			if(!containsAny(body->getGroups(), groupsNoResolve)) shapesToResolve.push_back(body->getShape());
 		}
 
-		sort(bodiesToResolve, [&](Body* mA, Body* mB){ return getOverlapArea(this, mA) > getOverlapArea(this, mB); });
-		for(auto& body : bodiesToResolve) resolve(body);
+		sort(shapesToResolve, [&](const AABB& mA, const AABB& mB){ return getOverlapArea(shape, mA) > getOverlapArea(shape, mB); });
+		for(auto& shape : shapesToResolve) resolve(shape);
 
 		gridInfo.postUpdate();
 	}
@@ -45,14 +45,15 @@ namespace ssvsc
 	void Body::integrate(float mFrameTime)
 	{
 		Vector2f tempVelocity{velocity.x * mFrameTime, velocity.y * mFrameTime};
-		Vector2f tempPosition{position.x + tempVelocity.x, position.y + tempVelocity.y};
-		oldPosition = position;
-		position = Vector2i(tempPosition.x, tempPosition.y);
+		Vector2f tempPosition{shape.getX() + tempVelocity.x, shape.getY() + tempVelocity.y};
+		oldShape = shape;
+		shape.setPosition(Vector2i(tempPosition.x, tempPosition.y));
 	}
 
-	void Body::resolve(Body* mBody)
+	void Body::resolve(const AABB& mShape)
 	{
-		int iX{getIntersectionX(this, mBody)}, iY{getIntersectionY(this, mBody)};
-		if(abs(iX) > abs(iY)) position.y += iY; else position.x += iX;
+		int iX{getIntersectionX(shape, mShape)}, iY{getIntersectionY(shape, mShape)};
+		if(abs(iX) > abs(iY)) shape.setPosition(shape.getPosition() + Vector2i{0, iY}); else shape.setPosition(shape.getPosition() + Vector2i{iX, 0});
 	}
 }
+

@@ -1,12 +1,13 @@
 #ifndef BODY_H
 #define BODY_H
 
+#include "AABB/AABB.h"
+#include "CollisionInfo.h"
+#include "Grid/GridInfo.h"
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SSVStart.h>
-#include "CollisionInfo.h"
-#include "Grid/GridInfo.h"
 
 namespace ssvsc
 {
@@ -20,13 +21,14 @@ namespace ssvsc
 			World& world;
 			Grid& grid;
 			GridInfo gridInfo;
+			AABB shape, oldShape;
 			bool isStatic;
-			sf::Vector2i position, oldPosition, velocity, halfSize;
+			sf::Vector2i velocity;
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
 			void integrate(float mFrameTime);
-			void resolve(Body* mBody);
+			void resolve(const AABB& mShape);
 
 		public:
 			ssvs::Delegate<void, CollisionInfo> onCollision;
@@ -42,28 +44,15 @@ namespace ssvsc
 			void setPosition(sf::Vector2i mPosition);
 			void setVelocity(sf::Vector2i mVelocity);
 			void setStatic(bool mStatic);
+			void setUserData(void* mUserData);
+			AABB& getShape();
+			AABB& getOldShape();
 			const std::vector<std::string>& getGroups();
 			const std::vector<std::string>& getGroupsToCheck();
 			sf::Vector2i getPosition();
-			sf::Vector2i getVelocity();
-			void* getUserData();
-			int getX();
-			int getY();
-			int getLeft();
-			int getRight();
-			int getTop();
-			int getBottom();
-			int getOldX();
-			int getOldY();
-			int getOldLeft();
-			int getOldRight();
-			int getOldTop();
-			int getOldBottom();
-			int getHalfWidth();
-			int getHalfHeight();
-			int getWidth();
-			int getHeight();
+			sf::Vector2i getVelocity();			
 			bool getStatic();
+			void* getUserData();
 	};
 }
 
