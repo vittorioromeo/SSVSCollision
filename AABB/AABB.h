@@ -13,7 +13,10 @@ namespace ssvsc
 		public:
 			AABB(sf::Vector2i mPosition, sf::Vector2i mHalfSize);
 
+			void move(sf::Vector2i mOffset);
+
 			void setPosition(sf::Vector2i mPosition);
+			void setHalfSize(sf::Vector2i mHalfSize);
 			sf::Vector2i getPosition() const;
 			int getX() const;
 			int getY() const;

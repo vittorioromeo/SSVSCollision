@@ -8,13 +8,15 @@ namespace ssvsc
 	AABB& Body::getShape()								{ return shape; }
 	AABB& Body::getOldShape() 							{ return oldShape; }
 	void Body::setPosition(Vector2i mPosition) 			{ shape.setPosition(mPosition); }
-	void Body::setVelocity(Vector2i mVelocity) 			{ velocity = mVelocity; }
+	void Body::setVelocity(Vector2f mVelocity) 			{ velocity = mVelocity; }
+	void Body::setAcceleration(Vector2f mAcceleration)	{ acceleration = mAcceleration; }
 	void Body::setStatic(bool mStatic) 					{ isStatic = mStatic; }
 	void Body::setUserData(void* mUserData) 			{ userData = mUserData; }
 	const vector<string>& Body::getGroups()				{ return groups; }
 	const vector<string>& Body::getGroupsToCheck()		{ return groupsToCheck; }
-	Vector2i Body::getPosition() 						{ return shape.getPosition(); }
-	Vector2i Body::getVelocity() 						{ return velocity; }
-	bool Body::getStatic() 								{ return isStatic; }
-	void* Body::getUserData()							{ return userData; }
+	Vector2i Body::getPosition() const					{ return shape.getPosition(); }
+	Vector2f Body::getVelocity() const					{ return velocity; }
+	Vector2f Body::getAcceleration() const				{ return acceleration; }
+	bool Body::getStatic() const						{ return isStatic; }
+	void* Body::getUserData() const						{ return userData; }
 }

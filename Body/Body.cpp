@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <sparsehash/dense_hash_set>
 #include <stack>
 #include "Body.h"
 #include "Grid/Cell.h"
@@ -8,11 +7,12 @@
 
 using namespace std;
 using namespace sf;
-using namespace google;
 using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
+	constexpr int resolutions = 1;
+
 	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, int mWidth, int mHeight) : world(mWorld), grid(world.getGrid()),
 		gridInfo{grid, *this}, shape{mPosition, {mWidth / 2, mHeight / 2}}, oldShape{shape}, isStatic{mIsStatic} { }
 
@@ -25,6 +25,8 @@ namespace ssvsc
 		gridInfo.preUpdate();
 
 		if(isStatic) return;
+
+		oldShape = shape;
 		integrate(mFrameTime);
 		vector<AABB> shapesToResolve;
 
@@ -38,24 +40,25 @@ namespace ssvsc
 			if(!containsAny(body->getGroups(), groupsNoResolve)) shapesToResolve.push_back(body->getShape());
 		}
 
-		if(false)
+		if(!shapesToResolve.empty())
 		{
-			sort(shapesToResolve, [&](const AABB& mA, const AABB& mB){ return getOverlapArea(shape, mA) > getOverlapArea(shape, mB); });
-			for(auto& s : shapesToResolve) shape.setPosition(shape.getPosition() + getMinIntersection(shape, s));
-		}
-		else
-		{
-			vector<AABB> finalToResolve = shapesToResolve;
+			if(velocity.x < 0) shapesToResolve = getMergedAABBSLeft(shapesToResolve);
+			else if(velocity.x > 0) shapesToResolve = getMergedAABBSRight(shapesToResolve);
 
-			if(oldShape.getX() > shape.getX()) finalToResolve = getMergedAABBSLeft(finalToResolve);
-			else if(oldShape.getX() < shape.getX()) finalToResolve = getMergedAABBSRight(finalToResolve);
+			if(velocity.y < 0) shapesToResolve = getMergedAABBSTop(shapesToResolve);
+			else if(velocity.y > 0) shapesToResolve = getMergedAABBSBottom(shapesToResolve);
 
-			if(oldShape.getY() > shape.getY()) finalToResolve = getMergedAABBSTop(finalToResolve);
-			else if(oldShape.getY() < shape.getY()) finalToResolve = getMergedAABBSBottom(finalToResolve);
-
-			vector<Vector2i> rVecs;
-			for(auto& s : finalToResolve) rVecs.push_back(getMinIntersection(shape, s));
-			if(!rVecs.empty()) shape.setPosition(shape.getPosition() + accumulate(begin(rVecs), end(rVecs), Vector2i{0, 0}) / (int) rVecs.size());
+			for(int i{0}; i < resolutions; ++i)
+			{
+				Vector2i rVec{0, 0};
+				for(auto& s : shapesToResolve) rVec += getMinIntersection(shape, s);
+				//shape.move(rVec / static_cast<int>(shapesToResolve.size()));
+				shape.move(rVec);
+				//applyForce(Vector2f(rVec / static_cast<int>(shapesToResolve.size())));
+				//velocity = Vector2f(rVec / static_cast<int>(shapesToResolve.size()));
+				//velocity = Vector2f(rVec);
+				if(rVec.x < rVec.y) velocity.x = 0; else velocity.y = 0;
+			}
 		}
 
 		gridInfo.postUpdate();
@@ -63,10 +66,12 @@ namespace ssvsc
 
 	void Body::integrate(float mFrameTime)
 	{
-		Vector2f tempVelocity{velocity.x * mFrameTime, velocity.y * mFrameTime};
-		Vector2f tempPosition{shape.getX() + tempVelocity.x, shape.getY() + tempVelocity.y};
-		oldShape = shape;
-		shape.setPosition(Vector2i(tempPosition.x, tempPosition.y));
+		velocity += acceleration * mFrameTime;
+		shape.move(Vector2i(velocity * mFrameTime));
+
+		acceleration = {0, 0};
 	}
+
+	void Body::applyForce(sf::Vector2f mForce) { acceleration += mForce; }
 }
 

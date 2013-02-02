@@ -6,7 +6,10 @@ namespace ssvsc
 {
 	AABB::AABB(Vector2i mPosition, Vector2i mHalfSize) : position{mPosition}, halfSize{mHalfSize} { }
 
+	void AABB::move(sf::Vector2i mOffset) { position += mOffset; }
+
 	void AABB::setPosition(Vector2i mPosition) 	{ position = mPosition; }
+	void AABB::setHalfSize(Vector2i mHalfSize)	{ halfSize = mHalfSize; }
 	Vector2i AABB::getPosition() const 			{ return position; }
 	int AABB::getX() const 						{ return position.x; }
 	int AABB::getY() const 						{ return position.y; }
@@ -21,4 +24,3 @@ namespace ssvsc
 
 	bool AABB::operator==(const AABB& mOther) const { return position == mOther.position && halfSize == mOther.halfSize; }
 }
-

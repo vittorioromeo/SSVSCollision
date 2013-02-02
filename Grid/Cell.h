@@ -24,10 +24,10 @@ namespace ssvsc
 
 			// Properties
 			std::vector<Body*>* getQuery(const std::string& mGroup);
-			int getLeft();
-			int getRight();
-			int getTop();
-			int getBottom();
+			int getLeft() const;
+			int getRight() const;
+			int getTop() const;
+			int getBottom() const;
 	};
 }
 

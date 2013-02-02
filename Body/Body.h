@@ -23,7 +23,7 @@ namespace ssvsc
 			GridInfo gridInfo;
 			AABB shape, oldShape;
 			bool isStatic;
-			sf::Vector2i velocity;
+			sf::Vector2f velocity, acceleration;
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData;
 
@@ -40,18 +40,22 @@ namespace ssvsc
 			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
 			void update(float mFrameTime);
 
+			void applyForce(sf::Vector2f mForce);
+
 			void setPosition(sf::Vector2i mPosition);
-			void setVelocity(sf::Vector2i mVelocity);
+			void setVelocity(sf::Vector2f mVelocity);
+			void setAcceleration(sf::Vector2f mAcceleration);
 			void setStatic(bool mStatic);
 			void setUserData(void* mUserData);
 			AABB& getShape();
 			AABB& getOldShape();
 			const std::vector<std::string>& getGroups();
 			const std::vector<std::string>& getGroupsToCheck();
-			sf::Vector2i getPosition();
-			sf::Vector2i getVelocity();			
-			bool getStatic();
-			void* getUserData();
+			sf::Vector2i getPosition() const;
+			sf::Vector2f getVelocity() const;
+			sf::Vector2f getAcceleration() const;
+			bool getStatic() const;
+			void* getUserData() const;
 	};
 }
 

@@ -15,9 +15,9 @@ namespace ssvsc
 
 	// Properties
 	vector<Body*>* Cell::getQuery(const string& mGroup) { return &bodies[mGroup]; }
-	int Cell::getLeft() 	{ return left; }
-	int Cell::getRight() 	{ return right; }
-	int Cell::getTop() 		{ return top; }
-	int Cell::getBottom() 	{ return bottom; }
+	int Cell::getLeft() const	{ return left; }
+	int Cell::getRight() const 	{ return right; }
+	int Cell::getTop() const 	{ return top; }
+	int Cell::getBottom() const { return bottom; }
 }
 
