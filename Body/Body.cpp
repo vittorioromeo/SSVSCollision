@@ -13,8 +13,8 @@ namespace ssvsc
 {
 	constexpr int resolutions = 1;
 
-	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, int mWidth, int mHeight) : world(mWorld), grid(world.getGrid()),
-		gridInfo{grid, *this}, shape{mPosition, {mWidth / 2, mHeight / 2}}, oldShape{shape}, isStatic{mIsStatic} { }
+	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), grid(world.getGrid()),
+		gridInfo{grid, *this}, shape{mPosition, mSize / 2}, oldShape{shape}, isStatic{mIsStatic} { }
 
 	void Body::addGroups(const vector<string>& mGroups) { for(auto& group : mGroups) groups.push_back(group); gridInfo.invalidate(); }
 	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); gridInfo.invalidate(); }
@@ -52,12 +52,19 @@ namespace ssvsc
 			{
 				Vector2i rVec{0, 0};
 				for(auto& s : shapesToResolve) rVec += getMinIntersection(shape, s);
-				//shape.move(rVec / static_cast<int>(shapesToResolve.size()));
+
 				shape.move(rVec);
-				//applyForce(Vector2f(rVec / static_cast<int>(shapesToResolve.size())));
+				if(abs(rVec.x) > abs(rVec.y)) velocity.x = 0; else velocity.y = 0;
+				
+				//velocity = Vector2f(rVec);
+				//shape.move(rVec);
+				//if(abs(rVec.x) > abs(rVec.y)) velocity.x = 0; else velocity.y = 0;
+				//shape.move(rVec / static_cast<int>(shapesToResolve.size()));
+				//applyForce(Vector2f(rVec) / 4.f);
 				//velocity = Vector2f(rVec / static_cast<int>(shapesToResolve.size()));
 				//velocity = Vector2f(rVec);
-				if(rVec.x < rVec.y) velocity.x = 0; else velocity.y = 0;
+				//velocity = Vector2f(rVec);
+				//acceleration = Vector2f(rVec) * 0.5f;
 			}
 		}
 
@@ -73,5 +80,7 @@ namespace ssvsc
 	}
 
 	void Body::applyForce(sf::Vector2f mForce) { acceleration += mForce; }
+
+	void Body::destroy() { world.del(this); }
 }
 

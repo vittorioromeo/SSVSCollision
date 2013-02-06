@@ -33,7 +33,7 @@ namespace ssvsc
 			ssvs::Delegate<void, CollisionInfo> onCollision;
 			ssvs::Delegate<void> onOutOfBounds;
 
-			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, int mWidth, int mHeight);
+			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			
 			void addGroups(const std::vector<std::string>& mGroups);
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
@@ -41,6 +41,8 @@ namespace ssvsc
 			void update(float mFrameTime);
 
 			void applyForce(sf::Vector2f mForce);
+
+			void destroy();
 
 			void setPosition(sf::Vector2i mPosition);
 			void setVelocity(sf::Vector2f mVelocity);
