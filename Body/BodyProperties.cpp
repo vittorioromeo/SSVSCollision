@@ -11,7 +11,7 @@ namespace ssvsc
 {
 	AABB& Body::getShape()								{ return shape; }
 	AABB& Body::getOldShape() 							{ return oldShape; }
-	void Body::setPosition(Vector2i mPosition) 			{ shape.setPosition(mPosition); }
+	void Body::setPosition(Vector2i mPosition) 			{ shape.setPosition(mPosition); gridInfo.invalidate(); }
 	void Body::setVelocity(Vector2f mVelocity) 			{ velocity = mVelocity; }
 	void Body::setAcceleration(Vector2f mAcceleration)	{ acceleration = mAcceleration; }
 	void Body::setStatic(bool mStatic) 					{ isStatic = mStatic; }

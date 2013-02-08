@@ -38,8 +38,10 @@ namespace ssvsc
 		{
 			if(body == this || !isOverlapping(shape, body->getShape())) continue;
 
-			onCollision({body, mFrameTime, body->getUserData()});
-			body->onCollision({this, mFrameTime, userData});
+			auto intersection = getIntersection(shape, body->getShape());
+
+			onCollision({body, mFrameTime, body->getUserData(), intersection});
+			body->onCollision({this, mFrameTime, userData, -intersection});
 
 			if(!containsAny(body->getGroups(), groupsNoResolve)) shapesToResolve.push_back(body->getShape());
 		}

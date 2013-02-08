@@ -5,10 +5,19 @@
 #ifndef COLLISIONINFO_H
 #define COLLISIONINFO_H
 
+#include <SFML/Graphics.hpp>
+
 namespace ssvsc
 {
 	class Body;
-	struct CollisionInfo { Body* body; float frameTime; void* userData; };
+
+	struct CollisionInfo
+	{
+		Body* body;
+		float frameTime;
+		void* userData;
+		sf::Vector2i intersection;
+	};
 }
 
 #endif // COLLISIONINFO_H

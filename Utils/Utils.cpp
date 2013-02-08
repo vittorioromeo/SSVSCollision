@@ -21,6 +21,7 @@ namespace ssvsc
 			int top{mB.getTop() - mA.getBottom()}, bottom{mB.getBottom() - mA.getTop()};
 			return abs(top) < abs(bottom) ? top : bottom;
 		}
+		Vector2i getIntersection(const AABB& mA, const AABB& mB) { return {getIntersectionX(mA, mB), getIntersectionY(mA, mB)}; }
 		Vector2i getMinIntersection(const AABB& mA, const AABB& mB)
 		{
 			int iX{getIntersectionX(mA, mB)}, iY{getIntersectionY(mA, mB)};

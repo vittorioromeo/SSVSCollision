@@ -29,12 +29,13 @@ namespace ssvsc
 			bool isStatic;
 			sf::Vector2f velocity, acceleration;
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
-			void* userData;
+			void* userData{nullptr};
 
 			void integrate(float mFrameTime);
 
 		public:
 			ssvs::Delegate<void, CollisionInfo> onCollision;
+			ssvs::Delegate<void, CollisionInfo> onResolution;
 			ssvs::Delegate<void> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);

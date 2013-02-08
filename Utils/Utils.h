@@ -22,6 +22,7 @@ namespace ssvsc
 
 		int getIntersectionX(const AABB& mA, const AABB& mB);
 		int getIntersectionY(const AABB& mA, const AABB& mB);
+		sf::Vector2i getIntersection(const AABB& mA, const AABB& mB);
 		sf::Vector2i getMinIntersection(const AABB& mA, const AABB& mB);
 		int getOverlapArea(const AABB& mA, const AABB& mB);
 		bool isOverlapping(const AABB& mA, const AABB& mB);
