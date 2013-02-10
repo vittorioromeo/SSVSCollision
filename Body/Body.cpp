@@ -15,8 +15,6 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	//constexpr int resolutions = 1;
-
 	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), grid(world.getGrid()),
 		gridInfo{grid, *this}, shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 

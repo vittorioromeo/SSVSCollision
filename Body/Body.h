@@ -47,19 +47,23 @@ namespace ssvsc
 			void applyForce(sf::Vector2f mForce);
 			void destroy();
 
-			void setX(int mX);
-			void setY(int mY);
-			void setVelocityX(float mX);
-			void setVelocityY(float mY);
+			// Setters
 			void setPosition(sf::Vector2i mPosition);
 			void setVelocity(sf::Vector2f mVelocity);
 			void setAcceleration(sf::Vector2f mAcceleration);
 			void setStatic(bool mStatic);
 			void setUserData(void* mUserData);
+			void setX(int mX);
+			void setY(int mY);
+			void setVelocityX(float mX);
+			void setVelocityY(float mY);
+			
+			// Getters
 			AABB& getShape();
 			AABB& getOldShape();
 			const std::vector<std::string>& getGroups();
 			const std::vector<std::string>& getGroupsToCheck();
+			const std::vector<std::string>& getGroupsNoResolve();
 			sf::Vector2i getPosition() const;
 			sf::Vector2f getVelocity() const;
 			sf::Vector2f getAcceleration() const;
