@@ -15,7 +15,7 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	constexpr int resolutions = 1;
+	//constexpr int resolutions = 1;
 
 	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), grid(world.getGrid()),
 		gridInfo{grid, *this}, shape{mPosition, mSize / 2}, oldShape{shape}, isStatic{mIsStatic} { }
@@ -54,23 +54,11 @@ namespace ssvsc
 			if(velocity.y < 0) shapesToResolve = getMergedAABBSTop(shapesToResolve);
 			else if(velocity.y > 0) shapesToResolve = getMergedAABBSBottom(shapesToResolve);
 
-			for(int i{0}; i < resolutions; ++i)
+			for(auto& s : shapesToResolve)
 			{
-				Vector2i rVec{0, 0};
-				for(auto& s : shapesToResolve) rVec += getMinIntersection(shape, s);
-
-				shape.move(rVec);
-				if(abs(rVec.x) > abs(rVec.y)) velocity.x = 0; else velocity.y = 0;
-				
-				//velocity = Vector2f(rVec);
-				//shape.move(rVec);
-				//if(abs(rVec.x) > abs(rVec.y)) velocity.x = 0; else velocity.y = 0;
-				//shape.move(rVec / static_cast<int>(shapesToResolve.size()));
-				//applyForce(Vector2f(rVec) / 4.f);
-				//velocity = Vector2f(rVec / static_cast<int>(shapesToResolve.size()));
-				//velocity = Vector2f(rVec);
-				//velocity = Vector2f(rVec);
-				//acceleration = Vector2f(rVec) * 0.5f;
+				shape.move(getMinIntersection(shape, s));
+				if(oldShape.isLeftOf(s) || oldShape.isRightOf(s)) velocity.x = 0;
+				else if(oldShape.isAbove(s) || oldShape.isBelow(s)) velocity.y = 0;
 			}
 		}
 

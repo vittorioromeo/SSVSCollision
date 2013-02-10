@@ -49,6 +49,10 @@ namespace ssvsc
 
 			void destroy();
 
+			void setX(int mX);
+			void setY(int mY);
+			void setVelocityX(float mX);
+			void setVelocityY(float mY);
 			void setPosition(sf::Vector2i mPosition);
 			void setVelocity(sf::Vector2f mVelocity);
 			void setAcceleration(sf::Vector2f mAcceleration);
@@ -63,6 +67,10 @@ namespace ssvsc
 			sf::Vector2f getAcceleration() const;
 			bool getStatic() const;
 			void* getUserData() const;
+			bool hasMovedLeft() const;
+			bool hasMovedRight() const;
+			bool hasMovedUp() const;
+			bool hasMovedDown() const;
 	};
 }
 
