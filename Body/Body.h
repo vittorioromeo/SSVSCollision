@@ -26,7 +26,7 @@ namespace ssvsc
 			Grid& grid;
 			GridInfo gridInfo;
 			AABB shape, oldShape;
-			bool isStatic;
+			bool _static;
 			sf::Vector2f velocity, acceleration;
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData{nullptr};
@@ -35,8 +35,8 @@ namespace ssvsc
 
 		public:
 			ssvs::Delegate<void, CollisionInfo> onCollision;
-			ssvs::Delegate<void, CollisionInfo> onResolution;
-			ssvs::Delegate<void> onOutOfBounds;
+			ssvs::Delegate<void, CollisionInfo> onResolution; // TODO
+			ssvs::Delegate<void> onOutOfBounds; // TODO
 
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			
@@ -44,9 +44,7 @@ namespace ssvsc
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
 			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
 			void update(float mFrameTime);
-
 			void applyForce(sf::Vector2f mForce);
-
 			void destroy();
 
 			void setX(int mX);
@@ -65,7 +63,7 @@ namespace ssvsc
 			sf::Vector2i getPosition() const;
 			sf::Vector2f getVelocity() const;
 			sf::Vector2f getAcceleration() const;
-			bool getStatic() const;
+			bool isStatic() const;
 			void* getUserData() const;
 			bool hasMovedLeft() const;
 			bool hasMovedRight() const;

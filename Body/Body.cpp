@@ -18,7 +18,7 @@ namespace ssvsc
 	//constexpr int resolutions = 1;
 
 	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), grid(world.getGrid()),
-		gridInfo{grid, *this}, shape{mPosition, mSize / 2}, oldShape{shape}, isStatic{mIsStatic} { }
+		gridInfo{grid, *this}, shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 
 	void Body::addGroups(const vector<string>& mGroups) { for(auto& group : mGroups) groups.push_back(group); gridInfo.invalidate(); }
 	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); gridInfo.invalidate(); }
@@ -28,7 +28,7 @@ namespace ssvsc
 	{
 		gridInfo.preUpdate();
 
-		if(isStatic) return;
+		if(_static) return;
 
 		oldShape = shape;
 		integrate(mFrameTime);
