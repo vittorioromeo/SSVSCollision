@@ -57,6 +57,9 @@ namespace ssvsc
 			void setY(int mY);
 			void setVelocityX(float mX);
 			void setVelocityY(float mY);
+			void setSize(sf::Vector2i mSize);
+			void setWidth(int mWidth);
+			void setHeight(int mHeight);
 			
 			// Getters
 			AABB& getShape();
@@ -67,6 +70,9 @@ namespace ssvsc
 			sf::Vector2i getPosition() const;
 			sf::Vector2f getVelocity() const;
 			sf::Vector2f getAcceleration() const;
+			sf::Vector2i getSize() const;
+			int getWidth() const;
+			int getHeight() const;
 			bool isStatic() const;
 			void* getUserData() const;
 			bool hasMovedLeft() const;

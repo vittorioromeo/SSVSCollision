@@ -23,6 +23,9 @@ namespace ssvsc
 			void setY(int mY);
 			void setPosition(sf::Vector2i mPosition);
 			void setHalfSize(sf::Vector2i mHalfSize);
+			void setSize(sf::Vector2i mSize);
+			void setWidth(int mWidth);
+			void setHeight(int mHeight);
 			sf::Vector2i getPosition() const;
 			int getX() const;
 			int getY() const;
@@ -34,6 +37,7 @@ namespace ssvsc
 			int getHalfHeight() const;
 			int getWidth() const;
 			int getHeight() const;
+			sf::Vector2i getSize() const;
 			bool isLeftOf(const AABB& mAABB) const;
 			bool isRightOf(const AABB& mAABB) const;
 			bool isAbove(const AABB& mAABB) const;

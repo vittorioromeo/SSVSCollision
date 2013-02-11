@@ -18,6 +18,9 @@ namespace ssvsc
 	void Body::setY(int mY)				 				{ shape.setY(mY); gridInfo.invalidate(); }
 	void Body::setVelocityX(float mX)				 	{ velocity.x = mX; }
 	void Body::setVelocityY(float mY)				 	{ velocity.y = mY; }
+	void Body::setSize(Vector2i mSize)					{ shape.setSize(mSize); gridInfo.invalidate(); }
+	void Body::setWidth(int mWidth)						{ shape.setWidth(mWidth); gridInfo.invalidate(); }
+	void Body::setHeight(int mHeight)					{ shape.setHeight(mHeight); gridInfo.invalidate(); }
 
 	AABB& Body::getShape()								{ return shape; }
 	AABB& Body::getOldShape() 							{ return oldShape; }
@@ -27,6 +30,9 @@ namespace ssvsc
 	Vector2i Body::getPosition() const					{ return shape.getPosition(); }
 	Vector2f Body::getVelocity() const					{ return velocity; }
 	Vector2f Body::getAcceleration() const				{ return acceleration; }
+	Vector2i Body::getSize() const						{ return shape.getSize(); }
+	int Body::getWidth() const							{ return shape.getWidth(); }
+	int Body::getHeight() const							{ return shape.getHeight(); }
 	bool Body::isStatic() const							{ return _static; }
 	void* Body::getUserData() const						{ return userData; }
 	bool Body::hasMovedLeft() const						{ return shape.getX() < oldShape.getX(); }
