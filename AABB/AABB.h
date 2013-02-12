@@ -19,13 +19,14 @@ namespace ssvsc
 
 			void move(sf::Vector2i mOffset);
 
+			void setPosition(sf::Vector2i mPosition);
 			void setX(int mX);
 			void setY(int mY);
-			void setPosition(sf::Vector2i mPosition);
 			void setHalfSize(sf::Vector2i mHalfSize);
 			void setSize(sf::Vector2i mSize);
 			void setWidth(int mWidth);
 			void setHeight(int mHeight);
+			
 			sf::Vector2i getPosition() const;
 			int getX() const;
 			int getY() const;
@@ -33,11 +34,13 @@ namespace ssvsc
 			int getRight() const;
 			int getTop() const;
 			int getBottom() const;
+			sf::Vector2i getHalfSize() const;
 			int getHalfWidth() const;
 			int getHalfHeight() const;
+			sf::Vector2i getSize() const;
 			int getWidth() const;
 			int getHeight() const;
-			sf::Vector2i getSize() const;
+
 			bool isLeftOf(const AABB& mAABB) const;
 			bool isRightOf(const AABB& mAABB) const;
 			bool isAbove(const AABB& mAABB) const;

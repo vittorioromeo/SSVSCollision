@@ -24,7 +24,7 @@ namespace ssvsc
 	Grid::~Grid() { for(auto& vector : cells) for(auto& cell : vector) delete cell; }
 
 	Cell* Grid::getCell(int mX, int mY) { return cells[mX + offset][mY + offset]; }
-	int Grid::getIndex(int mValue) { return mValue / cellSize; }
-	bool Grid::isOutside(int mStartX, int mStartY, int mEndX, int mEndY) { return mStartX < 0 || mEndX >= columns || mStartY < 0 || mEndY >= rows; }
+	int Grid::getIndex(int mValue) const { return mValue / cellSize; }
+	bool Grid::isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const { return mStartX < 0 || mEndX >= columns || mStartY < 0 || mEndY >= rows; }
 }
 

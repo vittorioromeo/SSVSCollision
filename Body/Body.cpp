@@ -38,8 +38,8 @@ namespace ssvsc
 
 			auto intersection = getIntersection(shape, body->getShape());
 
-			onCollision({body, mFrameTime, body->getUserData(), intersection});
-			body->onCollision({this, mFrameTime, userData, -intersection});
+			onCollision({*body, mFrameTime, body->getUserData(), intersection});
+			body->onCollision({*this, mFrameTime, userData, -intersection});
 
 			if(!containsAny(body->getGroups(), groupsNoResolve)) shapesToResolve.push_back(body->getShape());
 		}

@@ -22,8 +22,8 @@ namespace ssvsc
 			~Grid();
 
 			Cell* getCell(int mX, int mY);
-			int getIndex(int mValue);
-			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY);
+			int getIndex(int mValue) const;
+			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const;
 	};
 }
 

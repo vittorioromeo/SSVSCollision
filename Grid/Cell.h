@@ -24,14 +24,14 @@ namespace ssvsc
 
 			void add(Body* mBody);
 			void del(Body* mBody);
-			bool hasGroup(const std::string& mGroup);
 
-			// Properties
 			std::vector<Body*>* getQuery(const std::string& mGroup);
 			int getLeft() const;
 			int getRight() const;
 			int getTop() const;
 			int getBottom() const;
+
+			bool hasGroup(const std::string& mGroup) const;
 	};
 }
 

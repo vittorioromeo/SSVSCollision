@@ -9,10 +9,9 @@
 #include <algorithm>
 #include <SFML/Graphics.hpp>
 #include "Body/Body.h"
-#include "AABB/AABB.h"
 
 namespace ssvsc
-{
+{	
 	namespace Utils
 	{
 		template<typename T, typename V> bool contains(const T& mItems, const V& mValue) { return std::find(std::begin(mItems),std::end(mItems), mValue) != std::end(mItems); }

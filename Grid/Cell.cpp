@@ -15,13 +15,13 @@ namespace ssvsc
 
 	void Cell::add(Body* mBody) { for(auto group : mBody->getGroups()) bodies[group].push_back(mBody); }
 	void Cell::del(Body* mBody) { for(auto group : mBody->getGroups()) eraseRemove(bodies[group], mBody); }
-	bool Cell::hasGroup(const string& mGroup) { return bodies.count(mGroup) > 0; }
 
-	// Properties
 	vector<Body*>* Cell::getQuery(const string& mGroup) { return &bodies[mGroup]; }
 	int Cell::getLeft() const	{ return left; }
 	int Cell::getRight() const 	{ return right; }
 	int Cell::getTop() const 	{ return top; }
 	int Cell::getBottom() const { return bottom; }
+	
+	bool Cell::hasGroup(const string& mGroup) const { return bodies.count(mGroup) > 0; }
 }
 

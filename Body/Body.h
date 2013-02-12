@@ -17,7 +17,6 @@ namespace ssvsc
 {
 	class World;
 	class Grid;
-	class Cell;
 
 	class Body
 	{

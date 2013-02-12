@@ -13,7 +13,7 @@ namespace ssvsc
 
 	struct CollisionInfo
 	{
-		Body* body;
+		Body& body;
 		float frameTime;
 		void* userData;
 		sf::Vector2i intersection;
