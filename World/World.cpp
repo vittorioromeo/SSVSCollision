@@ -14,11 +14,11 @@ namespace ssvsc
 	World::World(int mColumns, int mRows, int mCellSize, int mOffset) : grid{mColumns, mRows, mCellSize, mOffset} { bodiesToDel.set_empty_key(nullptr); }
 	World::~World() { for(auto& body : bodies) delete body; }
 
-	Body* World::create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic)
+	Body& World::create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic)
 	{
 		Body* result{new Body{*this, mIsStatic, mPosition, mSize}};
 		add(result);
-		return result;
+		return *result;
 	}
 
 	void World::add(Body* mBody) { bodies.push_back(mBody); }

@@ -30,7 +30,7 @@ namespace ssvsc
 			World(int mColumns, int mRows, int mCellSize, int mOffset = 0);
 			~World();
 
-			Body* create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
+			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
 			void update(float mFrameTime);			
 
 			Grid& getGrid();
