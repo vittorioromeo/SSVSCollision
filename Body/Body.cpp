@@ -54,9 +54,31 @@ namespace ssvsc
 
 			for(auto& s : shapesToResolve)
 			{
-				shape.move(getMinIntersection(shape, s));
-				if(oldShape.isLeftOf(s) || oldShape.isRightOf(s)) velocity.x = 0;
-				else if(oldShape.isAbove(s) || oldShape.isBelow(s)) velocity.y = 0;
+				bool notResolved{true};
+
+				if(oldShape.isLeftOf(s))
+				{
+					shape.move({s.getLeft() - shape.getRight(), 0});
+					velocity.x = 0; notResolved = false;
+				}
+				else if(oldShape.isRightOf(s))
+				{
+					shape.move({s.getRight() - shape.getLeft(), 0});
+					velocity.x = 0; notResolved = false;
+				}
+
+				if(oldShape.isAbove(s))
+				{
+					shape.move({0, s.getTop() - shape.getBottom()});
+					velocity.y = 0; continue;
+				}
+				else if(oldShape.isBelow(s))
+				{
+					shape.move({0, s.getBottom() - shape.getTop()});
+					velocity.y = 0; continue;
+				}
+
+				if(notResolved) shape.move(getMinIntersection(shape, s));
 			}
 		}
 
