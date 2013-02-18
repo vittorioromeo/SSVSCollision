@@ -19,20 +19,12 @@ namespace ssvsc
 		template<typename T, typename V> void eraseRemove(T& mItems, const V& mValue) { mItems.erase(std::remove(std::begin(mItems), std::end(mItems), mValue), std::end(mItems)); }
 		template<typename T, typename P> void sort(T& mItems, P mPredicate) { std::sort(std::begin(mItems), std::end(mItems), mPredicate); }
 
-		int getIntersectionX(const AABB& mA, const AABB& mB);
-		int getIntersectionY(const AABB& mA, const AABB& mB);
-		sf::Vector2i getIntersection(const AABB& mA, const AABB& mB);
+		int getMinIntersectionX(const AABB& mA, const AABB& mB);
+		int getMinIntersectionY(const AABB& mA, const AABB& mB);
 		sf::Vector2i getMinIntersection(const AABB& mA, const AABB& mB);
+		sf::Vector2i getMin1DIntersection(const AABB& mA, const AABB& mB);
 		int getOverlapArea(const AABB& mA, const AABB& mB);
 		bool isOverlapping(const AABB& mA, const AABB& mB);
-
-		AABB getMergedAABBHorizontally(const AABB& mA, const AABB& mB);
-		AABB getMergedAABBVertically(const AABB& mA, const AABB& mB);
-
-		std::vector<AABB> getMergedAABBSLeft(std::vector<AABB> mSource);
-		std::vector<AABB> getMergedAABBSRight(std::vector<AABB> mSource);
-		std::vector<AABB> getMergedAABBSTop(std::vector<AABB> mSource);
-		std::vector<AABB> getMergedAABBSBottom(std::vector<AABB> mSource);
 	}
 }
 

@@ -6,6 +6,7 @@
 #include <stack>
 #include "Body.h"
 #include "Grid/Cell.h"
+#include "Utils/Merge.h"
 #include "Utils/Utils.h"
 #include "World/World.h"
 
@@ -36,7 +37,7 @@ namespace ssvsc
 		{
 			if(body == this || !isOverlapping(shape, body->getShape())) continue;
 
-			auto intersection = getIntersection(shape, body->getShape());
+			auto intersection = getMinIntersection(shape, body->getShape());
 
 			onCollision({*body, mFrameTime, body->getUserData(), intersection});
 			body->onCollision({*this, mFrameTime, userData, -intersection});
@@ -46,11 +47,11 @@ namespace ssvsc
 
 		if(!shapesToResolve.empty())
 		{
-			if(velocity.x < 0) shapesToResolve = getMergedAABBSLeft(shapesToResolve);
-			else if(velocity.x > 0) shapesToResolve = getMergedAABBSRight(shapesToResolve);
+			if(velocity.x < 0) shapesToResolve = getMergedAABBs<Side::Left>(shapesToResolve);
+			else if(velocity.x > 0) shapesToResolve = getMergedAABBs<Side::Right>(shapesToResolve);
 
-			if(velocity.y < 0) shapesToResolve = getMergedAABBSTop(shapesToResolve);
-			else if(velocity.y > 0) shapesToResolve = getMergedAABBSBottom(shapesToResolve);
+			if(velocity.y < 0) shapesToResolve = getMergedAABBs<Side::Top>(shapesToResolve);
+			else if(velocity.y > 0) shapesToResolve = getMergedAABBs<Side::Bottom>(shapesToResolve);
 
 			for(auto& s : shapesToResolve)
 			{
@@ -78,7 +79,7 @@ namespace ssvsc
 					velocity.y = 0; continue;
 				}
 
-				if(notResolved) shape.move(getMinIntersection(shape, s));
+				if(notResolved) shape.move(getMin1DIntersection(shape, s));
 			}
 		}
 
