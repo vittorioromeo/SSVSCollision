@@ -25,6 +25,12 @@ namespace ssvsc
 
 	Cell* Grid::getCell(int mX, int mY) { return cells[mX + offset][mY + offset]; }
 	int Grid::getIndex(int mValue) const { return mValue / cellSize; }
-	bool Grid::isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const { return mStartX < 0 || mEndX >= columns || mStartY < 0 || mEndY >= rows; }
+	bool Grid::isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const
+	{
+		return mStartX < 0 - offset ||
+		mEndX >= columns - offset ||
+		mStartY < 0 - offset ||
+		mEndY >= rows - offset; 
+	}
 }
 

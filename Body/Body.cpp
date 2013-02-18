@@ -28,6 +28,7 @@ namespace ssvsc
 		gridInfo.preUpdate();
 
 		if(_static) return;
+		if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
 
 		oldShape = shape;
 		integrate(mFrameTime);

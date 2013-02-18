@@ -21,6 +21,7 @@ namespace ssvsc
 	void Body::setSize(Vector2i mSize)					{ shape.setSize(mSize); gridInfo.invalidate(); }
 	void Body::setWidth(int mWidth)						{ shape.setWidth(mWidth); gridInfo.invalidate(); }
 	void Body::setHeight(int mHeight)					{ shape.setHeight(mHeight); gridInfo.invalidate(); }
+	void Body::setOutOfBounds(bool mOutOfBounds)		{ outOfBounds = mOutOfBounds; }
 
 	AABB& Body::getShape()								{ return shape; }
 	AABB& Body::getOldShape() 							{ return oldShape; }

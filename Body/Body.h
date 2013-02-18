@@ -25,7 +25,7 @@ namespace ssvsc
 			Grid& grid;
 			GridInfo gridInfo;
 			AABB shape, oldShape;
-			bool _static;
+			bool _static, outOfBounds{false};
 			sf::Vector2f velocity, acceleration;
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData{nullptr};
@@ -59,6 +59,7 @@ namespace ssvsc
 			void setSize(sf::Vector2i mSize);
 			void setWidth(int mWidth);
 			void setHeight(int mHeight);
+			void setOutOfBounds(bool mOutOfBounds);
 			
 			// Getters
 			AABB& getShape();
