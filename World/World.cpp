@@ -31,5 +31,5 @@ namespace ssvsc
 		for(auto& body : bodies) body->update(mFrameTime);
 	}
 
-	SpatialBase& World::getGrid() { return *spatial; }
+	SpatialBase& World::getSpatial() { return *spatial; }
 }

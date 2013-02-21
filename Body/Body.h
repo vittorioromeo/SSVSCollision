@@ -34,7 +34,7 @@ namespace ssvsc
 		public:
 			ssvs::Delegate<void, CollisionInfo> onCollision;
 			ssvs::Delegate<void, CollisionInfo> onResolution; // TODO
-			ssvs::Delegate<void> onOutOfBounds; // TODO
+			ssvs::Delegate<void> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();

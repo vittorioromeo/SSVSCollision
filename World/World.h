@@ -8,10 +8,10 @@
 #include <vector>
 #include <sparsehash/dense_hash_set>
 #include <SFML/Graphics.hpp>
-#include "Spatial/SpatialBase.h"
 
 namespace ssvsc
 {
+	class SpatialBase;
 	class Body;
 
 	class World
@@ -38,7 +38,7 @@ namespace ssvsc
 			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
 			void update(float mFrameTime);			
 
-			SpatialBase& getGrid();
+			SpatialBase& getSpatial();
 	};
 }
 
