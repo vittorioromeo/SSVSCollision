@@ -2,6 +2,7 @@
 #define SPATIALINFOBASE_H
 
 #include <sparsehash/dense_hash_set>
+#include "Spatial/SpatialBase.h"
 
 namespace ssvsc
 {
@@ -9,15 +10,20 @@ namespace ssvsc
 
 	class SpatialInfoBase
 	{
+		private:
+			SpatialBase& spatial;
+
 		public:
-			SpatialInfoBase() { }
+			Body& body;
+
+			SpatialInfoBase(SpatialBase& mSpatial, Body& mBody) : spatial(mSpatial), body(mBody) { }
 			virtual ~SpatialInfoBase() { }
 
 			virtual void invalidate() = 0;
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
 			virtual google::dense_hash_set<Body*> getBodiesToCheck() = 0;
-			virtual void destroy() = 0;
+			void destroy() { spatial.delSpatialInfo(*this); }
 	};
 }
 

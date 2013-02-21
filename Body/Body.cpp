@@ -16,8 +16,8 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), spatial(world.getGrid()),
-		spatialInfo(spatial.createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld),
+		spatialInfo(world.getGrid().createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
 	void Body::addGroups(const vector<string>& mGroups) { for(auto& group : mGroups) groups.push_back(group); spatialInfo.invalidate(); }

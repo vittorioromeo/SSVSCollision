@@ -19,7 +19,6 @@ namespace ssvsc
 	{
 		private:
 			Grid& grid;
-			Body& body;
 
 			std::vector<Cell*> cells;
 			std::vector<std::vector<Body*>*> queries; // Cell vector ptrs to query
@@ -39,7 +38,6 @@ namespace ssvsc
 			void preUpdate() override;
 			void postUpdate() override;
 			google::dense_hash_set<Body*> getBodiesToCheck() override;
-			void destroy() override;
 	};
 }
 

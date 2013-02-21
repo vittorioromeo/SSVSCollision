@@ -11,7 +11,7 @@ using namespace google;
 
 namespace ssvsc
 {
-	GridInfo::GridInfo(Grid& mGrid, Body& mBody) : grid(mGrid), body(mBody) { }
+	GridInfo::GridInfo(Grid& mGrid, Body& mBody) : SpatialInfoBase(mGrid, mBody), grid(mGrid) { }
 	GridInfo::~GridInfo() { clear(); }
 
 	void GridInfo::calcEdges()
@@ -62,6 +62,5 @@ namespace ssvsc
 		for(auto& query : queries) for(auto& body : *query) result.insert(body);
 		return result;
 	}
-	void GridInfo::destroy() { grid.delInfo(*this); }
 }
 

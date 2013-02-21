@@ -27,12 +27,11 @@ namespace ssvsc
 			~Grid();
 
 			SpatialInfoBase& createSpatialInfo(Body& mBody) override;
-
+			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
+			
 			Cell* getCell(int mX, int mY);
 			int getIndex(int mValue) const;
 			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const;
-
-			void delInfo(GridInfo& mGridInfo);
 	};
 }
 

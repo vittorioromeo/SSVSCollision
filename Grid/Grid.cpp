@@ -29,6 +29,11 @@ namespace ssvsc
 	}
 
 	SpatialInfoBase& Grid::createSpatialInfo(Body& mBody) { return memoryManager.create(*this, mBody); }
+	void Grid::delSpatialInfo(SpatialInfoBase& mSpatialInfo)
+	{
+		memoryManager.del(&(static_cast<GridInfo&>(mSpatialInfo))); 
+		memoryManager.cleanUp();
+	}
 
 	Cell* Grid::getCell(int mX, int mY) { return cells[mX + offset][mY + offset]; }
 	int Grid::getIndex(int mValue) const { return mValue / cellSize; }
@@ -36,7 +41,5 @@ namespace ssvsc
 	{
 		return mStartX < 0 - offset || mEndX >= columns - offset || mStartY < 0 - offset || mEndY >= rows - offset;
 	}
-
-	void Grid::delInfo(GridInfo& mGridInfo) { memoryManager.del(&mGridInfo); memoryManager.cleanUp(); }
 }
 

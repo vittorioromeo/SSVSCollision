@@ -16,14 +16,12 @@
 namespace ssvsc
 {
 	class World;
-	class SpatialBase;
 	class SpatialInfoBase;
 
 	class Body
 	{
 		private:
 			World& world;
-			SpatialBase& spatial;
 			SpatialInfoBase& spatialInfo;
 			AABB shape, oldShape;
 			bool _static, outOfBounds{false};
