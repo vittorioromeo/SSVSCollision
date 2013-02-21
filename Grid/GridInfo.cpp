@@ -16,7 +16,7 @@ namespace ssvsc
 
 	void GridInfo::calcEdges()
 	{
-		AABB& shape(body.getShape());
+		const AABB& shape(body.getShape());
 		startX = grid.getIndex(shape.getLeft());
 		startY = grid.getIndex(shape.getTop());
 		endX = grid.getIndex(shape.getRight());
@@ -25,7 +25,7 @@ namespace ssvsc
 
 	void GridInfo::checkEdges()
 	{
-		AABB& oldShape(body.getOldShape());
+		const AABB& oldShape(body.getOldShape());
 		if(grid.getIndex(oldShape.getLeft()) != startX) { calcCells(); return; }
 		if(grid.getIndex(oldShape.getRight()) != endX) { calcCells(); return; }
 		if(grid.getIndex(oldShape.getTop()) != startY) { calcCells(); return; }
