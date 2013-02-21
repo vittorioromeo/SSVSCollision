@@ -9,18 +9,18 @@ using namespace sf;
 
 namespace ssvsc
 {
-	void Body::setPosition(Vector2i mPosition) 			{ shape.setPosition(mPosition); gridInfo.invalidate(); }
+	void Body::setPosition(Vector2i mPosition) 			{ shape.setPosition(mPosition); spatialInfo.invalidate(); }
 	void Body::setVelocity(Vector2f mVelocity) 			{ velocity = mVelocity; }
 	void Body::setAcceleration(Vector2f mAcceleration)	{ acceleration = mAcceleration; }
 	void Body::setStatic(bool mStatic) 					{ _static = mStatic; }
 	void Body::setUserData(void* mUserData) 			{ userData = mUserData; }
-	void Body::setX(int mX)				 				{ shape.setX(mX); gridInfo.invalidate(); }
-	void Body::setY(int mY)				 				{ shape.setY(mY); gridInfo.invalidate(); }
+	void Body::setX(int mX)				 				{ shape.setX(mX); spatialInfo.invalidate(); }
+	void Body::setY(int mY)				 				{ shape.setY(mY); spatialInfo.invalidate(); }
 	void Body::setVelocityX(float mX)				 	{ velocity.x = mX; }
 	void Body::setVelocityY(float mY)				 	{ velocity.y = mY; }
-	void Body::setSize(Vector2i mSize)					{ shape.setSize(mSize); gridInfo.invalidate(); }
-	void Body::setWidth(int mWidth)						{ shape.setWidth(mWidth); gridInfo.invalidate(); }
-	void Body::setHeight(int mHeight)					{ shape.setHeight(mHeight); gridInfo.invalidate(); }
+	void Body::setSize(Vector2i mSize)					{ shape.setSize(mSize); spatialInfo.invalidate(); }
+	void Body::setWidth(int mWidth)						{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
+	void Body::setHeight(int mHeight)					{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
 	void Body::setOutOfBounds(bool mOutOfBounds)		{ outOfBounds = mOutOfBounds; }
 
 	AABB& Body::getShape()								{ return shape; }

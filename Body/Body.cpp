@@ -16,16 +16,17 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), grid(world.getGrid()),
-		gridInfo{grid, *this}, shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), spatial(world.getGrid()),
+		spatialInfo(spatial.createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+	Body::~Body() { spatialInfo.destroy(); }
 
-	void Body::addGroups(const vector<string>& mGroups) { for(auto& group : mGroups) groups.push_back(group); gridInfo.invalidate(); }
-	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); gridInfo.invalidate(); }
+	void Body::addGroups(const vector<string>& mGroups) { for(auto& group : mGroups) groups.push_back(group); spatialInfo.invalidate(); }
+	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); spatialInfo.invalidate(); }
 	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto& group : mGroups) groupsNoResolve.push_back(group); }
 
 	void Body::update(float mFrameTime)
 	{
-		gridInfo.preUpdate();
+		spatialInfo.preUpdate();
 
 		if(_static) return;
 		if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
@@ -34,7 +35,7 @@ namespace ssvsc
 		integrate(mFrameTime);
 		vector<AABB> shapesToResolve;
 
-		for(auto& body : gridInfo.getBodiesToCheck())
+		for(auto& body : spatialInfo.getBodiesToCheck())
 		{
 			if(body == this || !isOverlapping(shape, body->getShape())) continue;
 
@@ -84,7 +85,7 @@ namespace ssvsc
 			}
 		}
 
-		gridInfo.postUpdate();
+		spatialInfo.postUpdate();
 	}
 
 	void Body::integrate(float mFrameTime)

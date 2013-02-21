@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <sparsehash/dense_hash_set>
+#include "Spatial/SpatialInfoBase.h"
 
 namespace ssvsc
 {
@@ -14,7 +15,7 @@ namespace ssvsc
 	class Grid;
 	class Cell;
 
-	class GridInfo
+	class GridInfo : public SpatialInfoBase
 	{
 		private:
 			Grid& grid;
@@ -34,10 +35,11 @@ namespace ssvsc
 			GridInfo(Grid& mGrid, Body& mBody);
 			~GridInfo();
 
-			void invalidate();
-			void preUpdate();
-			void postUpdate();
-			google::dense_hash_set<Body*> getBodiesToCheck();
+			void invalidate() override;
+			void preUpdate() override;
+			void postUpdate() override;
+			google::dense_hash_set<Body*> getBodiesToCheck() override;
+			void destroy() override;
 	};
 }
 

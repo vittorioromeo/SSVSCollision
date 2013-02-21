@@ -8,7 +8,7 @@
 #include <vector>
 #include <sparsehash/dense_hash_set>
 #include <SFML/Graphics.hpp>
-#include "Grid/Grid.h"
+#include "Spatial/SpatialBase.h"
 
 namespace ssvsc
 {
@@ -21,19 +21,24 @@ namespace ssvsc
 		private:
 			std::vector<Body*> bodies; // owned
 			google::dense_hash_set<Body*> bodiesToDel;
-			Grid grid;
+			SpatialBase* spatial;
 
+			World(SpatialBase* mSpatial);
 			void add(Body* mBody);
 			void del(Body* mBody);
 		
 		public:
-			World(int mColumns, int mRows, int mCellSize, int mOffset = 0);
+			template<typename TSpatial, typename... TArgs> static World& create(TArgs&&... mArgs)
+			{
+				World* result{new World(new TSpatial(std::forward<TArgs>(mArgs)...))};
+				return *result;
+			}
 			~World();
 
 			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
 			void update(float mFrameTime);			
 
-			Grid& getGrid();
+			SpatialBase& getGrid();
 	};
 }
 

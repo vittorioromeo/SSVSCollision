@@ -3,6 +3,7 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include "Grid.h"
+#include "GridInfo.h"
 #include "Cell.h"
 
 using namespace std;
@@ -21,16 +22,21 @@ namespace ssvsc
 			}
 		}
 	}
-	Grid::~Grid() { for(auto& vector : cells) for(auto& cell : vector) delete cell; }
+	Grid::~Grid()
+	{
+		memoryManager.clear();
+		for(auto& vector : cells) for(auto& cell : vector) delete cell;
+	}
+
+	SpatialInfoBase& Grid::createSpatialInfo(Body& mBody) { return memoryManager.create(*this, mBody); }
 
 	Cell* Grid::getCell(int mX, int mY) { return cells[mX + offset][mY + offset]; }
 	int Grid::getIndex(int mValue) const { return mValue / cellSize; }
 	bool Grid::isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const
 	{
-		return mStartX < 0 - offset ||
-		mEndX >= columns - offset ||
-		mStartY < 0 - offset ||
-		mEndY >= rows - offset; 
+		return mStartX < 0 - offset || mEndX >= columns - offset || mStartY < 0 - offset || mEndY >= rows - offset;
 	}
+
+	void Grid::delInfo(GridInfo& mGridInfo) { memoryManager.del(&mGridInfo); memoryManager.cleanUp(); }
 }
 

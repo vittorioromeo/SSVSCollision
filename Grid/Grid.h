@@ -6,14 +6,19 @@
 #define GRID_H
 
 #include <vector>
+#include <SSVStart.h>
+#include "Grid/GridInfo.h"
+#include "Spatial/SpatialBase.h"
+#include "Spatial/SpatialInfoBase.h"
 
 namespace ssvsc
 {
 	class Cell;
 
-	class Grid
+	class Grid : public SpatialBase
 	{
 		private:
+			ssvs::Utils::MemoryManager<GridInfo> memoryManager;
 			std::vector<std::vector<Cell*>> cells; // owned
 			int columns, rows, cellSize, offset;
 
@@ -21,9 +26,13 @@ namespace ssvsc
 			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0);
 			~Grid();
 
+			SpatialInfoBase& createSpatialInfo(Body& mBody) override;
+
 			Cell* getCell(int mX, int mY);
 			int getIndex(int mValue) const;
 			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const;
+
+			void delInfo(GridInfo& mGridInfo);
 	};
 }
 

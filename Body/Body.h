@@ -16,14 +16,15 @@
 namespace ssvsc
 {
 	class World;
-	class Grid;
+	class SpatialBase;
+	class SpatialInfoBase;
 
 	class Body
 	{
 		private:
 			World& world;
-			Grid& grid;
-			GridInfo gridInfo;
+			SpatialBase& spatial;
+			SpatialInfoBase& spatialInfo;
 			AABB shape, oldShape;
 			bool _static, outOfBounds{false};
 			sf::Vector2f velocity, acceleration;
@@ -38,6 +39,7 @@ namespace ssvsc
 			ssvs::Delegate<void> onOutOfBounds; // TODO
 
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
+			~Body();
 			
 			void addGroups(const std::vector<std::string>& mGroups);
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);

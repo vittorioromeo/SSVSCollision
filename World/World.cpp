@@ -11,7 +11,7 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	World::World(int mColumns, int mRows, int mCellSize, int mOffset) : grid{mColumns, mRows, mCellSize, mOffset} { bodiesToDel.set_empty_key(nullptr); }
+	World::World(SpatialBase* mSpatial) : spatial{mSpatial} { bodiesToDel.set_empty_key(nullptr); }
 	World::~World() { for(auto& body : bodies) delete body; }
 
 	Body& World::create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic)
@@ -31,5 +31,5 @@ namespace ssvsc
 		for(auto& body : bodies) body->update(mFrameTime);
 	}
 
-	Grid& World::getGrid() { return grid; }
+	SpatialBase& World::getGrid() { return *spatial; }
 }
