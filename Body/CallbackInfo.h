@@ -11,12 +11,18 @@ namespace ssvsc
 {
 	class Body;
 
-	struct CollisionInfo
+	struct DetectionInfo
 	{
 		Body& body;
 		float frameTime;
 		void* userData;
 		sf::Vector2i intersection;
+	};
+
+	struct ResolutionInfo
+	{
+		AABB shape;
+		sf::Vector2i minIntersection;
 	};
 }
 

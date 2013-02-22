@@ -5,10 +5,11 @@
 #include <algorithm>
 #include <stack>
 #include "Body.h"
-#include "Grid/Cell.h"
 #include "Utils/Merge.h"
+#include "Utils/Resolution.h"
 #include "Utils/Utils.h"
 #include "World/World.h"
+#include "Spatial/SpatialInfoBase.h"
 
 using namespace std;
 using namespace sf;
@@ -41,8 +42,8 @@ namespace ssvsc
 
 			auto intersection = getMinIntersection(shape, body->getShape());
 
-			onCollision({*body, mFrameTime, body->getUserData(), intersection});
-			body->onCollision({*this, mFrameTime, userData, -intersection});
+			onDetection({*body, mFrameTime, body->getUserData(), intersection});
+			body->onDetection({*this, mFrameTime, userData, -intersection});
 
 			if(!containsAny(body->getGroups(), groupsNoResolve)) shapesToResolve.push_back(body->getShape());
 		}
@@ -59,29 +60,13 @@ namespace ssvsc
 			{
 				bool notResolved{true};
 
-				if(oldShape.isLeftOf(s))
-				{
-					shape.move({s.getLeft() - shape.getRight(), 0});
-					velocity.x = 0; notResolved = false;
-				}
-				else if(oldShape.isRightOf(s))
-				{
-					shape.move({s.getRight() - shape.getLeft(), 0});
-					velocity.x = 0; notResolved = false;
-				}
+				if(oldShape.isLeftOf(s)) { resolve<Resolution::LeftOf>(s); notResolved = false; }
+				else if(oldShape.isRightOf(s)) { resolve<Resolution::RightOf>(s); notResolved = false; }
 
-				if(oldShape.isAbove(s))
-				{
-					shape.move({0, s.getTop() - shape.getBottom()});
-					velocity.y = 0; continue;
-				}
-				else if(oldShape.isBelow(s))
-				{
-					shape.move({0, s.getBottom() - shape.getTop()});
-					velocity.y = 0; continue;
-				}
+				if(oldShape.isAbove(s)) { resolve<Resolution::Above>(s); continue; }
+				else if(oldShape.isBelow(s)) { resolve<Resolution::Below>(s); continue; }
 
-				if(notResolved) shape.move(getMin1DIntersection(shape, s));
+				if(notResolved) resolve<Resolution::General>(s);
 			}
 		}
 

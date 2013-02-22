@@ -5,13 +5,12 @@
 #ifndef BODY_H
 #define BODY_H
 
-#include "AABB/AABB.h"
-#include "CollisionInfo.h"
-#include "Grid/GridInfo.h"
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SSVStart.h>
+#include "AABB/AABB.h"
+#include "CallbackInfo.h"
 
 namespace ssvsc
 {
@@ -30,15 +29,22 @@ namespace ssvsc
 			void* userData{nullptr};
 
 			void integrate(float mFrameTime);
+			template<typename TResolutionTraits> void resolve(const AABB& mAABB)
+			{
+				sf::Vector2i getMinIntersection{TResolutionTraits::getMinIntersection(shape, mAABB)};
+				onResolution({mAABB, getMinIntersection});
+				shape.move(getMinIntersection);
+				velocity = TResolutionTraits::getVelocity(velocity);
+			}
 
 		public:
-			ssvs::Delegate<void, CollisionInfo> onCollision;
-			ssvs::Delegate<void, CollisionInfo> onResolution; // TODO
+			ssvs::Delegate<void, DetectionInfo> onDetection;
+			ssvs::Delegate<void, ResolutionInfo> onResolution;
 			ssvs::Delegate<void> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();
-			
+
 			void addGroups(const std::vector<std::string>& mGroups);
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
 			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
@@ -60,7 +66,7 @@ namespace ssvsc
 			void setWidth(int mWidth);
 			void setHeight(int mHeight);
 			void setOutOfBounds(bool mOutOfBounds);
-			
+
 			// Getters
 			AABB& getShape();
 			AABB& getOldShape();

@@ -6,8 +6,8 @@
 #define SSVSCOLLISION_H_
 
 #include "Body/Body.h"
-#include "Body/CollisionInfo.h"
+#include "Body/CallbackInfo.h"
 #include "World/World.h"
-#include "Grid/Grid.h"
+#include "Spatial/Grid/Grid.h"
 
 #endif /* SSVSCOLLISION_H_ */

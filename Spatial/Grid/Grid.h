@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <SSVStart.h>
-#include "Grid/GridInfo.h"
+#include "GridInfo.h"
 #include "Spatial/SpatialBase.h"
 #include "Spatial/SpatialInfoBase.h"
 

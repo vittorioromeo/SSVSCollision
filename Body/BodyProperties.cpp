@@ -3,6 +3,7 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include "Body.h"
+#include "Spatial/SpatialInfoBase.h"
 
 using namespace std;
 using namespace sf;
