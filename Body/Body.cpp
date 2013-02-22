@@ -5,14 +5,14 @@
 #include <algorithm>
 #include <stack>
 #include "Body.h"
-#include "Utils/Merge.h"
-#include "Utils/Resolution.h"
+#include "Utils/Traits.h"
 #include "Utils/Utils.h"
 #include "World/World.h"
 #include "Spatial/SpatialInfoBase.h"
 
 using namespace std;
 using namespace sf;
+using namespace ssvsc::Traits;
 using namespace ssvsc::Utils;
 
 namespace ssvsc
@@ -50,11 +50,11 @@ namespace ssvsc
 
 		if(!shapesToResolve.empty())
 		{
-			if(velocity.x < 0) shapesToResolve = getMergedAABBs<Side::Left>(shapesToResolve);
-			else if(velocity.x > 0) shapesToResolve = getMergedAABBs<Side::Right>(shapesToResolve);
+			if(velocity.x < 0) shapesToResolve = getMergedAABBs<Merge::Left>(shapesToResolve);
+			else if(velocity.x > 0) shapesToResolve = getMergedAABBs<Merge::Right>(shapesToResolve);
 
-			if(velocity.y < 0) shapesToResolve = getMergedAABBs<Side::Top>(shapesToResolve);
-			else if(velocity.y > 0) shapesToResolve = getMergedAABBs<Side::Bottom>(shapesToResolve);
+			if(velocity.y < 0) shapesToResolve = getMergedAABBs<Merge::Top>(shapesToResolve);
+			else if(velocity.y > 0) shapesToResolve = getMergedAABBs<Merge::Bottom>(shapesToResolve);
 
 			for(auto& s : shapesToResolve)
 			{
