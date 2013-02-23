@@ -9,5 +9,6 @@
 #include "Body/CallbackInfo.h"
 #include "World/World.h"
 #include "Spatial/Grid/Grid.h"
+#include "Utils/Utils.h"
 
 #endif /* SSVSCOLLISION_H_ */

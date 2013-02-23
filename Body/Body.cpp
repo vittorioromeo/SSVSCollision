@@ -27,6 +27,7 @@ namespace ssvsc
 
 	void Body::update(float mFrameTime)
 	{
+		onPreUpdate();
 		spatialInfo.preUpdate();
 
 		if(_static) return;
@@ -71,6 +72,7 @@ namespace ssvsc
 		}
 
 		spatialInfo.postUpdate();
+		onPostUpdate();
 	}
 
 	void Body::integrate(float mFrameTime)

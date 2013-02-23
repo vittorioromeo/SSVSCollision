@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef SSVSC_UTILS_H
+#define SSVSC_UTILS_H
 
 #include <vector>
 #include <algorithm>
@@ -47,4 +47,4 @@ namespace ssvsc
 	}
 }
 
-#endif // UTILS_H
+#endif // SSVSC_UTILS_H

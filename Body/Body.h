@@ -38,6 +38,8 @@ namespace ssvsc
 			}
 
 		public:
+			ssvs::Delegate<void> onPreUpdate;
+			ssvs::Delegate<void> onPostUpdate;
 			ssvs::Delegate<void, DetectionInfo> onDetection;
 			ssvs::Delegate<void, ResolutionInfo> onResolution;
 			ssvs::Delegate<void> onOutOfBounds;
