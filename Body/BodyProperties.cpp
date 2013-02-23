@@ -40,5 +40,5 @@ namespace ssvsc
 	bool Body::hasMovedLeft() const						{ return shape.getX() < oldShape.getX(); }
 	bool Body::hasMovedRight() const					{ return shape.getX() > oldShape.getX(); }
 	bool Body::hasMovedUp() const						{ return shape.getY() < oldShape.getY(); }
-	bool Body::hasMovedDown() const						{ return shape.getY() < oldShape.getY(); }
+	bool Body::hasMovedDown() const						{ return shape.getY() > oldShape.getY(); }
 }
