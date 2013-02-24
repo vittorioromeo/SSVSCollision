@@ -22,7 +22,8 @@ namespace ssvsc
 	struct ResolutionInfo
 	{
 		Body& body;
-		sf::Vector2i minIntersection;
+		void* userData;
+		sf::Vector2i resolution;
 	};
 }
 

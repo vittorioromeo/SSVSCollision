@@ -16,9 +16,8 @@ namespace ssvsc
 		{
 			const AABB& s(b->getShape());
 			Vector2i minIntersection{getMin1DIntersection(shape, s)};
-			mBody.onResolution({*b, minIntersection});
+			mBody.onResolution({*b, b->getUserData(), minIntersection});
 			shape.move(minIntersection);
-			//getOverlapX(shape, s) > getOverlapY(shape, s) ? mBody.setVelocityY(0) : mBody.setVelocityX(0);
 
 			if(oldShape.isAbove(s) && minIntersection.y < 0) mBody.setVelocityY(0);
 			else if(oldShape.isBelow(s) && minIntersection.y > 0) mBody.setVelocityY(0);
