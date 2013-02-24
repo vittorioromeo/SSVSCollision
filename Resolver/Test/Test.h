@@ -11,7 +11,7 @@ namespace ssvsc
 	class Test : public ResolverBase
 	{
 		public:
-			void resolve(Body& mBody, const std::vector<AABB>& mShapesToResolve) override;
+			void resolve(Body& mBody, std::vector<AABB>& mShapesToResolve) override;
 	};
 }
 

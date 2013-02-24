@@ -48,11 +48,7 @@ namespace ssvsc
 			if(!containsAny(body->getGroups(), groupsNoResolve)) shapesToResolve.push_back(body->getShape());
 		}
 
-		if(!shapesToResolve.empty())
-		{
-			sort(shapesToResolve, [&](const AABB& mA, const AABB& mB){ return getOverlapArea(shape, mA) > getOverlapArea(shape, mB); });
-			resolver.resolve(*this, shapesToResolve);
-		}
+		if(!shapesToResolve.empty()) resolver.resolve(*this, shapesToResolve);
 
 		spatialInfo.postUpdate();
 		onPostUpdate();

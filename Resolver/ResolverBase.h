@@ -12,7 +12,7 @@ namespace ssvsc
 		public:
 			ResolverBase() { }
 			virtual ~ResolverBase() { }
-			virtual void resolve(Body& mBody, const std::vector<AABB>& mShapesToResolve) = 0;
+			virtual void resolve(Body& mBody, std::vector<AABB>& mShapesToResolve) = 0;
 	};
 }
 
