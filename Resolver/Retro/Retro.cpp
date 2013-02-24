@@ -13,7 +13,7 @@ namespace ssvsc
 
 		for(auto& b : mBodiesToResolve)
 		{
-			AABB& s(b->getShape());
+			const AABB& s(b->getShape());
 			Vector2i minIntersection{getMin1DIntersection(shape, s)};
 			mBody.onResolution({s, minIntersection});
 			shape.move(minIntersection);
