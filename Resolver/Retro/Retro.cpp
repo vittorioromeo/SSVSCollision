@@ -1,4 +1,4 @@
-#include "Test.h"
+#include "Retro.h"
 
 using namespace std;
 using namespace sf;
@@ -6,7 +6,7 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	void Test::resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve)
+	void Retro::resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve)
 	{
 		AABB& shape(mBody.getShape());
 		sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return getOverlapArea(shape, mA->getShape()) > getOverlapArea(shape, mB->getShape()); });

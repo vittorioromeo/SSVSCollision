@@ -7,12 +7,11 @@ namespace ssvsc
 {
 	class AABB;
 
-	class ResolverBase
+	struct ResolverBase
 	{
-		public:
-			ResolverBase() { }
-			virtual ~ResolverBase() { }
-			virtual void resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve) = 0;
+		ResolverBase() { }
+		virtual ~ResolverBase() { }
+		virtual void resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve) = 0;
 	};
 }
 

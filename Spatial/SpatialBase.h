@@ -6,13 +6,12 @@ namespace ssvsc
 	class Body;
 	class SpatialInfoBase;
 
-	class SpatialBase
+	struct SpatialBase
 	{
-		public:
-			SpatialBase() { }
-			virtual ~SpatialBase() { }
-			virtual SpatialInfoBase& createSpatialInfo(Body& mBody) = 0;
-			virtual void delSpatialInfo(SpatialInfoBase& mSpatialInfo) = 0;
+		SpatialBase() { }
+		virtual ~SpatialBase() { }
+		virtual SpatialInfoBase& createSpatialInfo(Body& mBody) = 0;
+		virtual void delSpatialInfo(SpatialInfoBase& mSpatialInfo) = 0;
 	};
 }
 

@@ -9,7 +9,7 @@
 #include "Body/CallbackInfo.h"
 #include "World/World.h"
 #include "Utils/Utils.h"
-#include "Resolver/Test/Test.h"
+#include "Resolver/Retro/Retro.h"
 #include "Spatial/Grid/Grid.h"
 
 #endif /* SSVSCOLLISION_H_ */
