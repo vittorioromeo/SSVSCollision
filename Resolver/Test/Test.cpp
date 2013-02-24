@@ -6,13 +6,14 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	void Test::resolve(Body& mBody, std::vector<AABB>& mShapesToResolve)
+	void Test::resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve)
 	{
 		AABB& shape(mBody.getShape());
-		sort(mShapesToResolve, [&](const AABB& mA, const AABB& mB){ return getOverlapArea(shape, mA) > getOverlapArea(shape, mB); });
+		sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return getOverlapArea(shape, mA->getShape()) > getOverlapArea(shape, mB->getShape()); });
 
-		for(auto& s : mShapesToResolve)
+		for(auto& b : mBodiesToResolve)
 		{
+			AABB& s(b->getShape());
 			Vector2i minIntersection{getMin1DIntersection(shape, s)};
 			mBody.onResolution({s, minIntersection});
 			shape.move(minIntersection);
