@@ -10,11 +10,12 @@ namespace ssvsc
 	{
 		for(auto& s : mShapesToResolve)
 		{
-			Vector2i minIntersection{getMin1DIntersection(mBody.getShape(), s)};
+			AABB& shape(mBody.getShape());
+			
+			Vector2i minIntersection{getMin1DIntersection(shape, s)};
 			mBody.onResolution({s, minIntersection});
-			mBody.getShape().move(minIntersection);
-			if(getOverlapX(mBody.getShape(), s) > getOverlapY(mBody.getShape(), s)) mBody.setVelocityY(0);
-			else mBody.setVelocityX(0);
+			shape.move(minIntersection);
+			getOverlapX(shape, s) > getOverlapY(shape, s) ? mBody.setVelocityY(0) : mBody.setVelocityX(0);
 		}
 	}
 }

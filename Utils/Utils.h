@@ -25,25 +25,6 @@ namespace ssvsc
 		template<typename T, typename V> void eraseRemove(T& mItems, const V& mValue) { mItems.erase(std::remove(std::begin(mItems), std::end(mItems), mValue), std::end(mItems)); }
 		template<typename T, typename P> void sort(T& mItems, P mPredicate) { std::sort(std::begin(mItems), std::end(mItems), mPredicate); }
 
-		template<typename TMergeTraits> std::vector<AABB> getMergedAABBs(std::vector<AABB> mSource)
-		{
-			std::vector<AABB> result;
-			while(!mSource.empty())
-			{
-				bool merged{false}; AABB a{mSource.back()}; mSource.pop_back();
-				for(auto& b : mSource)
-				{
-					if(TMergeTraits::side(a) != TMergeTraits::side(b)) continue;
-					result.push_back(TMergeTraits::merge(a, b));
-					eraseRemove(mSource, b); merged = true; break;					
-				}
-				if(!merged) result.push_back(a);
-			}
-			return result;
-		}
-
-		AABB getMergedAABBHorizontally(const AABB& mA, const AABB& mB);
-		AABB getMergedAABBVertically(const AABB& mA, const AABB& mB);
 		int getMinIntersectionX(const AABB& mA, const AABB& mB);
 		int getMinIntersectionY(const AABB& mA, const AABB& mB);
 		sf::Vector2i getMinIntersection(const AABB& mA, const AABB& mB);

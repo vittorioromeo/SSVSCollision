@@ -7,13 +7,11 @@
 #include "Body.h"
 #include "Resolver/ResolverBase.h"
 #include "Spatial/SpatialInfoBase.h"
-#include "Utils/Traits.h"
 #include "Utils/Utils.h"
 #include "World/World.h"
 
 using namespace std;
 using namespace sf;
-using namespace ssvsc::Traits;
 using namespace ssvsc::Utils;
 
 namespace ssvsc
@@ -52,14 +50,7 @@ namespace ssvsc
 
 		if(!shapesToResolve.empty())
 		{
-			//if(velocity.x < 0) shapesToResolve = getMergedAABBs<Merge::Left>(shapesToResolve);
-			//else if(velocity.x > 0) shapesToResolve = getMergedAABBs<Merge::Right>(shapesToResolve);
-            //
-			//if(velocity.y < 0) shapesToResolve = getMergedAABBs<Merge::Top>(shapesToResolve);
-			//else if(velocity.y > 0) shapesToResolve = getMergedAABBs<Merge::Bottom>(shapesToResolve);
-
 			sort(shapesToResolve, [&](const AABB& mA, const AABB& mB){ return getOverlapArea(shape, mA) > getOverlapArea(shape, mB); });
-
 			resolver.resolve(*this, shapesToResolve);
 		}
 
