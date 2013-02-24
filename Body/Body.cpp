@@ -5,10 +5,11 @@
 #include <algorithm>
 #include <stack>
 #include "Body.h"
+#include "Resolver/ResolverBase.h"
+#include "Spatial/SpatialInfoBase.h"
 #include "Utils/Traits.h"
 #include "Utils/Utils.h"
 #include "World/World.h"
-#include "Spatial/SpatialInfoBase.h"
 
 using namespace std;
 using namespace sf;
@@ -17,7 +18,7 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld),
+	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), resolver(mWorld.getResolver()),
 		spatialInfo(world.getSpatial().createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
@@ -51,24 +52,15 @@ namespace ssvsc
 
 		if(!shapesToResolve.empty())
 		{
-			if(velocity.x < 0) shapesToResolve = getMergedAABBs<Merge::Left>(shapesToResolve);
-			else if(velocity.x > 0) shapesToResolve = getMergedAABBs<Merge::Right>(shapesToResolve);
+			//if(velocity.x < 0) shapesToResolve = getMergedAABBs<Merge::Left>(shapesToResolve);
+			//else if(velocity.x > 0) shapesToResolve = getMergedAABBs<Merge::Right>(shapesToResolve);
+            //
+			//if(velocity.y < 0) shapesToResolve = getMergedAABBs<Merge::Top>(shapesToResolve);
+			//else if(velocity.y > 0) shapesToResolve = getMergedAABBs<Merge::Bottom>(shapesToResolve);
 
-			if(velocity.y < 0) shapesToResolve = getMergedAABBs<Merge::Top>(shapesToResolve);
-			else if(velocity.y > 0) shapesToResolve = getMergedAABBs<Merge::Bottom>(shapesToResolve);
+			sort(shapesToResolve, [&](const AABB& mA, const AABB& mB){ return getOverlapArea(shape, mA) > getOverlapArea(shape, mB); });
 
-			for(auto& s : shapesToResolve)
-			{
-				bool notResolved{true};
-
-				if(oldShape.isLeftOf(s)) { resolve<Resolution::LeftOf>(s); notResolved = false; }
-				else if(oldShape.isRightOf(s)) { resolve<Resolution::RightOf>(s); notResolved = false; }
-
-				if(oldShape.isAbove(s)) { resolve<Resolution::Above>(s); continue; }
-				else if(oldShape.isBelow(s)) { resolve<Resolution::Below>(s); continue; }
-
-				if(notResolved) resolve<Resolution::General>(s);
-			}
+			resolver.resolve(*this, shapesToResolve);
 		}
 
 		spatialInfo.postUpdate();

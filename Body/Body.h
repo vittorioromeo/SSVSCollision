@@ -15,12 +15,14 @@
 namespace ssvsc
 {
 	class World;
+	class ResolverBase;
 	class SpatialInfoBase;
 
 	class Body
 	{
 		private:
 			World& world;
+			ResolverBase& resolver;
 			SpatialInfoBase& spatialInfo;
 			AABB shape, oldShape;
 			bool _static, outOfBounds{false};
@@ -29,14 +31,7 @@ namespace ssvsc
 			void* userData{nullptr};
 
 			void integrate(float mFrameTime);
-			template<typename TResolutionTraits> void resolve(const AABB& mAABB)
-			{
-				sf::Vector2i getMinIntersection{TResolutionTraits::getMinIntersection(shape, mAABB)};
-				onResolution({mAABB, getMinIntersection});
-				shape.move(getMinIntersection);
-				velocity = TResolutionTraits::getVelocity(velocity);
-			}
-
+			
 		public:
 			ssvs::Delegate<void> onPreUpdate;
 			ssvs::Delegate<void> onPostUpdate;

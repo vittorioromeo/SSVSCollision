@@ -5,14 +5,21 @@
 #include "World.h"
 #include "Body/Body.h"
 #include "Utils/Utils.h"
+#include "Resolver/ResolverBase.h"
+#include "Spatial/SpatialBase.h"
 
 using namespace std;
 using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	World::World(SpatialBase* mSpatial) : spatial{mSpatial} { bodiesToDel.set_empty_key(nullptr); }
-	World::~World() { for(auto& body : bodies) delete body; }
+	World::World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver{&mResolver}, spatial{&mSpatial} { bodiesToDel.set_empty_key(nullptr); }
+	World::~World()
+	{
+		for(auto& body : bodies) delete body;
+		delete resolver;
+		delete spatial;
+	}
 
 	Body& World::create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic)
 	{
@@ -31,5 +38,6 @@ namespace ssvsc
 		for(auto& body : bodies) body->update(mFrameTime);
 	}
 
+	ResolverBase& World::getResolver() { return *resolver; }
 	SpatialBase& World::getSpatial() { return *spatial; }
 }

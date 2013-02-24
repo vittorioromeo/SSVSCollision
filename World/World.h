@@ -11,8 +11,9 @@
 
 namespace ssvsc
 {
-	class SpatialBase;
 	class Body;
+	class ResolverBase;
+	class SpatialBase;
 
 	class World
 	{
@@ -21,23 +22,20 @@ namespace ssvsc
 		private:
 			std::vector<Body*> bodies; // owned
 			google::dense_hash_set<Body*> bodiesToDel;
-			SpatialBase* spatial;
+			ResolverBase* resolver; // owned
+			SpatialBase* spatial; // owned
 
-			World(SpatialBase* mSpatial);
 			void add(Body* mBody);
 			void del(Body* mBody);
 		
 		public:
-			template<typename TSpatial, typename... TArgs> static World& create(TArgs&&... mArgs)
-			{
-				World* result{new World(new TSpatial(std::forward<TArgs>(mArgs)...))};
-				return *result;
-			}
+			World(ResolverBase& mResolver, SpatialBase& mSpatial);
 			~World();
 
 			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
 			void update(float mFrameTime);			
 
+			ResolverBase& getResolver();
 			SpatialBase& getSpatial();
 	};
 }
