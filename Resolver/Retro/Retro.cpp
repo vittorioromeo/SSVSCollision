@@ -15,15 +15,15 @@ namespace ssvsc
 		for(auto& b : mBodiesToResolve)
 		{
 			const AABB& s(b->getShape());
-			Vector2i minIntersection{getMin1DIntersection(shape, s)};
-			mBody.onResolution({*b, b->getUserData(), minIntersection});
-			shape.move(minIntersection);
+			Vector2i resolution{getMin1DIntersection(shape, s)};
+			mBody.onResolution({*b, b->getUserData(), resolution});
+			shape.move(resolution);
 
-			if(oldShape.isAbove(s) && minIntersection.y < 0) mBody.setVelocityY(0);
-			else if(oldShape.isBelow(s) && minIntersection.y > 0) mBody.setVelocityY(0);
+			if(oldShape.isAbove(s) && resolution.y < 0) mBody.setVelocityY(0);
+			else if(oldShape.isBelow(s) && resolution.y > 0) mBody.setVelocityY(0);
 
-			if(oldShape.isLeftOf(s) && minIntersection.x < 0) mBody.setVelocityX(0);
-			else if(oldShape.isRightOf(s) && minIntersection.x > 0) mBody.setVelocityX(0);
+			if(oldShape.isLeftOf(s) && resolution.x < 0) mBody.setVelocityX(0);
+			else if(oldShape.isRightOf(s) && resolution.x > 0) mBody.setVelocityX(0);
 		}
 	}
 }
