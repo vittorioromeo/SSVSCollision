@@ -21,7 +21,7 @@ namespace ssvsc
 
 	struct ResolutionInfo
 	{
-		AABB shape;
+		Body& body;
 		sf::Vector2i minIntersection;
 	};
 }
