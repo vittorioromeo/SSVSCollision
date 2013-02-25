@@ -14,10 +14,14 @@ namespace ssvsc
 
 		for(auto& b : mBodiesToResolve)
 		{
+			bool noResolvePosition{false}, noResolveVelocity{false};
+
 			const AABB& s(b->getShape()), os(b->getOldShape());
 			Vector2i resolution{getMin1DIntersection(shape, s)};
-			mBody.onResolution({*b, b->getUserData(), resolution});
-			shape.move(resolution);
+			mBody.onResolution({*b, b->getUserData(), resolution, noResolvePosition, noResolveVelocity});
+
+			if(!noResolvePosition) shape.move(resolution);
+			if(noResolveVelocity) continue;
 
 			if(resolution.y < 0)
 			{

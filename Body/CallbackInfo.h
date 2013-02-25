@@ -24,6 +24,8 @@ namespace ssvsc
 		Body& body;
 		void* userData;
 		sf::Vector2i resolution;
+		bool& noResolvePosition;
+		bool& noResolveVelocity;
 	};
 }
 
