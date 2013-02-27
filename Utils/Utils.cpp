@@ -25,8 +25,7 @@ namespace ssvsc
 		Vector2i getMin1DIntersection(const AABB& mA, const AABB& mB)
 		{
 			int iX{getMinIntersectionX(mA, mB)}, iY{getMinIntersectionY(mA, mB)};
-			if(abs(iX) < abs(iY)) return {iX, 0};
-			return {0, iY};
+			return abs(iX) < abs(iY) ? Vector2i{iX, 0} : Vector2i{0, iY};
 		}
 		int getOverlapX(const AABB& mA, const AABB& mB) { return mA.getLeft() < mB.getLeft() ? mA.getRight() - mB.getLeft() : mB.getRight() - mA.getLeft(); }
 		int getOverlapY(const AABB& mA, const AABB& mB) { return mA.getTop() < mB.getTop() ? mA.getBottom() - mB.getTop() : mB.getBottom() - mA.getTop(); }
