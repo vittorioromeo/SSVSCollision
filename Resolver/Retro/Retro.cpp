@@ -24,6 +24,8 @@ namespace ssvsc
 			if(!noResolvePosition) shape.move(resolution);
 			if(noResolveVelocity) continue;
 
+			// Remember that shape has moved now
+
 			if(resolution.y < 0 && mBody.getVelocity().y > 0)
 			{
 				if(oldShape.isAbove(s) || (os.isBelow(shape) && !(oldShape.isLeftOf(s) || oldShape.isRightOf(s))))
