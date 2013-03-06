@@ -33,11 +33,11 @@ namespace ssvsc
 			void integrate(float mFrameTime);
 			
 		public:
-			ssvs::Delegate<void> onPreUpdate;
-			ssvs::Delegate<void> onPostUpdate;
-			ssvs::Delegate<void, DetectionInfo> onDetection;
-			ssvs::Delegate<void, ResolutionInfo> onResolution;
-			ssvs::Delegate<void> onOutOfBounds;
+			ssvs::Utils::Delegate<void> onPreUpdate;
+			ssvs::Utils::Delegate<void> onPostUpdate;
+			ssvs::Utils::Delegate<void, DetectionInfo> onDetection;
+			ssvs::Utils::Delegate<void, ResolutionInfo> onResolution;
+			ssvs::Utils::Delegate<void> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();
