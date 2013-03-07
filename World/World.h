@@ -8,6 +8,7 @@
 #include <vector>
 #include <sparsehash/dense_hash_set>
 #include <SFML/Graphics.hpp>
+#include <SSVStart.h>
 
 namespace ssvsc
 {
@@ -20,12 +21,10 @@ namespace ssvsc
 		friend class Body;
 
 		private:
-			std::vector<Body*> bodies; // owned
-			google::dense_hash_set<Body*> bodiesToDel;
+			ssvs::Utils::MemoryManager<Body, std::vector<Body*>, google::dense_hash_set<Body*>> memoryManager;
 			ResolverBase* resolver; // owned
 			SpatialBase* spatial; // owned
 
-			void add(Body* mBody);
 			void del(Body* mBody);
 		
 		public:
