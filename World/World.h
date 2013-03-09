@@ -6,7 +6,7 @@
 #define WORLD_H
 
 #include <vector>
-#include <sparsehash/dense_hash_set>
+#include <google/dense_hash_set>
 #include <SFML/Graphics.hpp>
 #include <SSVStart.h>
 

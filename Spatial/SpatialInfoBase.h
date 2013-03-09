@@ -1,7 +1,7 @@
 #ifndef SPATIALINFOBASE_H
 #define SPATIALINFOBASE_H
 
-#include <sparsehash/dense_hash_set>
+#include <google/dense_hash_set>
 #include "Spatial/SpatialBase.h"
 
 namespace ssvsc

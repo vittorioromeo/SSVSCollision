@@ -6,7 +6,7 @@
 #define GRIDINFO_H
 
 #include <vector>
-#include <sparsehash/dense_hash_set>
+#include <google/dense_hash_set>
 #include "Spatial/SpatialInfoBase.h"
 
 namespace ssvsc
