@@ -2,15 +2,15 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef BODY_H
-#define BODY_H
+#ifndef SSVSC_BODY
+#define SSVSC_BODY
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <SSVStart.h>
+#include <SSVUtils.h>
 #include "AABB/AABB.h"
-#include "CallbackInfo.h"
+#include "Body/CallbackInfo.h"
 
 namespace ssvsc
 {
@@ -33,11 +33,11 @@ namespace ssvsc
 			void integrate(float mFrameTime);
 			
 		public:
-			ssvs::Utils::Delegate<void> onPreUpdate;
-			ssvs::Utils::Delegate<void> onPostUpdate;
-			ssvs::Utils::Delegate<void, DetectionInfo> onDetection;
-			ssvs::Utils::Delegate<void, ResolutionInfo> onResolution;
-			ssvs::Utils::Delegate<void> onOutOfBounds;
+			ssvu::Delegate<void> onPreUpdate;
+			ssvu::Delegate<void> onPostUpdate;
+			ssvu::Delegate<void, DetectionInfo> onDetection;
+			ssvu::Delegate<void, ResolutionInfo> onResolution;
+			ssvu::Delegate<void> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();
@@ -85,4 +85,4 @@ namespace ssvsc
 	};
 }
 
-#endif // BODY_H
+#endif

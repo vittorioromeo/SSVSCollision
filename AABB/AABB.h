@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef AABB_H
-#define AABB_H
+#ifndef SSVSC_AABB
+#define SSVSC_AABB
 
 #include <SFML/Graphics.hpp>
 
@@ -50,4 +50,4 @@ namespace ssvsc
 	};
 }
 
-#endif // AABB_H
+#endif

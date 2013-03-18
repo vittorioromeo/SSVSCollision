@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef GRIDINFO_H
-#define GRIDINFO_H
+#ifndef SSVSC_GRIDINFO
+#define SSVSC_GRIDINFO
 
 #include <vector>
 #include <google/dense_hash_set>
@@ -41,4 +41,4 @@ namespace ssvsc
 	};
 }
 
-#endif // GRIDINFO_H
+#endif

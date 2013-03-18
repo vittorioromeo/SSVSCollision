@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef COLLISIONINFO_H
-#define COLLISIONINFO_H
+#ifndef SSVSC_CALLBACKINFO
+#define SSVSC_CALLBACKINFO
 
 #include <SFML/Graphics.hpp>
 
@@ -29,4 +29,4 @@ namespace ssvsc
 	};
 }
 
-#endif // COLLISIONINFO_H
+#endif

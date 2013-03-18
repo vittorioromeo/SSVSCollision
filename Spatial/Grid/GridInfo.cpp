@@ -3,9 +3,9 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include "Body/Body.h"
-#include "GridInfo.h"
-#include "Grid.h"
-#include "Cell.h"
+#include "Spatial/Grid/GridInfo.h"
+#include "Spatial/Grid/Grid.h"
+#include "Spatial/Grid/Cell.h"
 
 using namespace google;
 

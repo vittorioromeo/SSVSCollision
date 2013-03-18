@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef CELL_H
-#define CELL_H
+#ifndef SSVSC_CELL
+#define SSVSC_CELL
 
 #include <unordered_map>
 #include <vector>
@@ -35,4 +35,4 @@ namespace ssvsc
 	};
 }
 
-#endif // CELL_H
+#endif

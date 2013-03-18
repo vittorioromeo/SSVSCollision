@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef WORLD_H
-#define WORLD_H
+#ifndef SSVSC_WORLD
+#define SSVSC_WORLD
 
 #include <vector>
 #include <google/dense_hash_set>
@@ -39,4 +39,4 @@ namespace ssvsc
 	};
 }
 
-#endif // WORLD_H
+#endif

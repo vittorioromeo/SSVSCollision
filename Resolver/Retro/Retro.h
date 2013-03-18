@@ -2,13 +2,12 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef RETRO_H
-#define RETRO_H
+#ifndef SSVSC_RETRO
+#define SSVSC_RETRO
 
 #include <SFML/Graphics.hpp>
 #include "Body/Body.h"
 #include "Resolver/ResolverBase.h"
-#include "Utils/Utils.h"
 
 namespace ssvsc
 {
@@ -18,4 +17,4 @@ namespace ssvsc
 	};
 }
 
-#endif // RETRO_H
+#endif

@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef GRID_H
-#define GRID_H
+#ifndef SSVSC_GRID
+#define SSVSC_GRID
 
 #include <vector>
 #include <SSVStart.h>
@@ -35,4 +35,4 @@ namespace ssvsc
 	};
 }
 
-#endif // GRID_H
+#endif

@@ -12,6 +12,7 @@
 
 using namespace std;
 using namespace sf;
+using namespace ssvu::Utils;
 using namespace ssvsc::Utils;
 
 namespace ssvsc

@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SPATIALINFOBASE_H
-#define SPATIALINFOBASE_H
+#ifndef SSVSC_SPATIALINFOBASE
+#define SSVSC_SPATIALINFOBASE
 
 #include <google/dense_hash_set>
 #include "Spatial/SpatialBase.h"
@@ -31,4 +31,4 @@ namespace ssvsc
 	};
 }
 
-#endif // SPATIALINFOBASE_H
+#endif
