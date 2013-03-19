@@ -18,7 +18,7 @@ namespace ssvsc
 	class Grid : public SpatialBase
 	{
 		private:
-			ssvs::Utils::MemoryManager<GridInfo> memoryManager;
+			ssvu::MemoryManager<GridInfo> memoryManager;
 			std::vector<std::vector<Cell*>> cells; // owned
 			int columns, rows, cellSize, offset;
 
