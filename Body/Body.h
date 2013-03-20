@@ -8,7 +8,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <SSVUtils.h>
+#include <SSVUtils/SSVUtils.h>
 #include "AABB/AABB.h"
 #include "Body/CallbackInfo.h"
 
