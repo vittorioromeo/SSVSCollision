@@ -6,7 +6,7 @@
 #define SSVSC_GRID
 
 #include <vector>
-#include <SSVStart.h>
+#include <SSVStart/SSVStart.h>
 #include "GridInfo.h"
 #include "Spatial/SpatialBase.h"
 #include "Spatial/SpatialInfoBase.h"

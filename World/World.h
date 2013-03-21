@@ -8,7 +8,7 @@
 #include <vector>
 #include <google/dense_hash_set>
 #include <SFML/Graphics.hpp>
-#include <SSVStart.h>
+#include <SSVStart/SSVStart.h>
 
 namespace ssvu
 {
