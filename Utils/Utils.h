@@ -19,9 +19,7 @@ namespace ssvsc
 	{
 		template<typename TResolver, typename... TArgs> static ResolverBase& createResolver(TArgs&&... mArgs) { return *(new TResolver(std::forward<TArgs>(mArgs)...)); }
 		template<typename TSpatial, typename... TArgs> static SpatialBase& createSpatial(TArgs&&... mArgs) { return *(new TSpatial(std::forward<TArgs>(mArgs)...)); }
-
-		template<typename T, typename P> void sort(T& mItems, P mPredicate) { std::sort(std::begin(mItems), std::end(mItems), mPredicate); }
-
+		
 		int getMinIntersectionX(const AABB& mA, const AABB& mB);
 		int getMinIntersectionY(const AABB& mA, const AABB& mB);
 		sf::Vector2i getMinIntersection(const AABB& mA, const AABB& mB);
