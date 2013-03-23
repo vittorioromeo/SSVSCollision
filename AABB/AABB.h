@@ -5,7 +5,7 @@
 #ifndef SSVSC_AABB
 #define SSVSC_AABB
 
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 namespace ssvsc
 {
