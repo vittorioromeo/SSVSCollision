@@ -2,7 +2,7 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include "Utils/Utils.h"
+#include "SSVSCollision/Utils/Utils.h"
 
 using namespace std;
 using namespace sf;

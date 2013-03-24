@@ -3,8 +3,8 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include <SSVUtils/SSVUtils.h>
-#include "Body/Body.h"
-#include "Cell.h"
+#include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Spatial/Grid/Cell.h"
 
 using namespace std;
 using namespace ssvu;

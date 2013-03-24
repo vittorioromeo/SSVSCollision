@@ -9,8 +9,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SSVUtils/SSVUtils.h>
-#include "AABB/AABB.h"
-#include "Body/CallbackInfo.h"
+#include "SSVSCollision/AABB/AABB.h"
+#include "SSVSCollision/Body/CallbackInfo.h"
 
 namespace ssvsc
 {

@@ -2,11 +2,11 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include "World/World.h"
-#include "Body/Body.h"
-#include "Utils/Utils.h"
-#include "Resolver/ResolverBase.h"
-#include "Spatial/SpatialBase.h"
+#include "SSVSCollision/World/World.h"
+#include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Utils/Utils.h"
+#include "SSVSCollision/Resolver/ResolverBase.h"
+#include "SSVSCollision/Spatial/SpatialBase.h"
 
 using namespace std;
 using namespace ssvsc::Utils;

@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <google/dense_hash_set>
-#include "Spatial/SpatialInfoBase.h"
+#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 
 namespace ssvsc
 {

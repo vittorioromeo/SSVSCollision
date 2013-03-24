@@ -3,8 +3,8 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include <SSVUtils/SSVUtils.h>
-#include "Resolver/Retro/Retro.h"
-#include "Utils/Utils.h"
+#include "SSVSCollision/Resolver/Retro/Retro.h"
+#include "SSVSCollision/Utils/Utils.h"
 
 using namespace std;
 using namespace sf;

@@ -8,7 +8,7 @@
 #include <vector>
 #include <algorithm>
 #include <SFML/Graphics.hpp>
-#include "AABB/AABB.h"
+#include "SSVSCollision/AABB/AABB.h"
 
 namespace ssvsc
 {

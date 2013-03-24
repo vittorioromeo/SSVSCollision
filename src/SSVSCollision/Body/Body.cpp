@@ -4,11 +4,11 @@
 
 #include <algorithm>
 #include <stack>
-#include "Body.h"
-#include "Resolver/ResolverBase.h"
-#include "Spatial/SpatialInfoBase.h"
-#include "Utils/Utils.h"
-#include "World/World.h"
+#include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Resolver/ResolverBase.h"
+#include "SSVSCollision/Spatial/SpatialInfoBase.h"
+#include "SSVSCollision/Utils/Utils.h"
+#include "SSVSCollision/World/World.h"
 
 using namespace std;
 using namespace sf;

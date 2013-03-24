@@ -6,8 +6,8 @@
 #define SSVSC_RETRO
 
 #include <SFML/Graphics.hpp>
-#include "Body/Body.h"
-#include "Resolver/ResolverBase.h"
+#include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Resolver/ResolverBase.h"
 
 namespace ssvsc
 {

@@ -7,9 +7,9 @@
 
 #include <vector>
 #include <SSVStart/SSVStart.h>
-#include "GridInfo.h"
-#include "Spatial/SpatialBase.h"
-#include "Spatial/SpatialInfoBase.h"
+#include "SSVSCollision/Spatial/Grid/GridInfo.h"
+#include "SSVSCollision/Spatial/SpatialBase.h"
+#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 
 namespace ssvsc
 {
