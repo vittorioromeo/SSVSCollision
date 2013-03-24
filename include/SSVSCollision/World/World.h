@@ -6,9 +6,10 @@
 #define SSVSC_WORLD
 
 #include <vector>
-#include <google/dense_hash_set>
 #include <SFML/Graphics.hpp>
 #include <SSVStart/SSVStart.h>
+#pragma GCC system_header
+#include <google/dense_hash_set>
 
 namespace ssvu
 {

@@ -6,8 +6,9 @@
 #define SSVSC_GRIDINFO
 
 #include <vector>
-#include <google/dense_hash_set>
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
+#pragma GCC system_header
+#include <google/dense_hash_set>
 
 namespace ssvsc
 {
