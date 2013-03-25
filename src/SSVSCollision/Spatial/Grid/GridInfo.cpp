@@ -62,5 +62,6 @@ namespace ssvsc
 		for(auto& query : queries) for(auto& body : *query) result.insert(body);
 		return result;
 	}
+	void GridInfo::destroy() { grid.delSpatialInfo(*this); } 
 }
 

@@ -28,7 +28,7 @@ namespace ssvsc
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
 			virtual google::dense_hash_set<Body*> getBodiesToCheck() = 0;
-			void destroy() { spatial.delSpatialInfo(*this); }
+			virtual void destroy() = 0;
 	};
 }
 

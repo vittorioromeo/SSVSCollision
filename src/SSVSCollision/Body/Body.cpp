@@ -50,7 +50,7 @@ namespace ssvsc
 		}
 
 		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
-
+		
 		spatialInfo.postUpdate();
 		onPostUpdate();
 	}

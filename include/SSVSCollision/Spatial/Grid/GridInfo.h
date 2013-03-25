@@ -24,7 +24,7 @@ namespace ssvsc
 			std::vector<Cell*> cells;
 			std::vector<std::vector<Body*>*> queries; // Cell vector ptrs to query
 			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
-			bool invalid{false}; // IF TRUE CRASHES ON START - MUST FIX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			bool invalid{false}; // IF TRUE CRASHES ON START - MUST FIX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! BUG (TODO)
 
 			void calcEdges(); // Sets startX, startY, endX, endY
 			void checkEdges(); // Checks if startXY... is different from previousStartXY... - if so, recalculates
@@ -39,6 +39,7 @@ namespace ssvsc
 			void preUpdate() override;
 			void postUpdate() override;
 			google::dense_hash_set<Body*> getBodiesToCheck() override;
+			void destroy() override;
 	};
 }
 
