@@ -33,7 +33,8 @@ namespace ssvsc
 		memoryManager.cleanUp();
 		for(auto& body : memoryManager.getItems()) body->update(mFrameTime);
 	}
-
+	
+	vector<Body*>& World::getBodies()	{ return memoryManager.getItems(); }
 	ResolverBase& World::getResolver() 	{ return *resolver; }
 	SpatialBase& World::getSpatial() 	{ return *spatial; }
 }

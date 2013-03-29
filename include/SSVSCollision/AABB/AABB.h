@@ -47,6 +47,7 @@ namespace ssvsc
 			bool isBelow(const AABB& mAABB) const;
 
 			bool operator==(const AABB& mOther) const;
+			bool operator!=(const AABB& mOther) const;
 	};
 }
 

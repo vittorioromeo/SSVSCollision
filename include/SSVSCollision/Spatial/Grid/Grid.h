@@ -6,6 +6,7 @@
 #define SSVSC_GRID
 
 #include <vector>
+#include <SFML/System.hpp>
 #include <SSVStart/SSVStart.h>
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
@@ -14,7 +15,8 @@
 namespace ssvsc
 {
 	class Cell;
-
+	class GridQuery;
+	
 	class Grid : public SpatialBase
 	{
 		private:
@@ -32,6 +34,12 @@ namespace ssvsc
 			Cell* getCell(int mX, int mY);
 			int getIndex(int mValue) const;
 			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const;
+			int getXMinIndex() const;
+			int getYMinIndex() const;
+			int getXMaxIndex() const;
+			int getYMaxIndex() const;
+			
+			GridQuery getQuery(sf::Vector2i mPoint);
 	};
 }
 

@@ -25,7 +25,7 @@ namespace ssvsc
 			ResolverBase& resolver;
 			SpatialInfoBase& spatialInfo;
 			AABB shape, oldShape;
-			bool _static, outOfBounds{false};
+			bool _static, outOfBounds{false}, resolve{true};
 			sf::Vector2f velocity, acceleration;
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData{nullptr};
@@ -63,8 +63,10 @@ namespace ssvsc
 			void setWidth(int mWidth);
 			void setHeight(int mHeight);
 			void setOutOfBounds(bool mOutOfBounds);
+			void setResolve(bool mResolve);
 
 			// Getters
+			World& getWorld();
 			AABB& getShape();
 			AABB& getOldShape();
 			const std::vector<std::string>& getGroups();

@@ -4,12 +4,15 @@
 
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
+#include "SSVSCollision/Spatial/Grid/GridQuery.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
+#include "SSVSCollision/Body/Body.h"
 
 using namespace std;
+using namespace sf;
 
 namespace ssvsc
-{
+{	
 	Grid::Grid(int mColumns, int mRows, int mCellSize, int mOffset) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset}
 	{
 		for(int iX{0}; iX < columns; iX++)
@@ -41,5 +44,10 @@ namespace ssvsc
 	{
 		return mStartX < 0 - offset || mEndX >= columns - offset || mStartY < 0 - offset || mEndY >= rows - offset;
 	}
+	int Grid::getXMinIndex() const { return 0 - offset; }
+	int Grid::getYMinIndex() const { return 0 - offset; }
+	int Grid::getXMaxIndex() const { return columns - offset; }
+	int Grid::getYMaxIndex() const { return rows - offset; }
+	
+	GridQuery Grid::getQuery(Vector2i mPoint) { return GridQuery{*this, mPoint}; }
 }
-

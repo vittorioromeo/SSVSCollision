@@ -7,6 +7,7 @@
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 
+using namespace std;
 using namespace google;
 
 namespace ssvsc
@@ -16,22 +17,23 @@ namespace ssvsc
 
 	void GridInfo::calcEdges()
 	{
-		const AABB& shape(body.getShape());
-		startX = grid.getIndex(shape.getLeft());
-		startY = grid.getIndex(shape.getTop());
-		endX = grid.getIndex(shape.getRight());
-		endY = grid.getIndex(shape.getBottom());
-	}
-
-	void GridInfo::checkEdges()
-	{
 		const AABB& oldShape(body.getOldShape());
-		if(grid.getIndex(oldShape.getLeft()) != startX) { calcCells(); return; }
-		if(grid.getIndex(oldShape.getRight()) != endX) { calcCells(); return; }
-		if(grid.getIndex(oldShape.getTop()) != startY) { calcCells(); return; }
-		if(grid.getIndex(oldShape.getBottom()) != endY) { calcCells(); return; }
+		const AABB& shape(body.getShape());
+		
+		startX = grid.getIndex(min(oldShape.getLeft(), shape.getLeft()));
+		startY = grid.getIndex(min(oldShape.getTop(), shape.getTop()));
+		endX = grid.getIndex(max(oldShape.getRight(), shape.getRight()));
+		endY = grid.getIndex(max(oldShape.getBottom(), shape.getBottom()));
+		
+		if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells();
+		else invalid = false; 
+		
+		oldStartX = startX;	
+		oldStartY = startY;
+		oldEndX = endX;
+		oldEndY = endY;
 	}
-
+	
 	void GridInfo::clear()
 	{
 		for(auto& cell : cells) cell->del(&body);
@@ -49,13 +51,13 @@ namespace ssvsc
 			cell->add(&body);
 			for(auto& group : body.getGroupsToCheck()) queries.push_back(cell->getQuery(group));
 		}
-
+		
 		invalid = false;
 	}
 
 	void GridInfo::invalidate() { invalid = true; }
-	void GridInfo::preUpdate() { if(invalid) { calcEdges(); calcCells(); } }
-	void GridInfo::postUpdate() { calcEdges(); checkEdges(); }
+	void GridInfo::preUpdate() { if(invalid) calcEdges();  }
+	void GridInfo::postUpdate() { }
 	dense_hash_set<Body*> GridInfo::getBodiesToCheck()
 	{
 		dense_hash_set<Body*> result; result.set_empty_key(nullptr);

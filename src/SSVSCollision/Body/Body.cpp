@@ -28,29 +28,31 @@ namespace ssvsc
 	void Body::update(float mFrameTime)
 	{
 		onPreUpdate();
-		spatialInfo.preUpdate();
-
-		if(_static) return;
+		
+		if(_static) { spatialInfo.preUpdate(); return; }
 		if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
 
 		oldShape = shape;
-		integrate(mFrameTime);
+		integrate(mFrameTime); 	
+		spatialInfo.preUpdate();
 		vector<Body*> bodiesToResolve;
 
 		for(auto& body : spatialInfo.getBodiesToCheck())
 		{
 			if(body == this || !isOverlapping(shape, body->getShape())) continue;
 
-			auto intersection = getMinIntersection(shape, body->getShape());
+			auto intersection(getMinIntersection(shape, body->getShape()));
 
 			onDetection({*body, mFrameTime, body->getUserData(), intersection});
 			body->onDetection({*this, mFrameTime, userData, -intersection});
 
+			if(!resolve) continue;
 			if(!containsAny(body->getGroups(), groupsNoResolve)) bodiesToResolve.push_back(body);
 		}
 
 		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
-		
+		if(oldShape != shape) spatialInfo.invalidate(); 
+
 		spatialInfo.postUpdate();
 		onPostUpdate();
 	}
@@ -59,7 +61,6 @@ namespace ssvsc
 	{
 		velocity += acceleration * mFrameTime;
 		shape.move(Vector2i(velocity * mFrameTime));
-
 		acceleration = {0, 0};
 	}
 

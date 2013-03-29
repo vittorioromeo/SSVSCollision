@@ -7,14 +7,14 @@
 
 #include <vector>
 #include <algorithm>
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include "SSVSCollision/AABB/AABB.h"
 
 namespace ssvsc
 {
 	class ResolverBase;
 	class SpatialBase;
-
+	
 	namespace Utils
 	{
 		template<typename TResolver, typename... TArgs> static ResolverBase& createResolver(TArgs&&... mArgs) { return *(new TResolver(std::forward<TArgs>(mArgs)...)); }

@@ -11,5 +11,6 @@
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/Resolver/Retro/Retro.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
+#include "SSVSCollision/Spatial/Grid/GridQuery.h"
 
 #endif

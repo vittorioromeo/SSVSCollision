@@ -17,6 +17,7 @@ message("\nFound SSVSCollision include at: ${SSVSCOLLISION_INCLUDE_DIR}.\n")
 
 FIND_LIBRARY(SSVSCOLLISION_LIBRARY
   NAMES SSVSCollision libSSVSCollision SSVSCollision-s libSSVSCollision-s ssvscollision libssvscollision ssvscollision-s libssvscollision-s
+		SSVSCollision-s-d libSSVSCollision-s-d ssvscollision-s-d libssvscollision-s-d
   PATH_SUFFIXES lib/ lib64/
   PATHS "${PROJECT_SOURCE_DIR}/../SSVSCollision/"
   "${PROJECT_SOURCE_DIR}/extlibs/SSVSCollision/"

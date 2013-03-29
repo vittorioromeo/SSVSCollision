@@ -23,7 +23,9 @@ namespace ssvsc
 	void Body::setWidth(int mWidth)						{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
 	void Body::setHeight(int mHeight)					{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
 	void Body::setOutOfBounds(bool mOutOfBounds)		{ outOfBounds = mOutOfBounds; }
-
+	void Body::setResolve(bool mResolve)				{ resolve = mResolve; }
+	
+	World& Body::getWorld()								{ return world; }
 	AABB& Body::getShape()								{ return shape; }
 	AABB& Body::getOldShape() 							{ return oldShape; }
 	const vector<string>& Body::getGroups()				{ return groups; }

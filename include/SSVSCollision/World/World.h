@@ -54,6 +54,7 @@ namespace ssvsc
 			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
 			void update(float mFrameTime);			
 
+			std::vector<Body*>& getBodies();
 			ResolverBase& getResolver();
 			SpatialBase& getSpatial();
 	};

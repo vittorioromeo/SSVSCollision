@@ -5,7 +5,6 @@
 #ifndef SSVSC_RETRO
 #define SSVSC_RETRO
 
-#include <SFML/Graphics.hpp>
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Resolver/ResolverBase.h"
 

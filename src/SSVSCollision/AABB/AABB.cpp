@@ -40,4 +40,5 @@ namespace ssvsc
 	bool AABB::isBelow(const AABB& mAABB) const		{ return getTop() >= mAABB.getBottom(); }
 
 	bool AABB::operator==(const AABB& mOther) const { return position == mOther.position && halfSize == mOther.halfSize; }
+	bool AABB::operator!=(const AABB& mOther) const { return position != mOther.position || halfSize != mOther.halfSize; }
 }

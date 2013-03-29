@@ -17,7 +17,8 @@ namespace ssvsc
 	{
 		private:
 			int left, right, top, bottom;
-			std::unordered_map<std::string, std::vector<Body*>> bodies;
+			std::vector<Body*> bodies;
+			std::unordered_map<std::string, std::vector<Body*>> groupedBodies;
 
 		public:
 			Cell(int mLeft, int mRight, int mTop, int mBottom);			
@@ -25,6 +26,7 @@ namespace ssvsc
 			void add(Body* mBody);
 			void del(Body* mBody);
 
+			std::vector<Body*>& getBodies();
 			std::vector<Body*>* getQuery(const std::string& mGroup);
 			int getLeft() const;
 			int getRight() const;

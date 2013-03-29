@@ -8,8 +8,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extlibs/SSVUtils/cmake/Modules/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extlibs/SSVStart/cmake/Modules/;${CMAKE_MODULE_PATH}")
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -pg -Og" CACHE STRING "" FORCE)
+
 set(SPARSEHASH_INCLUDE_DIR "" CACHE STRING "google::sparsehash include directory")
-set(SPARSEHASH_LIBRARY "" CACHE STRING "google::sparsehash library file")
 
 set(SFML_STATIC_LIBRARIES FALSE CACHE BOOL "Look for static SFML libraries.")
 
@@ -62,6 +63,7 @@ set(
 	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/Cell.h
 	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/Grid.h
 	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridInfo.h
+	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridQuery.h
 	${INC_DIR}/${PROJECT_NAME}/Utils/Utils.h
 	${INC_DIR}/${PROJECT_NAME}/World/World.h
 	${SRC_DIR}/${PROJECT_NAME}/AABB/AABB.cpp
@@ -71,6 +73,7 @@ set(
 	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/Cell.cpp
 	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/Grid.cpp
 	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridInfo.cpp
+	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridQuery.cpp
 	${SRC_DIR}/${PROJECT_NAME}/Utils/Utils.cpp
 	${SRC_DIR}/${PROJECT_NAME}/World/World.cpp
 )
@@ -79,7 +82,6 @@ include_directories(${INC_DIR})
 include_directories(${SPARSEHASH_INCLUDE_DIR})
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${SOURCES})
-target_link_libraries(SSVSCollision ${SPARSEHASH_LIBRARY})
 target_link_libraries(SSVSCollision ${SFML_SYSTEM_LIBRARY})
 target_link_libraries(SSVSCollision ${SSVUTILS_LIBRARY})
 target_link_libraries(SSVSCollision ${SSVSTART_LIBRARY})
