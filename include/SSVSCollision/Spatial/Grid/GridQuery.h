@@ -14,7 +14,7 @@
 
 namespace ssvsc
 {	
-	sf::Vector2i lineIntersection(sf::Vector2i mA1, sf::Vector2i mA2, sf::Vector2i mY1, sf::Vector2i mY2);
+	sf::Vector2f lineIntersection(sf::Vector2f mA1, sf::Vector2f mA2, sf::Vector2f mY1, sf::Vector2f mY2);
 
 	namespace QueryTraits
 	{
@@ -49,11 +49,11 @@ namespace ssvsc
 				{ 
 					return mA->getPosition().x < mB->getPosition().x; 
 				}
-				static bool misses(const sf::Vector2i& mPos, const AABB& mShape, const sf::Vector2i&) 
+				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&) 
 				{ 
 					return mShape.getLeft() > mPos.x || mPos.y < mShape.getTop() || mPos.y > mShape.getBottom(); 
 				}
-				static void setPos(sf::Vector2i& mPos, const AABB& mShape) { mPos.x = mShape.getRight(); } 
+				static void setPos(sf::Vector2f& mPos, const AABB& mShape) { mPos.x = mShape.getRight(); } 
 			};		
 			struct Right
 			{
@@ -66,11 +66,11 @@ namespace ssvsc
 				{ 
 					return mA->getPosition().x > mB->getPosition().x; 
 				}
-				static bool misses(const sf::Vector2i& mPos, const AABB& mShape, const sf::Vector2i&) 
+				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&) 
 				{ 
 					return mShape.getRight() < mPos.x || mPos.y < mShape.getTop() || mPos.y > mShape.getBottom(); 
 				}
-				static void setPos(sf::Vector2i& mPos, const AABB& mShape) { mPos.x = mShape.getLeft(); } 
+				static void setPos(sf::Vector2f& mPos, const AABB& mShape) { mPos.x = mShape.getLeft(); } 
 			};		
 			struct Up
 			{
@@ -83,11 +83,11 @@ namespace ssvsc
 				{ 
 					return mA->getPosition().y < mB->getPosition().y; 
 				}
-				static bool misses(const sf::Vector2i& mPos, const AABB& mShape, const sf::Vector2i&) 
+				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&) 
 				{ 
 					return mShape.getTop() > mPos.y || mPos.x < mShape.getLeft() || mPos.x > mShape.getRight(); 
 				}
-				static void setPos(sf::Vector2i& mPos, const AABB& mShape) { mPos.y = mShape.getBottom(); } 
+				static void setPos(sf::Vector2f& mPos, const AABB& mShape) { mPos.y = mShape.getBottom(); } 
 			};		
 			struct Down
 			{
@@ -100,11 +100,11 @@ namespace ssvsc
 				{ 
 					return mA->getPosition().y > mB->getPosition().y; 
 				}
-				static bool misses(const sf::Vector2i& mPos, const AABB& mShape, const sf::Vector2i&) 
+				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&) 
 				{ 
 					return mShape.getBottom() < mPos.y || mPos.x < mShape.getLeft() || mPos.x > mShape.getRight(); 
 				}
-				static void setPos(sf::Vector2i& mPos, const AABB& mShape) { mPos.y = mShape.getTop(); } 
+				static void setPos(sf::Vector2f& mPos, const AABB& mShape) { mPos.y = mShape.getTop(); } 
 			};
 		}
 		
@@ -114,10 +114,10 @@ namespace ssvsc
 			{ 
 				return mIndex.x >= mGrid.getXMinIndex() && mIndex.x < mGrid.getXMaxIndex() && mIndex.y >= mGrid.getYMinIndex() && mIndex.y < mGrid.getYMaxIndex(); 
 			}
-			static void step(sf::Vector2i& mIndex, sf::Vector2i& mPos, sf::Vector2i& mStep, sf::Vector2f& mSideDist, 
+			static void step(sf::Vector2i& mIndex, sf::Vector2f& mPos, sf::Vector2i& mStep, sf::Vector2f& mSideDist, 
 				const sf::Vector2i& mStartIndex, const sf::Vector2f& mDirection, const sf::Vector2f& mDeltaDist, int mCellSize)
 			{ 
-				mPos += sf::Vector2i(mDirection * static_cast<float>(mCellSize));
+				mPos += sf::Vector2f(mDirection * static_cast<float>(mCellSize));
 				
 				if(mDirection.x < 0) { mStep.x = -1; mSideDist.x = (mStartIndex.x - mIndex.x) * mDeltaDist.x; }
 				else { mStep.x = 1; mSideDist.x = (mIndex.x + 1.0f - mStartIndex.x) * mDeltaDist.x; }
@@ -127,12 +127,12 @@ namespace ssvsc
 				if(mSideDist.x < mSideDist.y) { mSideDist.x += mDeltaDist.x; mIndex.x += mStep.x; }
 				else { mSideDist.y += mSideDist.y; mIndex.y += mStep.y; }
 			}
-			static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2i& mStartPos) 
+			static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f& mStartPos)
 			{ 
 				return sqrt(pow((mA->getPosition().x - mStartPos.x), 2) + pow((mA->getPosition().y - mStartPos.y), 2)) > 
 						sqrt(pow((mB->getPosition().x - mStartPos.x), 2) + pow((mB->getPosition().y - mStartPos.y), 2));
 			}
-			static bool misses(sf::Vector2i& mPos, const AABB& mShape, const sf::Vector2i& mStartPos) 
+			static bool misses(sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f& mStartPos) 
 			{ 				
 				std::vector<std::pair<sf::Vector2i, sf::Vector2i>> lines;
 				lines.push_back({mShape.getNWCorner(), mShape.getNECorner()});
@@ -140,22 +140,26 @@ namespace ssvsc
 				lines.push_back({mShape.getSECorner(), mShape.getSWCorner()});
 				lines.push_back({mShape.getSWCorner(), mShape.getNWCorner()});
 				
-				sf::Vector2i intersection{0, 0};
+				sf::Vector2f intersection{0, 0};
 				while(intersection.x == 0 && intersection.y == 0 && !lines.empty())
 				{
 					auto currentLine(lines.back());
 					lines.pop_back();
-					intersection = lineIntersection(mStartPos, mPos, currentLine.first, currentLine.second);
+					intersection = lineIntersection(mStartPos, mPos, sf::Vector2f(currentLine.first), sf::Vector2f(currentLine.second));
 				}
 					
-				if(intersection.x == 0 && intersection.y == 0) return true;
+				if(intersection.x == 0 && intersection.y == 0) 
+				{
+					ssvu::log("body found, but missed");
+					return true;
+				}
 				else
 				{
 					mPos = intersection;
 					return false;	
 				}
 			}
-			static void setPos(sf::Vector2i&, const AABB&) { } 
+			static void setPos(sf::Vector2f&, const AABB&) { } 
 		};
 	}
 	
@@ -164,8 +168,8 @@ namespace ssvsc
 		private:
 			Grid& grid;
 			std::vector<Body*> bodies;
-			sf::Vector2i startPos, pos, startIndex, index, step;
-			sf::Vector2f direction, sideDist, deltaDist{(float)sqrt(1 + (direction.y * direction.y) / (direction.x * direction.x)), (float)sqrt(1 + (direction.x * direction.x) / (direction.y * direction.y))};
+			sf::Vector2i startIndex, index, step;
+			sf::Vector2f startPos, pos, direction, sideDist, deltaDist;
 
 			template<typename TQueryTraits, typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
 			{
