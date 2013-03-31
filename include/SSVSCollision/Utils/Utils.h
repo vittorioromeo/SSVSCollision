@@ -20,6 +20,9 @@ namespace ssvsc
 		template<typename TResolver, typename... TArgs> static ResolverBase& createResolver(TArgs&&... mArgs) { return *(new TResolver(std::forward<TArgs>(mArgs)...)); }
 		template<typename TSpatial, typename... TArgs> static SpatialBase& createSpatial(TArgs&&... mArgs) { return *(new TSpatial(std::forward<TArgs>(mArgs)...)); }
 		
+		float getSigned2DTriangleArea(sf::Vector2f mA, sf::Vector2f mB, sf::Vector2f mC);
+		bool isSegmentInsersecting(sf::Vector2f mA1, sf::Vector2f mA2, sf::Vector2f mB1, sf::Vector2f mB2, sf::Vector2f& mIntersection);
+		
 		int getMinIntersectionX(const AABB& mA, const AABB& mB);
 		int getMinIntersectionY(const AABB& mA, const AABB& mB);
 		sf::Vector2i getMinIntersection(const AABB& mA, const AABB& mB);

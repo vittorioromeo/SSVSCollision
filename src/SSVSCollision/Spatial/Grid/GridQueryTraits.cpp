@@ -6,10 +6,12 @@
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Spatial/Grid/GridQueryTraits.h"
 #include "SSVSCollision/Spatial/Grid/GridQuery.h"
+#include "SSVSCollision/Utils/Utils.h"
 
 using namespace std;
 using namespace sf;
 using namespace ssvu;
+using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
@@ -89,80 +91,50 @@ namespace ssvsc
 		bool RayCast::isValid(const GridQuery& mQuery) { return mQuery.getGrid().isIndexValid(mQuery.getIndex()); }
 		void RayCast::step(GridQuery& mQuery)
 		{
-			const auto index(mQuery.getIndex());
-			const auto startIndex(mQuery.getStartIndex());
-			const auto deltaDist(mQuery.getDeltaDist());
-			const auto sideDist(mQuery.getSideDist());
-			const auto direction(mQuery.getDirection());
-			const auto step(mQuery.getStep());
+			const auto index(mQuery.getIndex()), startIndex(mQuery.getStartIndex()), step(mQuery.getStep());
+			const auto deltaDist(mQuery.getDeltaDist()), sideDist(mQuery.getSideDist()), direction(mQuery.getDirection());
 			
 			mQuery.setPos(mQuery.getPos() + direction * static_cast<float>(mQuery.getGrid().getCellSize()));
 
-			if(direction.x < 0)
-			{
-				mQuery.setStepX(-1);
-				mQuery.setSideDistX((startIndex.x - index.x) * deltaDist.x);
-			}
-			else
-			{
-				mQuery.setStepX(1);
-				mQuery.setSideDistX((index.x + 1.0f - startIndex.x) * deltaDist.x);
-			}
+			if(direction.x < 0) { mQuery.setStepX(-1); mQuery.setSideDistX((startIndex.x - index.x) * deltaDist.x); }
+			else { mQuery.setStepX(1); mQuery.setSideDistX((index.x + 1.0f - startIndex.x) * deltaDist.x); }
 
-			if(direction.y < 0)
-			{
-				mQuery.setStepY(-1);
-				mQuery.setSideDistY((startIndex.y - index.y) * deltaDist.y);
-			}
-			else
-			{
-				mQuery.setStepY(1);
-				mQuery.setSideDistY((index.y + 1.0f - startIndex.y) * deltaDist.y);
-			}
+			if(direction.y < 0) { mQuery.setStepY(-1); mQuery.setSideDistY((startIndex.y - index.y) * deltaDist.y); }
+			else { mQuery.setStepY(1); mQuery.setSideDistY((index.y + 1.0f - startIndex.y) * deltaDist.y); }
 
-			if(sideDist.x < sideDist.y)
-			{
-				mQuery.setSideDistX(sideDist.x + deltaDist.x);
-				mQuery.setIndexX(index.x + step.x);
-			}
-			else
-			{
-				mQuery.setSideDistY(sideDist.y + deltaDist.y);
-				mQuery.setIndexY(index.y + step.y);
-			}
+			if(sideDist.x < sideDist.y) { mQuery.setSideDistX(sideDist.x + deltaDist.x); mQuery.setIndexX(index.x + step.x); }
+			else { mQuery.setSideDistY(sideDist.y + deltaDist.y); mQuery.setIndexY(index.y + step.y); }
 		}
 		bool RayCast::getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB)
 		{
-			auto startPos(mQuery.getStartPos());
-			auto aPos(mA->getPosition());
-			auto bPos(mB->getPosition());
+			const auto startPos(mQuery.getStartPos());
+			const auto aPos(mA->getPosition()), bPos(mB->getPosition());
 			return sqrt(pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2)) > sqrt(pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2));
 		}
 		bool RayCast::misses(GridQuery& mQuery, const AABB& mShape)
 		{
+			const auto direction(mQuery.getDirection());
 			vector<pair<Vector2i, Vector2i>> lines;
-			lines.push_back({mShape.getNWCorner(), mShape.getNECorner()});
-			lines.push_back({mShape.getNECorner(), mShape.getSECorner()});
-			lines.push_back({mShape.getSECorner(), mShape.getSWCorner()});
-			lines.push_back({mShape.getSWCorner(), mShape.getNWCorner()});
+			
+			if(direction.x > 0) lines.push_back({mShape.getSWCorner(), mShape.getNWCorner()});
+			else lines.push_back({mShape.getNECorner(), mShape.getSECorner()});
+			
+			if(direction.y > 0) lines.push_back({mShape.getNWCorner(), mShape.getNECorner()});
+			else lines.push_back({mShape.getSECorner(), mShape.getSWCorner()});
 
-			bool f{false};
+			bool intersects{false};
 			Vector2f intersection;
 
-			while(!f && !lines.empty())
+			while(!intersects && !lines.empty())
 			{
 				auto currentLine(lines.back());
 				lines.pop_back();
-				f = isSegmentInsersecting(mQuery.getStartPos(), mQuery.getPos(), Vector2f(currentLine.first), Vector2f(currentLine.second), intersection);
+				intersects = isSegmentInsersecting(mQuery.getStartPos(), mQuery.getPos(), Vector2f(currentLine.first), Vector2f(currentLine.second), intersection);
 			}
 
-			if(!f) return true;
-			else
-			{
-				mQuery.setOutX(intersection.x);
-				mQuery.setOutY(intersection.y);
-				return false;
-			}
+			if(intersects) { mQuery.setOutX(intersection.x); mQuery.setOutY(intersection.y); return false; }
+			
+			return true;
 		}
 		void RayCast::setOut(GridQuery&, const AABB&) { }
 	}

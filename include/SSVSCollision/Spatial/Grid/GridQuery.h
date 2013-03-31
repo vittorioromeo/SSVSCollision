@@ -15,8 +15,6 @@
 
 namespace ssvsc
 {	
-	bool isSegmentInsersecting(sf::Vector2f a, sf::Vector2f b, sf::Vector2f c, sf::Vector2f d, sf::Vector2f &p);
-	
 	class GridQuery
 	{
 		private:
