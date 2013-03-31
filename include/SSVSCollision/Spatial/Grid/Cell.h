@@ -27,6 +27,7 @@ namespace ssvsc
 			void del(Body* mBody);
 
 			std::vector<Body*>& getBodies();
+			std::vector<Body*>& getBodies(const std::string& mGroup);
 			std::vector<Body*>* getQuery(const std::string& mGroup);
 			int getLeft() const;
 			int getRight() const;

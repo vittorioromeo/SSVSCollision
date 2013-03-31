@@ -37,9 +37,11 @@ namespace ssvsc
 		memoryManager.del(&(static_cast<GridInfo&>(mSpatialInfo))); 
 		memoryManager.cleanUp();
 	}
-
-	Cell* Grid::getCell(int mX, int mY) { return cells[mX + offset][mY + offset]; }
+	
+	Cell& Grid::getCell(int mX, int mY) { return *(cells[mX + offset][mY + offset]); }
+	Cell& Grid::getCell(Vector2i mIndex) { return getCell(mIndex.x, mIndex.y); }
 	int Grid::getIndex(int mValue) const { return mValue / cellSize; }
+	Vector2i Grid::getIndex(Vector2i mPosition) const { return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 	bool Grid::isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const
 	{
 		return mStartX < 0 - offset || mEndX >= columns - offset || mStartY < 0 - offset || mEndY >= rows - offset;

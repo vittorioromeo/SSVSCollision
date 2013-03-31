@@ -40,6 +40,10 @@ namespace ssvsc
 			sf::Vector2i getSize() const;
 			int getWidth() const;
 			int getHeight() const;
+			sf::Vector2i getNWCorner() const;
+			sf::Vector2i getNECorner() const;
+			sf::Vector2i getSWCorner() const;
+			sf::Vector2i getSECorner() const;
 
 			bool isLeftOf(const AABB& mAABB) const;
 			bool isRightOf(const AABB& mAABB) const;

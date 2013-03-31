@@ -44,7 +44,7 @@ namespace ssvsc
 		clear();
 
 		if(grid.isOutside(startX, startY, endX, endY)) { body.setOutOfBounds(true); return; }
-		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(grid.getCell(iX, iY));
+		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(&grid.getCell(iX, iY));
 
 		for(auto& cell : cells)
 		{

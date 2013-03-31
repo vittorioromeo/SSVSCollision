@@ -25,6 +25,7 @@ namespace ssvsc
 	}
 	
 	vector<Body*>& Cell::getBodies() { return bodies; }
+	vector<Body*>& Cell::getBodies(const string& mGroup) { return groupedBodies[mGroup]; }
 	vector<Body*>* Cell::getQuery(const string& mGroup) { return &groupedBodies[mGroup]; }
 	int Cell::getLeft() const	{ return left; }
 	int Cell::getRight() const 	{ return right; }

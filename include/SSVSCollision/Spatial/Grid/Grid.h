@@ -31,8 +31,10 @@ namespace ssvsc
 			SpatialInfoBase& createSpatialInfo(Body& mBody) override;
 			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
 			
-			Cell* getCell(int mX, int mY);
+			Cell& getCell(int mX, int mY);
+			Cell& getCell(sf::Vector2i mIndex);
 			int getIndex(int mValue) const;
+			sf::Vector2i getIndex(sf::Vector2i mPosition) const;
 			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const;
 			int getXMinIndex() const;
 			int getYMinIndex() const;

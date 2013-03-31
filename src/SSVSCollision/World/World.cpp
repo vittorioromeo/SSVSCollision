@@ -27,7 +27,7 @@ namespace ssvsc
 		return memoryManager.create(*this, mIsStatic, mPosition, mSize);
 	}
 
-	void World::del(Body* mBody) { memoryManager.del(mBody); }
+	void World::del(Body* mBody) { memoryManager.del(mBody); memoryManager.cleanUp(); }
 	void World::update(float mFrameTime)
 	{
 		memoryManager.cleanUp();

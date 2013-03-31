@@ -33,6 +33,10 @@ namespace ssvsc
 	Vector2i AABB::getSize() const 					{ return halfSize * 2; }
 	int AABB::getWidth() const 						{ return halfSize.x * 2; }
 	int AABB::getHeight() const 					{ return halfSize.y * 2; }
+	Vector2i AABB::getNWCorner() const				{ return {getLeft(), getTop()}; }
+	Vector2i AABB::getNECorner() const				{ return {getRight(), getTop()}; }
+	Vector2i AABB::getSWCorner() const				{ return {getLeft(), getBottom()}; }
+	Vector2i AABB::getSECorner() const				{ return {getRight(), getBottom()}; }
 	
 	bool AABB::isLeftOf(const AABB& mAABB) const	{ return getRight() <= mAABB.getLeft(); }
 	bool AABB::isRightOf(const AABB& mAABB) const	{ return getLeft() >= mAABB.getRight(); }
