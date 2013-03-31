@@ -15,7 +15,8 @@
 namespace ssvsc
 {	
 	sf::Vector2f lineIntersection(sf::Vector2f mA1, sf::Vector2f mA2, sf::Vector2f mY1, sf::Vector2f mY2);
-
+	bool Test2DSegmentSegment(sf::Vector2f a, sf::Vector2f b, sf::Vector2f c, sf::Vector2f d, float &t, sf::Vector2f &p);
+	
 	namespace QueryTraits
 	{
 		namespace Bodies
@@ -46,6 +47,25 @@ namespace ssvsc
 							sf::Vector2i index{mIndex + sf::Vector2i(iX, iY)};
 							if(!mGrid.isIndexValid(index)) continue;
 							for(auto& b : mGrid.getCell(index).getBodies()) if(!ssvu::contains(result, b)) result.push_back(b); 
+						}
+					
+					mBodies = result;
+				}
+			};
+			struct GroupedOffset
+			{
+				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string& mGroup) 
+				{
+					std::vector<Body*> result;
+					
+					for(int iY = -1; iY < 2; ++iY)
+						for(int iX = -1; iX < 2; ++iX)
+						{
+							sf::Vector2i index{mIndex + sf::Vector2i(iX, iY)};
+							if(!mGrid.isIndexValid(index)) continue;
+							for(auto& b : mGrid.getCell(index).getBodies(mGroup)) if(!ssvu::contains(result, b)) result.push_back(b); 
+							if(index.x == 3 && index.y == 10) ssvu::log ("SUPEROCKCS!");//if(mIndex.x > -20)
+							//ssvu::log("index : " + ssvu::toStr(mIndex.x) + " " + ssvu::toStr(mIndex.y));
 						}
 					
 					mBodies = result;
@@ -131,7 +151,7 @@ namespace ssvsc
 			static void step(sf::Vector2i& mIndex, sf::Vector2f& mPos, sf::Vector2i& mStep, sf::Vector2f& mSideDist, 
 				const sf::Vector2i& mStartIndex, const sf::Vector2f& mDirection, const sf::Vector2f& mDeltaDist, int mCellSize)
 			{ 
-				mPos += sf::Vector2f(mDirection * static_cast<float>(mCellSize));
+				mPos += mDirection * static_cast<float>(mCellSize);
 				
 				if(mDirection.x < 0) { mStep.x = -1; mSideDist.x = (mStartIndex.x - mIndex.x) * mDeltaDist.x; }
 				else { mStep.x = 1; mSideDist.x = (mIndex.x + 1.0f - mStartIndex.x) * mDeltaDist.x; }
@@ -146,7 +166,7 @@ namespace ssvsc
 				return sqrt(pow((mA->getPosition().x - mStartPos.x), 2) + pow((mA->getPosition().y - mStartPos.y), 2)) > 
 						sqrt(pow((mB->getPosition().x - mStartPos.x), 2) + pow((mB->getPosition().y - mStartPos.y), 2));
 			}
-			static bool misses(sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f& mStartPos) 
+			static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f& mStartPos, sf::Vector2f& mOut) 
 			{ 				
 				std::vector<std::pair<sf::Vector2i, sf::Vector2i>> lines;
 				lines.push_back({mShape.getNWCorner(), mShape.getNECorner()});
@@ -154,22 +174,26 @@ namespace ssvsc
 				lines.push_back({mShape.getSECorner(), mShape.getSWCorner()});
 				lines.push_back({mShape.getSWCorner(), mShape.getNWCorner()});
 				
-				sf::Vector2f intersection{0, 0};
-				while(intersection.x == 0 && intersection.y == 0 && !lines.empty())
+				bool f{false};
+				float t;
+				sf::Vector2f intersection;
+				
+				while(!f && !lines.empty())
 				{
 					auto currentLine(lines.back());
 					lines.pop_back();
-					intersection = lineIntersection(mStartPos, mPos, sf::Vector2f(currentLine.first), sf::Vector2f(currentLine.second));
+					f = Test2DSegmentSegment(mStartPos, mPos, sf::Vector2f(currentLine.first), sf::Vector2f(currentLine.second), t, intersection);
 				}
 					
-				if(intersection.x == 0 && intersection.y == 0) 
+				if(!f) 
 				{
 					ssvu::log("body found, but missed");
 					return true;
 				}
 				else
 				{
-					mPos = intersection;
+					ssvu::log("body found, YEP.");
+					mOut = intersection;
 					return false;	
 				}
 			}
@@ -183,16 +207,18 @@ namespace ssvsc
 			Grid& grid;
 			std::vector<Body*> bodies;
 			sf::Vector2i startIndex, index, step;
-			sf::Vector2f startPos, pos, direction, sideDist, deltaDist;
+			sf::Vector2f startPos, pos, direction, sideDist, deltaDist, out;
 
 			template<typename TQueryTraits, typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
 			{
 				while(TQueryTraits::isValid(grid, index))
 				{				
 					if(bodies.empty())
-					{			
+					{	
+						//ssvu::log("from index : " + ssvu::toStr(index.x) + " " + ssvu::toStr(index.y));
 						TCellTraits::getBodies(grid, bodies, index, mGroup);
 						TQueryTraits::step(index, pos, step, sideDist, startIndex, direction, deltaDist, grid.getCellSize());
+						//ssvu::log("toindex : " + ssvu::toStr(index.x) + " " + ssvu::toStr(index.y));
 						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return TQueryTraits::getSorting(mA, mB, startPos); });
 					}				
 					
@@ -202,7 +228,7 @@ namespace ssvsc
 						auto& shape(body->getShape());
 						bodies.pop_back();
 						
-						if(TQueryTraits::misses(pos, shape, startPos)) continue;
+						if(TQueryTraits::misses(pos, shape, startPos, out)) continue;
 						
 						TQueryTraits::setPos(pos, shape);
 						return body;
@@ -226,6 +252,7 @@ namespace ssvsc
 			sf::Vector2i getStartPos();
 			sf::Vector2i getStartIndex();
 			sf::Vector2i getPos();
+			sf::Vector2i getOut();
 			sf::Vector2i getIndex();
 	};
 }

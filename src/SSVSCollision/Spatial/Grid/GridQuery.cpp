@@ -13,6 +13,39 @@ using namespace ssvu;
 
 namespace ssvsc
 {
+	float Signed2DTriArea(Vector2f a, Vector2f b, Vector2f c)
+	{
+		return (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);
+	}
+	
+	bool Test2DSegmentSegment(Vector2f a, Vector2f b, Vector2f c, Vector2f d, float &t, Vector2f &p)
+	{
+		// Sign of areas correspond to which side of ab points c and d are
+		float a1 = Signed2DTriArea(a, b, d); // Compute winding of abd (+ or -)
+		float a2 = Signed2DTriArea(a, b, c); // To intersect, must have sign opposite of a1
+		// If c and d are on different sides of ab, areas have different signs
+		if (a1 * a2 < 0.0f) {
+		// Compute signs for a and b with respect to segment cd
+		float a3 = Signed2DTriArea(c, d, a); // Compute winding of cda (+ or -)
+		// Since area is constant a1 - a2 = a3 - a4, or a4 = a3 + a2 - a1
+		// float a4 = Signed2DTriArea(c, d, b); // Must have opposite sign of a3
+		float a4 = a3 + a2 - a1;
+		// Points a and b on different sides of cd if areas have different signs
+		if (a3 * a4 < 0.0f) {
+		// Segments intersect. Find intersection point along L(t) = a + t * (b - a).
+		// Given height h1 of an over cd and height h2 of b over cd,
+		// t = h1 / (h1 - h2) = (b*h1/2) / (b*h1/2 - b*h2/2) = a3 / (a3 - a4),
+		// where b (the base of the triangles cda and cdb, i.e., the length
+		// of cd) cancels out.
+		t = a3 / (a3 - a4);
+		p = a + t * (b - a);
+		return true;
+		}
+		}
+		// Segments not intersecting (or collinear)
+		return false;
+	}
+	
 	Vector2f lineIntersection(Vector2f mA1, Vector2f mA2, Vector2f mB1, Vector2f mB2)
 	{
 		float d = (mA1.x - mA2.x) * (mB1.y - mB2.y) - (mA1.y - mA2.y) * (mB1.x - mB2.x);
@@ -46,7 +79,7 @@ namespace ssvsc
 	{
 		direction = ssvs::Utils::getNormalized(mDirection);
 		deltaDist = {(float)sqrt(1 + (direction.y * direction.y) / (direction.x * direction.x)), (float)sqrt(1 + (direction.x * direction.x) / (direction.y * direction.y))};
-		return nextImpl<QueryTraits::RayCast, QueryTraits::Bodies::Grouped>(mGroup);
+		return nextImpl<QueryTraits::RayCast, QueryTraits::Bodies::GroupedOffset>(mGroup);
 	}
 	
 	void GridQuery::reset()
@@ -61,5 +94,6 @@ namespace ssvsc
 	Vector2i GridQuery::getStartPos()	{ return Vector2i(startPos); }
 	Vector2i GridQuery::getStartIndex()	{ return startIndex; }	
 	Vector2i GridQuery::getPos()		{ return Vector2i(pos); }
+	Vector2i GridQuery::getOut()		{ return Vector2i(out); }
 	Vector2i GridQuery::getIndex()		{ return index; }
 }
