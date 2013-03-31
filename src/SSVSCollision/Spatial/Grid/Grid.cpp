@@ -38,6 +38,7 @@ namespace ssvsc
 		memoryManager.cleanUp();
 	}
 	
+	int Grid::getCellSize() const { return cellSize; }
 	Cell& Grid::getCell(int mX, int mY) { return *(cells[mX + offset][mY + offset]); }
 	Cell& Grid::getCell(Vector2i mIndex) { return getCell(mIndex.x, mIndex.y); }
 	int Grid::getIndex(int mValue) const { return mValue / cellSize; }

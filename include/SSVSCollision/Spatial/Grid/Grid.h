@@ -31,6 +31,7 @@ namespace ssvsc
 			SpatialInfoBase& createSpatialInfo(Body& mBody) override;
 			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
 			
+			int getCellSize() const;
 			Cell& getCell(int mX, int mY);
 			Cell& getCell(sf::Vector2i mIndex);
 			int getIndex(int mValue) const;
