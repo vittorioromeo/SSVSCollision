@@ -11,191 +11,12 @@
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 #include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Spatial/Grid/GridQueryTraits.h"
 
 namespace ssvsc
 {	
 	sf::Vector2f lineIntersection(sf::Vector2f mA1, sf::Vector2f mA2, sf::Vector2f mY1, sf::Vector2f mY2);
 	bool Test2DSegmentSegment(sf::Vector2f a, sf::Vector2f b, sf::Vector2f c, sf::Vector2f d, float &t, sf::Vector2f &p);
-	
-	namespace QueryTraits
-	{
-		namespace Bodies
-		{
-			struct All
-			{
-				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string&) 
-				{
-					mBodies = mGrid.getCell(mIndex).getBodies(); 
-				}
-			};
-			struct Grouped
-			{
-				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string& mGroup) 
-				{ 
-					mBodies = mGrid.getCell(mIndex).getBodies(mGroup); 
-				}
-			};	
-			struct AllOffset
-			{
-				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string&) 
-				{
-					std::vector<Body*> result;
-					
-					for(int iY = -1; iY < 2; ++iY)
-						for(int iX = -1; iX < 2; ++iX)
-						{
-							sf::Vector2i index{mIndex + sf::Vector2i(iX, iY)};
-							if(!mGrid.isIndexValid(index)) continue;
-							for(auto& b : mGrid.getCell(index).getBodies()) if(!ssvu::contains(result, b)) result.push_back(b); 
-						}
-					
-					mBodies = result;
-				}
-			};
-			struct GroupedOffset
-			{
-				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string& mGroup) 
-				{
-					std::vector<Body*> result;
-					
-					for(int iY = -1; iY < 2; ++iY)
-						for(int iX = -1; iX < 2; ++iX)
-						{
-							sf::Vector2i index{mIndex + sf::Vector2i(iX, iY)};
-							if(!mGrid.isIndexValid(index)) continue;
-							for(auto& b : mGrid.getCell(index).getBodies(mGroup)) if(!ssvu::contains(result, b)) result.push_back(b); 
-						}
-					
-					mBodies = result;
-				}
-			};
-		}
-		
-		namespace Orthogonal
-		{
-			struct Left
-			{
-				static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) { return mIndex.x >= mGrid.getXMinIndex(); }
-				static void step(sf::Vector2i& mIndex, sf::Vector2f&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
-				{ 
-					--mIndex.x; 
-				}
-				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f&) 
-				{ 
-					return mA->getPosition().x < mB->getPosition().x; 
-				}
-				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&, sf::Vector2f&) 
-				{ 
-					return mShape.getLeft() > mPos.x || mPos.y < mShape.getTop() || mPos.y > mShape.getBottom(); 
-				}
-				static void setOut(const sf::Vector2f& mPos, sf::Vector2f& mOut, const AABB& mShape) { mOut.x = mShape.getRight(); mOut.y = mPos.y; } 
-			};		
-			struct Right
-			{
-				static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) { return mIndex.x < mGrid.getXMaxIndex(); }
-				static void step(sf::Vector2i& mIndex, sf::Vector2f&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
-				{ 
-					++mIndex.x; 
-				}
-				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f&) 
-				{ 
-					return mA->getPosition().x > mB->getPosition().x; 
-				}
-				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&, sf::Vector2f&) 
-				{ 
-					return mShape.getRight() < mPos.x || mPos.y < mShape.getTop() || mPos.y > mShape.getBottom(); 
-				}
-				static void setOut(const sf::Vector2f& mPos, sf::Vector2f& mOut, const AABB& mShape) { mOut.x = mShape.getLeft(); mOut.y = mPos.y; } 
-			};		
-			struct Up
-			{
-				static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) { return mIndex.y >= mGrid.getYMinIndex(); }
-				static void step(sf::Vector2i& mIndex, sf::Vector2f&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
-				{ 
-					--mIndex.y; 
-				}
-				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f&) 
-				{ 
-					return mA->getPosition().y < mB->getPosition().y; 
-				}
-				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&, sf::Vector2f&) 
-				{ 
-					return mShape.getTop() > mPos.y || mPos.x < mShape.getLeft() || mPos.x > mShape.getRight(); 
-				}
-				static void setOut(const sf::Vector2f& mPos, sf::Vector2f& mOut, const AABB& mShape) { mOut.y = mShape.getBottom(); mOut.x = mPos.x; } 
-			};		
-			struct Down
-			{
-				static bool isValid(const Grid& mGrid, const sf::Vector2i& mCurrentIndex) { return mCurrentIndex.y < mGrid.getYMaxIndex(); }
-				static void step(sf::Vector2i& mIndex, sf::Vector2f&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
-				{ 
-					++mIndex.y; 
-				}
-				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f&) 
-				{ 
-					return mA->getPosition().y > mB->getPosition().y; 
-				}
-				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&, sf::Vector2f&) 
-				{ 
-					return mShape.getBottom() < mPos.y || mPos.x < mShape.getLeft() || mPos.x > mShape.getRight(); 
-				}
-				static void setOut(const sf::Vector2f& mPos, sf::Vector2f& mOut, const AABB& mShape) { mOut.y = mShape.getTop(); mOut.x = mPos.x; } 
-			};
-		}
-		
-		struct RayCast
-		{
-			static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) { return mGrid.isIndexValid(mIndex); }
-			static void step(sf::Vector2i& mIndex, sf::Vector2f& mPos, sf::Vector2i& mStep, sf::Vector2f& mSideDist, 
-				const sf::Vector2i& mStartIndex, const sf::Vector2f& mDirection, const sf::Vector2f& mDeltaDist, int mCellSize)
-			{ 
-				mPos += mDirection * static_cast<float>(mCellSize);
-				
-				if(mDirection.x < 0) { mStep.x = -1; mSideDist.x = (mStartIndex.x - mIndex.x) * mDeltaDist.x; }
-				else { mStep.x = 1; mSideDist.x = (mIndex.x + 1.0f - mStartIndex.x) * mDeltaDist.x; }
-				if(mDirection.y < 0) { mStep.y = -1; mSideDist.y = (mStartIndex.y - mIndex.y) * mDeltaDist.y; }
-				else { mStep.y = 1; mSideDist.y = (mIndex.y + 1.0f - mStartIndex.y) * mDeltaDist.y; }
-				
-				if(mSideDist.x < mSideDist.y) { mSideDist.x += mDeltaDist.x; mIndex.x += mStep.x; }
-				else { mSideDist.y += mSideDist.y; mIndex.y += mStep.y; }
-			}
-			static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f& mStartPos)
-			{ 
-				return sqrt(pow((mA->getPosition().x - mStartPos.x), 2) + pow((mA->getPosition().y - mStartPos.y), 2)) > 
-						sqrt(pow((mB->getPosition().x - mStartPos.x), 2) + pow((mB->getPosition().y - mStartPos.y), 2));
-			}
-			static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f& mStartPos, sf::Vector2f& mOut) 
-			{ 				
-				std::vector<std::pair<sf::Vector2i, sf::Vector2i>> lines;
-				lines.push_back({mShape.getNWCorner(), mShape.getNECorner()});
-				lines.push_back({mShape.getNECorner(), mShape.getSECorner()});
-				lines.push_back({mShape.getSECorner(), mShape.getSWCorner()});
-				lines.push_back({mShape.getSWCorner(), mShape.getNWCorner()});
-				
-				bool f{false};
-				float t;
-				sf::Vector2f intersection;
-				
-				while(!f && !lines.empty())
-				{
-					auto currentLine(lines.back());
-					lines.pop_back();
-					f = Test2DSegmentSegment(mStartPos, mPos, sf::Vector2f(currentLine.first), sf::Vector2f(currentLine.second), t, intersection);
-				}
-					
-				if(!f) 
-				{
-					return true;
-				}
-				else
-				{
-					mOut = intersection;
-					return false;	
-				}
-			}
-			static void setOut(const sf::Vector2f&, sf::Vector2f&, const AABB&) { } 
-		};
-	}
 	
 	class GridQuery
 	{
@@ -207,13 +28,13 @@ namespace ssvsc
 
 			template<typename TQueryTraits, typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
 			{
-				while(TQueryTraits::isValid(grid, index))
+				while(TQueryTraits::isValid(*this))
 				{				
 					if(bodies.empty())
 					{
 						TCellTraits::getBodies(grid, bodies, index, mGroup);
-						TQueryTraits::step(index, pos, step, sideDist, startIndex, direction, deltaDist, grid.getCellSize());					
-						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return TQueryTraits::getSorting(mA, mB, startPos); });
+						TQueryTraits::step(*this);					
+						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return TQueryTraits::getSorting(*this, mA, mB); });
 					}
 					
 					while(!bodies.empty())
@@ -222,9 +43,9 @@ namespace ssvsc
 						auto& shape(body->getShape());
 						bodies.pop_back();
 						
-						if(TQueryTraits::misses(pos, shape, startPos, out)) continue;
+						if(TQueryTraits::misses(*this, shape)) continue;
 						
-						TQueryTraits::setOut(pos, out, shape);
+						TQueryTraits::setOut(*this, shape);
 						return body;
 					}
 				}
@@ -243,11 +64,27 @@ namespace ssvsc
 			void reset();
 						
 			// Getters
-			sf::Vector2i getStartPos();
-			sf::Vector2i getStartIndex();
-			sf::Vector2i getPos();
-			sf::Vector2i getOut();
-			sf::Vector2i getIndex();
+			Grid& getGrid() const;
+			sf::Vector2f getStartPos() const;
+			sf::Vector2i getStartIndex() const;
+			sf::Vector2f getPos() const;
+			sf::Vector2f getOut() const;
+			sf::Vector2i getIndex() const;
+			sf::Vector2f getDirection() const;
+			sf::Vector2i getStep() const;
+			sf::Vector2f getDeltaDist() const;
+			sf::Vector2f getSideDist() const;
+			
+			// Setters
+			void setPos(sf::Vector2f mPos);
+			void setIndexX(int mIndexX);
+			void setIndexY(int mIndexY);
+			void setOutX(float mOutX);
+			void setOutY(float mOutY);
+			void setStepX(int mStepX);
+			void setStepY(int mStepX);
+			void setSideDistX(float mSideDistX);
+			void setSideDistY(float mSideDistY);
 	};
 }
 
