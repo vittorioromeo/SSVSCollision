@@ -76,70 +76,70 @@ namespace ssvsc
 			struct Left
 			{
 				static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) { return mIndex.x >= mGrid.getXMinIndex(); }
-				static void step(sf::Vector2i& mIndex, sf::Vector2i&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
+				static void step(sf::Vector2i& mIndex, sf::Vector2f&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
 				{ 
 					--mIndex.x; 
 				}
-				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2i&) 
+				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f&) 
 				{ 
 					return mA->getPosition().x < mB->getPosition().x; 
 				}
-				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&) 
+				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&, sf::Vector2f&) 
 				{ 
 					return mShape.getLeft() > mPos.x || mPos.y < mShape.getTop() || mPos.y > mShape.getBottom(); 
 				}
-				static void setPos(sf::Vector2f& mPos, const AABB& mShape) { mPos.x = mShape.getRight(); } 
+				static void setOut(const sf::Vector2f& mPos, sf::Vector2f& mOut, const AABB& mShape) { mOut.x = mShape.getRight(); mOut.y = mPos.y; } 
 			};		
 			struct Right
 			{
 				static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) { return mIndex.x < mGrid.getXMaxIndex(); }
-				static void step(sf::Vector2i& mIndex, sf::Vector2i&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
+				static void step(sf::Vector2i& mIndex, sf::Vector2f&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
 				{ 
 					++mIndex.x; 
 				}
-				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2i&) 
+				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f&) 
 				{ 
 					return mA->getPosition().x > mB->getPosition().x; 
 				}
-				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&) 
+				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&, sf::Vector2f&) 
 				{ 
 					return mShape.getRight() < mPos.x || mPos.y < mShape.getTop() || mPos.y > mShape.getBottom(); 
 				}
-				static void setPos(sf::Vector2f& mPos, const AABB& mShape) { mPos.x = mShape.getLeft(); } 
+				static void setOut(const sf::Vector2f& mPos, sf::Vector2f& mOut, const AABB& mShape) { mOut.x = mShape.getLeft(); mOut.y = mPos.y; } 
 			};		
 			struct Up
 			{
 				static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) { return mIndex.y >= mGrid.getYMinIndex(); }
-				static void step(sf::Vector2i& mIndex, sf::Vector2i&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
+				static void step(sf::Vector2i& mIndex, sf::Vector2f&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
 				{ 
 					--mIndex.y; 
 				}
-				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2i&) 
+				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f&) 
 				{ 
 					return mA->getPosition().y < mB->getPosition().y; 
 				}
-				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&) 
+				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&, sf::Vector2f&) 
 				{ 
 					return mShape.getTop() > mPos.y || mPos.x < mShape.getLeft() || mPos.x > mShape.getRight(); 
 				}
-				static void setPos(sf::Vector2f& mPos, const AABB& mShape) { mPos.y = mShape.getBottom(); } 
+				static void setOut(const sf::Vector2f& mPos, sf::Vector2f& mOut, const AABB& mShape) { mOut.y = mShape.getBottom(); mOut.x = mPos.x; } 
 			};		
 			struct Down
 			{
 				static bool isValid(const Grid& mGrid, const sf::Vector2i& mCurrentIndex) { return mCurrentIndex.y < mGrid.getYMaxIndex(); }
-				static void step(sf::Vector2i& mIndex, sf::Vector2i&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
+				static void step(sf::Vector2i& mIndex, sf::Vector2f&, sf::Vector2i&, sf::Vector2f&, const sf::Vector2i&, const sf::Vector2f&, const sf::Vector2f&, int)
 				{ 
 					++mIndex.y; 
 				}
-				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2i&) 
+				static bool getSorting(const Body* mA, const Body* mB, const sf::Vector2f&) 
 				{ 
 					return mA->getPosition().y > mB->getPosition().y; 
 				}
-				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&) 
+				static bool misses(const sf::Vector2f& mPos, const AABB& mShape, const sf::Vector2f&, sf::Vector2f&) 
 				{ 
 					return mShape.getBottom() < mPos.y || mPos.x < mShape.getLeft() || mPos.x > mShape.getRight(); 
 				}
-				static void setPos(sf::Vector2f& mPos, const AABB& mShape) { mPos.y = mShape.getTop(); } 
+				static void setOut(const sf::Vector2f& mPos, sf::Vector2f& mOut, const AABB& mShape) { mOut.y = mShape.getTop(); mOut.x = mPos.x; } 
 			};
 		}
 		
@@ -193,7 +193,7 @@ namespace ssvsc
 					return false;	
 				}
 			}
-			static void setPos(sf::Vector2f&, const AABB&) { } 
+			static void setOut(const sf::Vector2f&, sf::Vector2f&, const AABB&) { } 
 		};
 	}
 	
@@ -210,13 +210,11 @@ namespace ssvsc
 				while(TQueryTraits::isValid(grid, index))
 				{				
 					if(bodies.empty())
-					{	
-						//ssvu::log("from index : " + ssvu::toStr(index.x) + " " + ssvu::toStr(index.y));
+					{
 						TCellTraits::getBodies(grid, bodies, index, mGroup);
-						TQueryTraits::step(index, pos, step, sideDist, startIndex, direction, deltaDist, grid.getCellSize());
-						//ssvu::log("toindex : " + ssvu::toStr(index.x) + " " + ssvu::toStr(index.y));
+						TQueryTraits::step(index, pos, step, sideDist, startIndex, direction, deltaDist, grid.getCellSize());					
 						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return TQueryTraits::getSorting(mA, mB, startPos); });
-					}				
+					}
 					
 					while(!bodies.empty())
 					{
@@ -226,7 +224,7 @@ namespace ssvsc
 						
 						if(TQueryTraits::misses(pos, shape, startPos, out)) continue;
 						
-						TQueryTraits::setPos(pos, shape);
+						TQueryTraits::setOut(pos, out, shape);
 						return body;
 					}
 				}
