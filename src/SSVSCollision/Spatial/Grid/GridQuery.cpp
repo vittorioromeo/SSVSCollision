@@ -40,7 +40,7 @@ namespace ssvsc
 	{
 		direction = ssvs::Utils::getNormalized(mDirection);
 		deltaDist = {(float)sqrt(1 + (direction.y * direction.y) / (direction.x * direction.x)), (float)sqrt(1 + (direction.x * direction.x) / (direction.y * direction.y))};
-		return nextImpl<QueryTraits::RayCast, QueryTraits::Bodies::All>();
+		return nextImpl<QueryTraits::RayCast, QueryTraits::Bodies::AllOffset>();
 	}	
 	Body*GridQuery::nextByDirection(Vector2f mDirection, const string& mGroup)
 	{

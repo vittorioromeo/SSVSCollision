@@ -34,6 +34,23 @@ namespace ssvsc
 					mBodies = mGrid.getCell(mIndex).getBodies(mGroup); 
 				}
 			};	
+			struct AllOffset
+			{
+				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string&) 
+				{
+					std::vector<Body*> result;
+					
+					for(int iY = -1; iY < 2; ++iY)
+						for(int iX = -1; iX < 2; ++iX)
+						{
+							sf::Vector2i index{mIndex + sf::Vector2i(iX, iY)};
+							if(!mGrid.isIndexValid(index)) continue;
+							for(auto& b : mGrid.getCell(index).getBodies()) if(!ssvu::contains(result, b)) result.push_back(b); 
+						}
+					
+					mBodies = result;
+				}
+			};
 		}
 		
 		namespace Orthogonal
@@ -110,10 +127,7 @@ namespace ssvsc
 		
 		struct RayCast
 		{
-			static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) 
-			{ 
-				return mIndex.x >= mGrid.getXMinIndex() && mIndex.x < mGrid.getXMaxIndex() && mIndex.y >= mGrid.getYMinIndex() && mIndex.y < mGrid.getYMaxIndex(); 
-			}
+			static bool isValid(const Grid& mGrid, const sf::Vector2i& mIndex) { return mGrid.isIndexValid(mIndex); }
 			static void step(sf::Vector2i& mIndex, sf::Vector2f& mPos, sf::Vector2i& mStep, sf::Vector2f& mSideDist, 
 				const sf::Vector2i& mStartIndex, const sf::Vector2f& mDirection, const sf::Vector2f& mDeltaDist, int mCellSize)
 			{ 

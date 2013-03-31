@@ -41,6 +41,7 @@ namespace ssvsc
 			int getYMinIndex() const;
 			int getXMaxIndex() const;
 			int getYMaxIndex() const;
+			bool isIndexValid(sf::Vector2i mIndex) const;
 			
 			GridQuery getQuery(sf::Vector2i mPoint);
 	};
