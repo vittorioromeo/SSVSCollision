@@ -19,46 +19,39 @@ namespace ssvsc
 	{
 		namespace Bodies
 		{
-			void All::getBodies(Grid& mGrid, vector<Body*>& mBodies, const Vector2i& mIndex, const string&)
+			void All::getBodies(GridQuery& mQuery, const string&) { mQuery.setBodies(mQuery.getGrid().getCell(mQuery.getIndex()).getBodies()); }
+			void Grouped::getBodies(GridQuery& mQuery, const string& mGroup) { mQuery.setBodies(mQuery.getGrid().getCell(mQuery.getIndex()).getBodies(mGroup)); }
+			void AllOffset::getBodies(GridQuery& mQuery, const string&)
 			{
-				mBodies = mGrid.getCell(mIndex).getBodies();
-			}
-
-			void Grouped::getBodies(Grid& mGrid, vector<Body*>& mBodies, const Vector2i& mIndex, const string& mGroup)
-			{
-				mBodies = mGrid.getCell(mIndex).getBodies(mGroup);
-			}
-
-			void AllOffset::getBodies(Grid& mGrid, vector<Body*>& mBodies, const Vector2i& mIndex, const string&)
-			{
+				auto& grid(mQuery.getGrid());
 				vector<Body*> result;
 
 				for(int iY = -1; iY < 2; ++iY)
 					for(int iX = -1; iX < 2; ++iX)
 					{
-						Vector2i index{mIndex + Vector2i(iX, iY)};
-						if(!mGrid.isIndexValid(index)) continue;
-						for(auto& b : mGrid.getCell(index).getBodies()) if(!ssvu::contains(result, b)) result.push_back(b);
+						Vector2i index{mQuery.getIndex() + Vector2i(iX, iY)};
+						if(!grid.isIndexValid(index)) continue;
+						for(auto& b : grid.getCell(index).getBodies()) if(!contains(result, b)) result.push_back(b);
 					}
 
-				mBodies = result;
+				 mQuery.setBodies(result);
 			}
 
-			void GroupedOffset::getBodies(Grid& mGrid, vector<Body*>& mBodies, const Vector2i& mIndex, const string& mGroup)
+			void GroupedOffset::getBodies(GridQuery& mQuery, const string& mGroup)
 			{
+				auto& grid(mQuery.getGrid());
 				vector<Body*> result;
 
 				for(int iY = -1; iY < 2; ++iY)
 					for(int iX = -1; iX < 2; ++iX)
 					{
-						Vector2i index{mIndex + Vector2i(iX, iY)};
-						if(!mGrid.isIndexValid(index)) continue;
-						for(auto& b : mGrid.getCell(index).getBodies(mGroup)) if(!ssvu::contains(result, b)) result.push_back(b);
+						Vector2i index{mQuery.getIndex() + Vector2i(iX, iY)};
+						if(!grid.isIndexValid(index)) continue;
+						for(auto& b : grid.getCell(index).getBodies(mGroup)) if(!contains(result, b)) result.push_back(b);
 					}
 
-				mBodies = result;
+				mQuery.setBodies(result);
 			}
-
 		}
 
 		namespace Orthogonal
@@ -93,7 +86,7 @@ namespace ssvsc
 		{
 			const auto index(mQuery.getIndex()), startIndex(mQuery.getStartIndex()), step(mQuery.getStep());
 			const auto deltaDist(mQuery.getDeltaDist()), sideDist(mQuery.getSideDist()), direction(mQuery.getDirection());
-			
+
 			mQuery.setPos(mQuery.getPos() + direction * static_cast<float>(mQuery.getGrid().getCellSize()));
 
 			if(direction.x < 0) { mQuery.setStepX(-1); mQuery.setSideDistX((startIndex.x - index.x) * deltaDist.x); }
@@ -115,10 +108,10 @@ namespace ssvsc
 		{
 			const auto direction(mQuery.getDirection());
 			vector<pair<Vector2i, Vector2i>> lines;
-			
+
 			if(direction.x > 0) lines.push_back({mShape.getSWCorner(), mShape.getNWCorner()});
 			else lines.push_back({mShape.getNECorner(), mShape.getSECorner()});
-			
+
 			if(direction.y > 0) lines.push_back({mShape.getNWCorner(), mShape.getNECorner()});
 			else lines.push_back({mShape.getSECorner(), mShape.getSWCorner()});
 
@@ -133,7 +126,7 @@ namespace ssvsc
 			}
 
 			if(intersects) { mQuery.setOutX(intersection.x); mQuery.setOutY(intersection.y); return false; }
-			
+
 			return true;
 		}
 		void RayCast::setOut(GridQuery&, const AABB&) { }

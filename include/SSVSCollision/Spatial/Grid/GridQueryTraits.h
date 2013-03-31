@@ -18,22 +18,10 @@ namespace ssvsc
 	{
 		namespace Bodies
 		{
-			struct All
-			{
-				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string&);
-			};
-			struct Grouped
-			{
-				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string& mGroup);
-			};
-			struct AllOffset
-			{
-				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string&);
-			};
-			struct GroupedOffset
-			{
-				static void getBodies(Grid& mGrid, std::vector<Body*>& mBodies, const sf::Vector2i& mIndex, const std::string& mGroup);
-			};
+			struct All { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
+			struct Grouped { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
+			struct AllOffset { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
+			struct GroupedOffset { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
 		}
 
 		namespace Orthogonal

@@ -48,8 +48,9 @@ namespace ssvsc
 	Vector2i GridQuery::getStep() const			{ return step; }
 	Vector2f GridQuery::getDeltaDist() const	{ return deltaDist; }
 	Vector2f GridQuery::getSideDist() const		{ return sideDist; }
-
+	
 	// Setters
+	void GridQuery::setBodies(vector<Body*> mBodies)	{ bodies = mBodies; }
 	void GridQuery::setPos(Vector2f mPos)				{ pos = mPos; }
 	void GridQuery::setIndexX(int mIndexX)				{ index.x = mIndexX; }
 	void GridQuery::setIndexY(int mIndexY)				{ index.y = mIndexY; }

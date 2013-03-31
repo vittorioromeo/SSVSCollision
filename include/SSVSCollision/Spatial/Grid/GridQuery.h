@@ -29,7 +29,7 @@ namespace ssvsc
 				{				
 					if(bodies.empty())
 					{
-						TCellTraits::getBodies(grid, bodies, index, mGroup);
+						TCellTraits::getBodies(*this, mGroup);
 						TQueryTraits::step(*this);					
 						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return TQueryTraits::getSorting(*this, mA, mB); });
 					}
@@ -73,6 +73,7 @@ namespace ssvsc
 			sf::Vector2f getSideDist() const;
 			
 			// Setters
+			void setBodies(std::vector<Body*> mBodies);
 			void setPos(sf::Vector2f mPos);
 			void setIndexX(int mIndexX);
 			void setIndexY(int mIndexY);
