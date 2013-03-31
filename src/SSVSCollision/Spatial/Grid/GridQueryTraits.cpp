@@ -86,10 +86,7 @@ namespace ssvsc
 			void Down::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mShape.getTop()); }
 		}
 
-		bool RayCast::isValid(const GridQuery& mQuery)
-		{
-			return mQuery.getGrid().isIndexValid(mQuery.getIndex());
-		}
+		bool RayCast::isValid(const GridQuery& mQuery) { return mQuery.getGrid().isIndexValid(mQuery.getIndex()); }
 		void RayCast::step(GridQuery& mQuery)
 		{
 			const auto index(mQuery.getIndex());
@@ -136,9 +133,10 @@ namespace ssvsc
 		}
 		bool RayCast::getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB)
 		{
-			Vector2f startPos{mQuery.getStartPos()};
-			return sqrt(pow((mA->getPosition().x - startPos.x), 2) + pow((mA->getPosition().y - startPos.y), 2)) >
-					sqrt(pow((mB->getPosition().x - startPos.x), 2) + pow((mB->getPosition().y - startPos.y), 2));
+			auto startPos(mQuery.getStartPos());
+			auto aPos(mA->getPosition());
+			auto bPos(mB->getPosition());
+			return sqrt(pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2)) > sqrt(pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2));
 		}
 		bool RayCast::misses(GridQuery& mQuery, const AABB& mShape)
 		{
@@ -149,14 +147,13 @@ namespace ssvsc
 			lines.push_back({mShape.getSWCorner(), mShape.getNWCorner()});
 
 			bool f{false};
-			float t;
 			Vector2f intersection;
 
 			while(!f && !lines.empty())
 			{
 				auto currentLine(lines.back());
 				lines.pop_back();
-				f = Test2DSegmentSegment(mQuery.getStartPos(), mQuery.getPos(), Vector2f(currentLine.first), Vector2f(currentLine.second), t, intersection);
+				f = isSegmentInsersecting(mQuery.getStartPos(), mQuery.getPos(), Vector2f(currentLine.first), Vector2f(currentLine.second), intersection);
 			}
 
 			if(!f) return true;

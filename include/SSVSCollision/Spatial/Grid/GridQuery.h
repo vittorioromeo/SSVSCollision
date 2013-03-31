@@ -15,8 +15,7 @@
 
 namespace ssvsc
 {	
-	sf::Vector2f lineIntersection(sf::Vector2f mA1, sf::Vector2f mA2, sf::Vector2f mY1, sf::Vector2f mY2);
-	bool Test2DSegmentSegment(sf::Vector2f a, sf::Vector2f b, sf::Vector2f c, sf::Vector2f d, float &t, sf::Vector2f &p);
+	bool isSegmentInsersecting(sf::Vector2f a, sf::Vector2f b, sf::Vector2f c, sf::Vector2f d, sf::Vector2f &p);
 	
 	class GridQuery
 	{
@@ -85,6 +84,7 @@ namespace ssvsc
 			void setStepY(int mStepX);
 			void setSideDistX(float mSideDistX);
 			void setSideDistY(float mSideDistY);
+			void setDirection(sf::Vector2f mDirection);
 	};
 }
 
