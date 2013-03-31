@@ -17,18 +17,10 @@ namespace ssvsc
 
 
 	GridQuery::GridQuery(Grid& mGrid, Vector2i mStartPos) : grid(mGrid), startPos{Vector2f(mStartPos)}, pos{startPos},
-		startIndex{grid.getIndex(mStartPos)}, index{startIndex}, direction(Vector2f(5.f, -2.f)) { }
+		startIndex{grid.getIndex(mStartPos)}, index{startIndex}, direction{0, 0} { }
 
-	Body* GridQuery::nextByDirection(Vector2f mDirection)
-	{
-		setDirection(mDirection);
-		return nextImpl<QueryTraits::RayCast, QueryTraits::Bodies::AllOffset>();
-	}
-	Body* GridQuery::nextByDirection(Vector2f mDirection, const string& mGroup)
-	{
-		setDirection(mDirection);
-		return nextImpl<QueryTraits::RayCast, QueryTraits::Bodies::GroupedOffset>(mGroup);
-	}
+	Body* GridQuery::next(Vector2f mDirection) { return nextHelper<QueryTraits::Bodies::All, QueryTraits::Bodies::AllOffset>(mDirection); }
+	Body* GridQuery::next(Vector2f mDirection, const string& mGroup) { return nextHelper<QueryTraits::Bodies::Grouped, QueryTraits::Bodies::GroupedOffset>(mDirection, mGroup); }
 
 	void GridQuery::reset()
 	{

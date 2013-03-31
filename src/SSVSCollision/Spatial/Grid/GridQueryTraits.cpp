@@ -36,7 +36,6 @@ namespace ssvsc
 
 				 mQuery.setBodies(result);
 			}
-
 			void GroupedOffset::getBodies(GridQuery& mQuery, const string& mGroup)
 			{
 				auto& grid(mQuery.getGrid());
@@ -97,6 +96,8 @@ namespace ssvsc
 
 			if(sideDist.x < sideDist.y) { mQuery.setSideDistX(sideDist.x + deltaDist.x); mQuery.setIndexX(index.x + step.x); }
 			else { mQuery.setSideDistY(sideDist.y + deltaDist.y); mQuery.setIndexY(index.y + step.y); }
+			
+			mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mQuery.getPos().y);
 		}
 		bool RayCast::getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB)
 		{

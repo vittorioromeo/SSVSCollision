@@ -64,7 +64,7 @@ namespace ssvsc
 		acceleration = {0, 0};
 	}
 
-	void Body::applyForce(sf::Vector2f mForce) { acceleration += mForce; }
+	void Body::applyForce(sf::Vector2f mForce) { if(!_static) acceleration += mForce; }
 
 	void Body::destroy() { world.del(this); }
 }

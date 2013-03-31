@@ -49,14 +49,28 @@ namespace ssvsc
 				
 				return nullptr;
 			}
+			
+			template<typename TCellTraits, typename TCellTraitsOffset> Body* nextHelper(sf::Vector2f mDirection, const std::string& mGroup = "")
+			{
+				setDirection(mDirection);
+				if(mDirection.x == 0.f)
+				{
+					if(mDirection.y == 1.f)	return nextImpl<QueryTraits::Orthogonal::Down, TCellTraits>(mGroup);
+					else if(mDirection.y == -1.f) return nextImpl<QueryTraits::Orthogonal::Up, TCellTraits>(mGroup);
+				}
+				else if(mDirection.y == 0.f)
+				{
+					if(mDirection.x == 1.f)	return nextImpl<QueryTraits::Orthogonal::Right, TCellTraits>(mGroup);
+					else if(mDirection.x == -1.f) return nextImpl<QueryTraits::Orthogonal::Left, TCellTraits>(mGroup);
+				}
+				return nextImpl<QueryTraits::RayCast, TCellTraitsOffset>(mGroup);
+			}
 		
 		public:
 			GridQuery(Grid& mGrid, sf::Vector2i mStartPos);
 		
-			template<typename TQueryTraits> Body* next() { return nextImpl<TQueryTraits, QueryTraits::Bodies::All>(); }
-			template<typename TQueryTraits> Body* next(const std::string& mGroup) { return nextImpl<TQueryTraits, QueryTraits::Bodies::Grouped>(mGroup); }
-			Body* nextByDirection(sf::Vector2f mDirection);
-			Body* nextByDirection(sf::Vector2f mDirection, const std::string& mGroup);
+			Body* next(sf::Vector2f mDirection);
+			Body* next(sf::Vector2f mDirection, const std::string& mGroup);
 			
 			void reset();
 						
