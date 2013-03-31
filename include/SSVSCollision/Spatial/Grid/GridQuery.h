@@ -64,8 +64,6 @@ namespace ssvsc
 							sf::Vector2i index{mIndex + sf::Vector2i(iX, iY)};
 							if(!mGrid.isIndexValid(index)) continue;
 							for(auto& b : mGrid.getCell(index).getBodies(mGroup)) if(!ssvu::contains(result, b)) result.push_back(b); 
-							if(index.x == 3 && index.y == 10) ssvu::log ("SUPEROCKCS!");//if(mIndex.x > -20)
-							//ssvu::log("index : " + ssvu::toStr(mIndex.x) + " " + ssvu::toStr(mIndex.y));
 						}
 					
 					mBodies = result;
@@ -187,12 +185,10 @@ namespace ssvsc
 					
 				if(!f) 
 				{
-					ssvu::log("body found, but missed");
 					return true;
 				}
 				else
 				{
-					ssvu::log("body found, YEP.");
 					mOut = intersection;
 					return false;	
 				}
