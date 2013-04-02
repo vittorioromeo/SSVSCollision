@@ -65,6 +65,7 @@ set(
 	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridInfo.h
 	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridQuery.h
 	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridQueryTraits.h
+	${INC_DIR}/${PROJECT_NAME}/Utils/Segment.h
 	${INC_DIR}/${PROJECT_NAME}/Utils/Utils.h
 	${INC_DIR}/${PROJECT_NAME}/World/World.h
 	${SRC_DIR}/${PROJECT_NAME}/AABB/AABB.cpp

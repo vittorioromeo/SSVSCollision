@@ -16,8 +16,7 @@ namespace ssvsc
 	World::World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver{&mResolver}, spatial{&mSpatial} { }
 	World::~World() 
 	{ 
-		for(auto& body : memoryManager.getItems()) body->destroy();
-		memoryManager.cleanUp(); // TODO: refactor into "clear" method
+		clear();
 		delete resolver; 
 		delete spatial; 
 	}
@@ -32,6 +31,11 @@ namespace ssvsc
 	{
 		memoryManager.cleanUp();
 		for(auto& body : memoryManager.getItems()) body->update(mFrameTime);
+	}
+	void World::clear()
+	{
+		for(auto& body : memoryManager.getItems()) body->destroy();
+		memoryManager.cleanUp();
 	}
 	
 	vector<Body*>& World::getBodies()	{ return memoryManager.getItems(); }

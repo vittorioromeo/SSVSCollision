@@ -19,21 +19,21 @@ namespace ssvsc
 	{
 		const AABB& oldShape(body.getOldShape());
 		const AABB& shape(body.getShape());
-		
+
 		startX = grid.getIndex(min(oldShape.getLeft(), shape.getLeft()));
 		startY = grid.getIndex(min(oldShape.getTop(), shape.getTop()));
 		endX = grid.getIndex(max(oldShape.getRight(), shape.getRight()));
 		endY = grid.getIndex(max(oldShape.getBottom(), shape.getBottom()));
-		
+
 		if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells();
-		else invalid = false; 
-		
-		oldStartX = startX;	
+		else invalid = false;
+
+		oldStartX = startX;
 		oldStartY = startY;
 		oldEndX = endX;
 		oldEndY = endY;
 	}
-	
+
 	void GridInfo::clear()
 	{
 		for(auto& cell : cells) cell->del(&body);
@@ -49,9 +49,9 @@ namespace ssvsc
 		for(auto& cell : cells)
 		{
 			cell->add(&body);
-			for(auto& group : body.getGroupsToCheck()) queries.push_back(cell->getQuery(group));
+			for(auto& group : body.getGroupsToCheck()) queries.push_back(&cell->getBodies(group));
 		}
-		
+
 		invalid = false;
 	}
 
@@ -64,6 +64,6 @@ namespace ssvsc
 		for(auto& query : queries) for(auto& body : *query) result.insert(body);
 		return result;
 	}
-	void GridInfo::destroy() { grid.delSpatialInfo(*this); } 
+	void GridInfo::destroy() { grid.delSpatialInfo(*this); }
 }
 

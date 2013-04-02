@@ -46,17 +46,21 @@ namespace ssvsc
 			SpatialBase* spatial; // owned
 
 			void del(Body* mBody);
-		
+
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
 			~World();
 
 			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
-			void update(float mFrameTime);			
+			void update(float mFrameTime);
+			void clear();
 
 			std::vector<Body*>& getBodies();
 			ResolverBase& getResolver();
 			SpatialBase& getSpatial();
+
+			template<typename T> T& getResolver() { return static_cast<T&>(getResolver()); }
+			template<typename T> T& getSpatial() { return static_cast<T&>(getSpatial()); }
 	};
 }
 

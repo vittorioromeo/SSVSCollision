@@ -20,8 +20,21 @@ namespace ssvsc
 		template<typename TResolver, typename... TArgs> static ResolverBase& createResolver(TArgs&&... mArgs) { return *(new TResolver(std::forward<TArgs>(mArgs)...)); }
 		template<typename TSpatial, typename... TArgs> static SpatialBase& createSpatial(TArgs&&... mArgs) { return *(new TSpatial(std::forward<TArgs>(mArgs)...)); }
 		
-		float getSigned2DTriangleArea(sf::Vector2f mA, sf::Vector2f mB, sf::Vector2f mC);
-		bool isSegmentInsersecting(sf::Vector2f mA1, sf::Vector2f mA2, sf::Vector2f mB1, sf::Vector2f mB2, sf::Vector2f& mIntersection);
+		template<typename T> T getSigned2DTriangleArea(sf::Vector2<T> mA, sf::Vector2<T> mB, sf::Vector2<T> mC)
+		{ 
+			return (mA.x - mC.x) * (mB.y - mC.y) - (mA.y - mC.y) * (mB.x - mC.x); 
+		}
+		template<typename T> bool isSegmentInsersecting(const Segment<T>& mA, const Segment<T>& mB, sf::Vector2<T>& mIntersection)
+		{
+			float a1{getSigned2DTriangleArea(mA.getStart(), mA.getEnd(), mB.getEnd())}, a2{getSigned2DTriangleArea(mA.getStart(), mA.getEnd(), mB.getStart())};
+			if(a1 * a2 >= 0.f) return false;
+				
+			float a3{getSigned2DTriangleArea(mB.getStart(), mB.getEnd(), mA.getStart())}, a4{a3 + a2 - a1};
+			if(a3 * a4 >= 0.f) return false;
+			
+			mIntersection = mA.getStart() + (a3 / (a3 - a4)) * (mA.getEnd() - mA.getStart());
+			return true;
+		}
 		
 		int getMinIntersectionX(const AABB& mA, const AABB& mB);
 		int getMinIntersectionY(const AABB& mA, const AABB& mB);

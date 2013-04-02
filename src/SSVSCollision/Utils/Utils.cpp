@@ -10,20 +10,7 @@ using namespace sf;
 namespace ssvsc
 {
 	namespace Utils
-	{
-		float getSigned2DTriangleArea(Vector2f mA, Vector2f mB, Vector2f mC) { return (mA.x - mC.x) * (mB.y - mC.y) - (mA.y - mC.y) * (mB.x - mC.x); }
-		bool isSegmentInsersecting(Vector2f mA1, Vector2f mA2, Vector2f mB1, Vector2f mB2, Vector2f& mIntersection)
-		{
-			float a1{getSigned2DTriangleArea(mA1, mA2, mB2)}, a2{getSigned2DTriangleArea(mA1, mA2, mB1)};
-			if(a1 * a2 >= 0.f) return false;
-				
-			float a3{getSigned2DTriangleArea(mB1, mB2, mA1)}, a4{a3 + a2 - a1};
-			if(a3 * a4 >= 0.f) return false;
-			
-			mIntersection = mA1 + (a3 / (a3 - a4)) * (mA2 - mA1);
-			return true;
-		}
-		
+	{		
 		int getMinIntersectionX(const AABB& mA, const AABB& mB)
 		{
 			int left{mB.getLeft() - mA.getRight()}, right{mB.getRight() - mA.getLeft()};

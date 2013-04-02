@@ -16,7 +16,7 @@ namespace ssvsc
 {
 	class Cell;
 	class GridQuery;
-	
+
 	class Grid : public SpatialBase
 	{
 		private:
@@ -30,19 +30,18 @@ namespace ssvsc
 
 			SpatialInfoBase& createSpatialInfo(Body& mBody) override;
 			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
-			
+
 			int getCellSize() const;
 			Cell& getCell(int mX, int mY);
 			Cell& getCell(sf::Vector2i mIndex);
 			int getIndex(int mValue) const;
 			sf::Vector2i getIndex(sf::Vector2i mPosition) const;
 			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const;
-			int getXMinIndex() const;
-			int getYMinIndex() const;
-			int getXMaxIndex() const;
-			int getYMaxIndex() const;
+			int getIndexXMin() const;
+			int getIndexYMin() const;
+			int getIndexXMax() const;
+			int getIndexYMax() const;
 			bool isIndexValid(sf::Vector2i mIndex) const;
-			
 			GridQuery getQuery(sf::Vector2i mPoint);
 	};
 }

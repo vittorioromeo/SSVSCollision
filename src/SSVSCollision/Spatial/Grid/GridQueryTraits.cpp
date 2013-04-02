@@ -55,25 +55,25 @@ namespace ssvsc
 
 		namespace Orthogonal
 		{
-			bool Left::isValid(const GridQuery& mQuery) { return mQuery.getIndex().x >= mQuery.getGrid().getXMinIndex(); }
+			bool Left::isValid(const GridQuery& mQuery) { return mQuery.getIndex().x >= mQuery.getGrid().getIndexXMin(); }
 			void Left::step(GridQuery& mQuery) { mQuery.setIndexX(mQuery.getIndex().x - 1); }
 			bool Left::getSorting(const GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
 			bool Left::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getLeft() > mQuery.getPos().x || mQuery.getPos().y < mShape.getTop() || mQuery.getPos().y > mShape.getBottom(); }
 			void Left::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mShape.getRight()); mQuery.setOutY(mQuery.getPos().y); }
 
-			bool Right::isValid(const GridQuery& mQuery) { return mQuery.getIndex().x < mQuery.getGrid().getXMaxIndex(); }
+			bool Right::isValid(const GridQuery& mQuery) { return mQuery.getIndex().x < mQuery.getGrid().getIndexXMax(); }
 			void Right::step(GridQuery& mQuery) { mQuery.setIndexX(mQuery.getIndex().x + 1); }
 			bool Right::getSorting(const GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().x > mB->getPosition().x; }
 			bool Right::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getRight() < mQuery.getPos().x || mQuery.getPos().y < mShape.getTop() || mQuery.getPos().y > mShape.getBottom(); }
 			void Right::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mShape.getLeft()); mQuery.setOutY(mQuery.getPos().y); }
 
-			bool Up::isValid(const GridQuery& mQuery) { return mQuery.getIndex().y >= mQuery.getGrid().getYMinIndex(); }
+			bool Up::isValid(const GridQuery& mQuery) { return mQuery.getIndex().y >= mQuery.getGrid().getIndexYMin(); }
 			void Up::step(GridQuery& mQuery) { mQuery.setIndexY(mQuery.getIndex().y - 1); }
 			bool Up::getSorting(const GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().y < mB->getPosition().y; }
 			bool Up::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getTop() > mQuery.getPos().y || mQuery.getPos().x < mShape.getLeft() || mQuery.getPos().x > mShape.getRight(); }
 			void Up::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mShape.getBottom()); }
 
-			bool Down::isValid(const GridQuery& mQuery) { return mQuery.getIndex().y < mQuery.getGrid().getYMaxIndex(); }
+			bool Down::isValid(const GridQuery& mQuery) { return mQuery.getIndex().y < mQuery.getGrid().getIndexYMax(); }
 			void Down::step(GridQuery& mQuery) { mQuery.setIndexY(mQuery.getIndex().y + 1); }
 			bool Down::getSorting(const GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().y > mB->getPosition().y; }
 			bool Down::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getBottom() < mQuery.getPos().y || mQuery.getPos().x < mShape.getLeft() || mQuery.getPos().x > mShape.getRight(); }
@@ -96,7 +96,7 @@ namespace ssvsc
 
 			if(sideDist.x < sideDist.y) { mQuery.setSideDistX(sideDist.x + deltaDist.x); mQuery.setIndexX(index.x + step.x); }
 			else { mQuery.setSideDistY(sideDist.y + deltaDist.y); mQuery.setIndexY(index.y + step.y); }
-			
+
 			mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mQuery.getPos().y);
 		}
 		bool RayCast::getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB)
@@ -108,13 +108,14 @@ namespace ssvsc
 		bool RayCast::misses(GridQuery& mQuery, const AABB& mShape)
 		{
 			const auto direction(mQuery.getDirection());
-			vector<pair<Vector2i, Vector2i>> lines;
+			Segment<float> ray{mQuery.getStartPos(), mQuery.getPos()};
+			vector<Segment<float>> lines;
 
-			if(direction.x > 0) lines.push_back({mShape.getSWCorner(), mShape.getNWCorner()});
-			else lines.push_back({mShape.getNECorner(), mShape.getSECorner()});
+			if(direction.x > 0) lines.push_back(mShape.getLeftSegment<float>());
+			else lines.push_back(mShape.getRightSegment<float>());
 
-			if(direction.y > 0) lines.push_back({mShape.getNWCorner(), mShape.getNECorner()});
-			else lines.push_back({mShape.getSECorner(), mShape.getSWCorner()});
+			if(direction.y > 0) lines.push_back(mShape.getTopSegment<float>());
+			else lines.push_back(mShape.getBottomSegment<float>());
 
 			bool intersects{false};
 			Vector2f intersection;
@@ -123,7 +124,7 @@ namespace ssvsc
 			{
 				auto currentLine(lines.back());
 				lines.pop_back();
-				intersects = isSegmentInsersecting(mQuery.getStartPos(), mQuery.getPos(), Vector2f(currentLine.first), Vector2f(currentLine.second), intersection);
+				intersects = isSegmentInsersecting(ray, currentLine, intersection);
 			}
 
 			if(intersects) { mQuery.setOutX(intersection.x); mQuery.setOutY(intersection.y); return false; }

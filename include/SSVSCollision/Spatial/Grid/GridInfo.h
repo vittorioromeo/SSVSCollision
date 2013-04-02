@@ -27,9 +27,8 @@ namespace ssvsc
 			int oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1};
 			bool invalid{true};
 
-			void calcEdges(); // Sets startX, startY, endX, endY
-			void checkEdges(); // Checks if startXY... is different from previousStartXY... - if so, recalculates
-			void calcCells(); // Clears cells/queries and gets new ones
+			void calcEdges();
+			void calcCells();
 			void clear();
 
 		public:

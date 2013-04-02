@@ -8,6 +8,7 @@
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
 #include "SSVSCollision/World/World.h"
+#include "SSVSCollision/Utils/Segment.h"
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/Resolver/Retro/Retro.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"

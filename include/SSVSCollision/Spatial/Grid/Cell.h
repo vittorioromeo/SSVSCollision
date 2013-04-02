@@ -21,19 +21,17 @@ namespace ssvsc
 			std::unordered_map<std::string, std::vector<Body*>> groupedBodies;
 
 		public:
-			Cell(int mLeft, int mRight, int mTop, int mBottom);			
+			Cell(int mLeft, int mRight, int mTop, int mBottom);
 
 			void add(Body* mBody);
 			void del(Body* mBody);
 
 			std::vector<Body*>& getBodies();
 			std::vector<Body*>& getBodies(const std::string& mGroup);
-			std::vector<Body*>* getQuery(const std::string& mGroup);
 			int getLeft() const;
 			int getRight() const;
 			int getTop() const;
 			int getBottom() const;
-
 			bool hasGroup(const std::string& mGroup) const;
 	};
 }

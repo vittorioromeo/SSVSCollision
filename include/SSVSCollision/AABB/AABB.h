@@ -6,9 +6,10 @@
 #define SSVSC_AABB
 
 #include <SFML/System.hpp>
+#include "SSVSCollision/Utils/Segment.h"
 
 namespace ssvsc
-{
+{	
 	class AABB
 	{
 		private:
@@ -40,10 +41,14 @@ namespace ssvsc
 			sf::Vector2i getSize() const;
 			int getWidth() const;
 			int getHeight() const;
-			sf::Vector2i getNWCorner() const;
-			sf::Vector2i getNECorner() const;
-			sf::Vector2i getSWCorner() const;
-			sf::Vector2i getSECorner() const;
+			template<typename T> sf::Vector2<T> getNWCorner() const	{ return sf::Vector2<T>(getLeft(), getTop()); }
+			template<typename T> sf::Vector2<T> getNECorner() const	{ return sf::Vector2<T>(getRight(), getTop()); }
+			template<typename T> sf::Vector2<T> getSWCorner() const	{ return sf::Vector2<T>(getLeft(), getBottom()); }
+			template<typename T> sf::Vector2<T> getSECorner() const	{ return sf::Vector2<T>(getRight(), getBottom()); }
+			template<typename T> Segment<T> getLeftSegment() const	{ return {getNWCorner<T>(), getSWCorner<T>()}; }
+			template<typename T> Segment<T> getRightSegment() const	{ return {getNECorner<T>(), getSECorner<T>()}; }
+			template<typename T> Segment<T> getTopSegment() const	{ return {getNWCorner<T>(), getNECorner<T>()}; }
+			template<typename T> Segment<T> getBottomSegment() const{ return {getSWCorner<T>(), getSECorner<T>()}; }
 
 			bool isLeftOf(const AABB& mAABB) const;
 			bool isRightOf(const AABB& mAABB) const;
