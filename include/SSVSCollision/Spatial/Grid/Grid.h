@@ -41,8 +41,12 @@ namespace ssvsc
 			int getIndexYMin() const;
 			int getIndexXMax() const;
 			int getIndexYMax() const;
+			int getRows() const;
+			int getColumns() const;
+			int getOffset() const;
 			bool isIndexValid(sf::Vector2i mIndex) const;
 			GridQuery getQuery(sf::Vector2i mPoint);
+			std::vector<std::vector<Cell*>>& getCells();
 	};
 }
 

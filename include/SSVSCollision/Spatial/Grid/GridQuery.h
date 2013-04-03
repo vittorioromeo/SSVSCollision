@@ -21,7 +21,9 @@ namespace ssvsc
 			Grid& grid;
 			std::vector<Body*> bodies;
 			sf::Vector2i startIndex, index, step;
-			sf::Vector2f startPos, pos, direction, sideDist, deltaDist, out;
+			sf::Vector2f startPos, pos, direction, deltaDist, out;
+			std::vector<sf::Vector2i> visitedIndexes;
+			sf::Vector2f max;
 
 			template<typename TQueryTraits, typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
 			{
@@ -63,7 +65,7 @@ namespace ssvsc
 					if(mDirection.x == 1.f)	return nextImpl<QueryTraits::Orthogonal::Right, TCellTraits>(mGroup);
 					else if(mDirection.x == -1.f) return nextImpl<QueryTraits::Orthogonal::Left, TCellTraits>(mGroup);
 				}
-				return nextImpl<QueryTraits::RayCast, TCellTraitsOffset>(mGroup);
+				return nextImpl<QueryTraits::RayCast, TCellTraits>(mGroup);
 			}
 		
 		public:
@@ -84,7 +86,8 @@ namespace ssvsc
 			sf::Vector2f getDirection() const;
 			sf::Vector2i getStep() const;
 			sf::Vector2f getDeltaDist() const;
-			sf::Vector2f getSideDist() const;
+			std::vector<sf::Vector2i> getVisitedIndexes() const;
+			sf::Vector2f& getMax();
 			
 			// Setters
 			void setBodies(std::vector<Body*> mBodies);
@@ -94,9 +97,7 @@ namespace ssvsc
 			void setOutX(float mOutX);
 			void setOutY(float mOutY);
 			void setStepX(int mStepX);
-			void setStepY(int mStepX);
-			void setSideDistX(float mSideDistX);
-			void setSideDistY(float mSideDistY);
+			void setStepY(int mStepY);
 			void setDirection(sf::Vector2f mDirection);
 	};
 }

@@ -14,8 +14,6 @@ using namespace ssvs::Utils;
 
 namespace ssvsc
 {
-
-
 	GridQuery::GridQuery(Grid& mGrid, Vector2i mStartPos) : grid(mGrid), startPos{Vector2f(mStartPos)}, pos{startPos},
 		startIndex{grid.getIndex(mStartPos)}, index{startIndex}, direction{0, 0} { }
 
@@ -39,22 +37,31 @@ namespace ssvsc
 	Vector2f GridQuery::getDirection() const	{ return direction; }
 	Vector2i GridQuery::getStep() const			{ return step; }
 	Vector2f GridQuery::getDeltaDist() const	{ return deltaDist; }
-	Vector2f GridQuery::getSideDist() const		{ return sideDist; }
+	vector<Vector2i> GridQuery::getVisitedIndexes() const { return visitedIndexes; }
+	Vector2f& GridQuery::getMax() 		{ return max; }
 	
 	// Setters
 	void GridQuery::setBodies(vector<Body*> mBodies)	{ bodies = mBodies; }
 	void GridQuery::setPos(Vector2f mPos)				{ pos = mPos; }
-	void GridQuery::setIndexX(int mIndexX)				{ index.x = mIndexX; }
-	void GridQuery::setIndexY(int mIndexY)				{ index.y = mIndexY; }
+	void GridQuery::setIndexX(int mIndexX)				{ visitedIndexes.push_back(index); index.x = mIndexX; }
+	void GridQuery::setIndexY(int mIndexY)				{ visitedIndexes.push_back(index); index.y = mIndexY; }
 	void GridQuery::setOutX(float mOutX)				{ out.x = mOutX; }
 	void GridQuery::setOutY(float mOutY)				{ out.y = mOutY; }
 	void GridQuery::setStepX(int mStepX)				{ step.x = mStepX; }
 	void GridQuery::setStepY(int mStepY)				{ step.y = mStepY; }
-	void GridQuery::setSideDistX(float mSideDistX)		{ sideDist.x = mSideDistX; }
-	void GridQuery::setSideDistY(float mSideDistY)		{ sideDist.y = mSideDistY; }
 	void GridQuery::setDirection(Vector2f mDirection)
 	{
+		const int cellSize{grid.getCellSize()};
 		direction = getNormalized(mDirection);
-		deltaDist = {sqrt(1 + (direction.y * direction.y) / (direction.x * direction.x)), sqrt(1 + (direction.x * direction.x) / (direction.y * direction.y))};
+		deltaDist = {cellSize / abs(direction.x), cellSize / abs(direction.y)};
+		
+		step.x = direction.x < 0 ? -1 : 1;
+        step.y = direction.y < 0 ? -1 : 1;
+		
+		max = Vector2f(startIndex * cellSize) - startPos;
+		if(direction.x >= 0) max.x += cellSize;
+		if(direction.y >= 0) max.y += cellSize;
+		max.x /= direction.x;
+		max.y /= direction.y;		
 	}
 }

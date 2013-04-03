@@ -51,6 +51,10 @@ namespace ssvsc
 	int Grid::getIndexYMin() const { return 0 - offset; }
 	int Grid::getIndexXMax() const { return columns - offset; }
 	int Grid::getIndexYMax() const { return rows - offset; }
+	int Grid::getRows() const { return rows; }
+	int Grid::getColumns() const { return columns; }
+	int Grid::getOffset() const { return offset; }
 	bool Grid::isIndexValid(Vector2i mIndex) const { return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
 	GridQuery Grid::getQuery(Vector2i mPoint) { return GridQuery{*this, mPoint}; }
+	vector<vector<Cell*>>& Grid::getCells() { return cells; }
 }

@@ -83,19 +83,24 @@ namespace ssvsc
 		bool RayCast::isValid(const GridQuery& mQuery) { return mQuery.getGrid().isIndexValid(mQuery.getIndex()); }
 		void RayCast::step(GridQuery& mQuery)
 		{
-			const auto index(mQuery.getIndex()), startIndex(mQuery.getStartIndex()), step(mQuery.getStep());
-			const auto deltaDist(mQuery.getDeltaDist()), sideDist(mQuery.getSideDist()), direction(mQuery.getDirection());
+			const auto index(mQuery.getIndex()), step(mQuery.getStep());
+			const auto deltaDist(mQuery.getDeltaDist()), direction(mQuery.getDirection());
+			auto& max(mQuery.getMax());
+
+		
 
 			mQuery.setPos(mQuery.getPos() + direction * static_cast<float>(mQuery.getGrid().getCellSize()));
 
-			if(direction.x < 0) { mQuery.setStepX(-1); mQuery.setSideDistX((startIndex.x - index.x) * deltaDist.x); }
-			else { mQuery.setStepX(1); mQuery.setSideDistX((index.x + 1.0f - startIndex.x) * deltaDist.x); }
-
-			if(direction.y < 0) { mQuery.setStepY(-1); mQuery.setSideDistY((startIndex.y - index.y) * deltaDist.y); }
-			else { mQuery.setStepY(1); mQuery.setSideDistY((index.y + 1.0f - startIndex.y) * deltaDist.y); }
-
-			if(sideDist.x < sideDist.y) { mQuery.setSideDistX(sideDist.x + deltaDist.x); mQuery.setIndexX(index.x + step.x); }
-			else { mQuery.setSideDistY(sideDist.y + deltaDist.y); mQuery.setIndexY(index.y + step.y); }
+			if (max.x < max.y)
+			{
+				max.x += deltaDist.x;
+				mQuery.setIndexX(index.x + step.x);
+			}
+			else
+			{
+				max.y += deltaDist.y;
+				mQuery.setIndexY(index.y + step.y);
+			}
 
 			mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mQuery.getPos().y);
 		}
