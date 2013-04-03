@@ -39,12 +39,14 @@ namespace ssvsc
 	Vector2f GridQuery::getDeltaDist() const	{ return deltaDist; }
 	vector<Vector2i> GridQuery::getVisitedIndexes() const { return visitedIndexes; }
 	Vector2f& GridQuery::getMax() 		{ return max; }
+	Vector2f GridQuery::getIncrement() const	{ return increment; }
 	
 	// Setters
 	void GridQuery::setBodies(vector<Body*> mBodies)	{ bodies = mBodies; }
 	void GridQuery::setPos(Vector2f mPos)				{ pos = mPos; }
 	void GridQuery::setIndexX(int mIndexX)				{ visitedIndexes.push_back(index); index.x = mIndexX; }
 	void GridQuery::setIndexY(int mIndexY)				{ visitedIndexes.push_back(index); index.y = mIndexY; }
+	void GridQuery::setOut(Vector2f mOut)				{ out = mOut; }
 	void GridQuery::setOutX(float mOutX)				{ out.x = mOutX; }
 	void GridQuery::setOutY(float mOutY)				{ out.y = mOutY; }
 	void GridQuery::setStepX(int mStepX)				{ step.x = mStepX; }
@@ -54,6 +56,7 @@ namespace ssvsc
 		const int cellSize{grid.getCellSize()};
 		direction = getNormalized(mDirection);
 		deltaDist = {cellSize / abs(direction.x), cellSize / abs(direction.y)};
+		increment = direction * static_cast<float>(cellSize);
 		
 		step.x = direction.x < 0 ? -1 : 1;
         step.y = direction.y < 0 ? -1 : 1;

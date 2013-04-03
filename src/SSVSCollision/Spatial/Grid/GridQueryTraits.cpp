@@ -83,13 +83,14 @@ namespace ssvsc
 		bool RayCast::isValid(const GridQuery& mQuery) { return mQuery.getGrid().isIndexValid(mQuery.getIndex()); }
 		void RayCast::step(GridQuery& mQuery)
 		{
-			const auto index(mQuery.getIndex()), step(mQuery.getStep());
-			const auto deltaDist(mQuery.getDeltaDist()), direction(mQuery.getDirection());
+			const auto& index(mQuery.getIndex());
+			const auto& step(mQuery.getStep());
+			const auto& deltaDist(mQuery.getDeltaDist());
+			const auto& pos(mQuery.getPos());
 			auto& max(mQuery.getMax());
-
 		
-
-			mQuery.setPos(mQuery.getPos() + direction * static_cast<float>(mQuery.getGrid().getCellSize()));
+			mQuery.setOut(pos); 
+			mQuery.setPos(pos + mQuery.getIncrement());
 
 			if (max.x < max.y)
 			{
@@ -102,12 +103,13 @@ namespace ssvsc
 				mQuery.setIndexY(index.y + step.y);
 			}
 
-			mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mQuery.getPos().y);
+			
 		}
 		bool RayCast::getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB)
 		{
-			const auto startPos(mQuery.getStartPos());
-			const auto aPos(mA->getPosition()), bPos(mB->getPosition());
+			const auto& startPos(mQuery.getStartPos());
+			const auto& aPos(mA->getPosition());
+			const auto& bPos(mB->getPosition());
 			return sqrt(pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2)) > sqrt(pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2));
 		}
 		bool RayCast::misses(GridQuery& mQuery, const AABB& mShape)
@@ -132,7 +134,7 @@ namespace ssvsc
 				intersects = isSegmentInsersecting(ray, currentLine, intersection);
 			}
 
-			if(intersects) { mQuery.setOutX(intersection.x); mQuery.setOutY(intersection.y); return false; }
+			if(intersects) { mQuery.setOut(intersection); return false; }
 
 			return true;
 		}

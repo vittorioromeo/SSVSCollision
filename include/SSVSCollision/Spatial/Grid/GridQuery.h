@@ -23,7 +23,7 @@ namespace ssvsc
 			sf::Vector2i startIndex, index, step;
 			sf::Vector2f startPos, pos, direction, deltaDist, out;
 			std::vector<sf::Vector2i> visitedIndexes;
-			sf::Vector2f max;
+			sf::Vector2f max, increment;
 
 			template<typename TQueryTraits, typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
 			{
@@ -88,12 +88,14 @@ namespace ssvsc
 			sf::Vector2f getDeltaDist() const;
 			std::vector<sf::Vector2i> getVisitedIndexes() const;
 			sf::Vector2f& getMax();
+			sf::Vector2f getIncrement() const;
 			
 			// Setters
 			void setBodies(std::vector<Body*> mBodies);
 			void setPos(sf::Vector2f mPos);
 			void setIndexX(int mIndexX);
 			void setIndexY(int mIndexY);
+			void setOut(sf::Vector2f mOut);
 			void setOutX(float mOutX);
 			void setOutY(float mOutY);
 			void setStepX(int mStepX);
