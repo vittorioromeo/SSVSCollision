@@ -21,9 +21,8 @@ namespace ssvsc
 			Grid& grid;
 			std::vector<Body*> bodies;
 			sf::Vector2i startIndex, index, step;
-			sf::Vector2f startPos, pos, direction, deltaDist, out;
+			sf::Vector2f startPos, pos, direction, deltaDist, out,  max, increment;
 			std::vector<sf::Vector2i> visitedIndexes;
-			sf::Vector2f max, increment;
 
 			template<typename TQueryTraits, typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
 			{
@@ -52,7 +51,7 @@ namespace ssvsc
 				return nullptr;
 			}
 			
-			template<typename TCellTraits, typename TCellTraitsOffset> Body* nextHelper(sf::Vector2f mDirection, const std::string& mGroup = "")
+			template<typename TCellTraits> Body* nextHelper(sf::Vector2f mDirection, const std::string& mGroup = "")
 			{
 				setDirection(mDirection);
 				if(mDirection.x == 0.f)
@@ -102,6 +101,8 @@ namespace ssvsc
 			void setStepY(int mStepY);
 			void setDirection(sf::Vector2f mDirection);
 	};
+	
+	// TODO: consider removing everything but raycasting and forget about QueryTraits
 }
 
 #endif

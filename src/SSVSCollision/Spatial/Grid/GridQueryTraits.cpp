@@ -21,36 +21,6 @@ namespace ssvsc
 		{
 			void All::getBodies(GridQuery& mQuery, const string&) { mQuery.setBodies(mQuery.getGrid().getCell(mQuery.getIndex()).getBodies()); }
 			void Grouped::getBodies(GridQuery& mQuery, const string& mGroup) { mQuery.setBodies(mQuery.getGrid().getCell(mQuery.getIndex()).getBodies(mGroup)); }
-			void AllOffset::getBodies(GridQuery& mQuery, const string&)
-			{
-				auto& grid(mQuery.getGrid());
-				vector<Body*> result;
-
-				for(int iY = -1; iY < 2; ++iY)
-					for(int iX = -1; iX < 2; ++iX)
-					{
-						Vector2i index{mQuery.getIndex() + Vector2i(iX, iY)};
-						if(!grid.isIndexValid(index)) continue;
-						for(auto& b : grid.getCell(index).getBodies()) if(!contains(result, b)) result.push_back(b);
-					}
-
-				 mQuery.setBodies(result);
-			}
-			void GroupedOffset::getBodies(GridQuery& mQuery, const string& mGroup)
-			{
-				auto& grid(mQuery.getGrid());
-				vector<Body*> result;
-
-				for(int iY = -1; iY < 2; ++iY)
-					for(int iX = -1; iX < 2; ++iX)
-					{
-						Vector2i index{mQuery.getIndex() + Vector2i(iX, iY)};
-						if(!grid.isIndexValid(index)) continue;
-						for(auto& b : grid.getCell(index).getBodies(mGroup)) if(!contains(result, b)) result.push_back(b);
-					}
-
-				mQuery.setBodies(result);
-			}
 		}
 
 		namespace Orthogonal
@@ -114,7 +84,7 @@ namespace ssvsc
 		}
 		bool RayCast::misses(GridQuery& mQuery, const AABB& mShape)
 		{
-			const auto direction(mQuery.getDirection());
+			const auto& direction(mQuery.getDirection());
 			Segment<float> ray{mQuery.getStartPos(), mQuery.getPos()};
 			vector<Segment<float>> lines;
 

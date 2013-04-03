@@ -20,8 +20,6 @@ namespace ssvsc
 		{
 			struct All { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
 			struct Grouped { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
-			struct AllOffset { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
-			struct GroupedOffset { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
 		}
 
 		namespace Orthogonal
