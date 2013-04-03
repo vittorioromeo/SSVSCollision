@@ -85,7 +85,7 @@ namespace ssvsc
 			sf::Vector2f getDirection() const;
 			sf::Vector2i getStep() const;
 			sf::Vector2f getDeltaDist() const;
-			std::vector<sf::Vector2i> getVisitedIndexes() const;
+			std::vector<sf::Vector2i> getVisitedIndexes() const; // TODO: cannot the indexes be returned while querying?
 			sf::Vector2f& getMax();
 			sf::Vector2f getIncrement() const;
 			
@@ -100,6 +100,8 @@ namespace ssvsc
 			void setStepX(int mStepX);
 			void setStepY(int mStepY);
 			void setDirection(sf::Vector2f mDirection);
+			
+			// TODO: consider removing getters and setters and encapsulate everything in the same class or use friends
 	};
 	
 	// TODO: consider removing everything but raycasting and forget about QueryTraits
