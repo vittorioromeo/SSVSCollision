@@ -29,18 +29,18 @@ namespace ssvsc
 	}
 
 	// Getters
-	Grid& GridQuery::getGrid() const			{ return grid; }
-	Vector2f GridQuery::getStartPos() const		{ return startPos; }
-	Vector2i GridQuery::getStartIndex() const	{ return startIndex; }
-	Vector2f GridQuery::getPos() const			{ return pos; }
-	Vector2f GridQuery::getOut() const			{ return out; }
-	Vector2i GridQuery::getIndex() const		{ return index; }
-	Vector2f GridQuery::getDirection() const	{ return direction; }
-	Vector2i GridQuery::getStep() const			{ return step; }
-	Vector2f GridQuery::getDeltaDist() const	{ return deltaDist; }
-	vector<Vector2i> GridQuery::getVisitedIndexes() const { return visitedIndexes; }
-	Vector2f& GridQuery::getMax() 		{ return max; }
-	Vector2f GridQuery::getIncrement() const	{ return increment; }
+	Grid& GridQuery::getGrid() 			{ return grid; }
+	const Vector2f& GridQuery::getStartPos() 		{ return startPos; }
+	const Vector2i& GridQuery::getStartIndex() 	{ return startIndex; }
+	const Vector2f& GridQuery::getPos() 			{ return pos; }
+	const Vector2f& GridQuery::getOut() 			{ return out; }
+	const Vector2i& GridQuery::getIndex()		{ return index; }
+	const Vector2f& GridQuery::getDirection() 	{ return direction; }
+	const Vector2i& GridQuery::getStep() 			{ return step; }
+	const Vector2f& GridQuery::getDeltaDist() 	{ return deltaDist; }
+	const vector<Vector2i>& GridQuery::getVisitedIndexes()  { return visitedIndexes; }
+	const Vector2f& GridQuery::getMax() 		{ return max; }
+	const Vector2f& GridQuery::getIncrement() 	{ return increment; }
 	
 	// Setters
 	void GridQuery::setBodies(vector<Body*> mBodies)	{ bodies = mBodies; }
@@ -52,6 +52,8 @@ namespace ssvsc
 	void GridQuery::setOutY(float mOutY)				{ out.y = mOutY; }
 	void GridQuery::setStepX(int mStepX)				{ step.x = mStepX; }
 	void GridQuery::setStepY(int mStepY)				{ step.y = mStepY; }
+	void GridQuery::setMaxX(float mMaxX)				{ max.x = mMaxX; }
+	void GridQuery::setMaxY(float mMaxY)				{ max.y = mMaxY; }
 	void GridQuery::setDirection(Vector2f mDirection)
 	{
 		const int cellSize{grid.getCellSize()};

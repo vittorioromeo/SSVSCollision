@@ -26,33 +26,33 @@ namespace ssvsc
 		{
 			struct Left
 			{
-				static bool isValid(const GridQuery& mQuery);
+				static bool isValid(GridQuery& mQuery);
 				static void step(GridQuery& mQuery);
-				static bool getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB);
+				static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
 				static bool misses(GridQuery& mQuery, const AABB& mShape);
 				static void setOut(GridQuery& mQuery, const AABB& mShape);
 			};
 			struct Right
 			{
-				static bool isValid(const GridQuery& mQuery);
+				static bool isValid(GridQuery& mQuery);
 				static void step(GridQuery& mQuery);
-				static bool getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB);
+				static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
 				static bool misses(GridQuery& mQuery, const AABB& mShape);
 				static void setOut(GridQuery& mQuery, const AABB& mShape);
 			};
 			struct Up
 			{
-				static bool isValid(const GridQuery& mQuery);
+				static bool isValid(GridQuery& mQuery);
 				static void step(GridQuery& mQuery);
-				static bool getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB);
+				static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
 				static bool misses(GridQuery& mQuery, const AABB& mShape);
 				static void setOut(GridQuery& mQuery, const AABB& mShape);
 			};
 			struct Down
 			{
-				static bool isValid(const GridQuery& mQuery);
+				static bool isValid(GridQuery& mQuery);
 				static void step(GridQuery& mQuery);
-				static bool getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB);
+				static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
 				static bool misses(GridQuery& mQuery, const AABB& mShape);
 				static void setOut(GridQuery& mQuery, const AABB& mShape);
 			};
@@ -60,9 +60,9 @@ namespace ssvsc
 
 		struct RayCast
 		{
-			static bool isValid(const GridQuery& mQuery);
+			static bool isValid(GridQuery& mQuery);
 			static void step(GridQuery& mQuery);
-			static bool getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB);
+			static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
 			static bool misses(GridQuery& mQuery, const AABB& mShape);
 			static void setOut(GridQuery& mQuery, const AABB& mShape);
 		};

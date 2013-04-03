@@ -25,57 +25,55 @@ namespace ssvsc
 
 		namespace Orthogonal
 		{
-			bool Left::isValid(const GridQuery& mQuery) { return mQuery.getIndex().x >= mQuery.getGrid().getIndexXMin(); }
+			bool Left::isValid(GridQuery& mQuery) { return mQuery.getIndex().x >= mQuery.getGrid().getIndexXMin(); }
 			void Left::step(GridQuery& mQuery) { mQuery.setIndexX(mQuery.getIndex().x - 1); }
-			bool Left::getSorting(const GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
+			bool Left::getSorting(GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
 			bool Left::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getLeft() > mQuery.getPos().x || mQuery.getPos().y < mShape.getTop() || mQuery.getPos().y > mShape.getBottom(); }
 			void Left::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mShape.getRight()); mQuery.setOutY(mQuery.getPos().y); }
 
-			bool Right::isValid(const GridQuery& mQuery) { return mQuery.getIndex().x < mQuery.getGrid().getIndexXMax(); }
+			bool Right::isValid(GridQuery& mQuery) { return mQuery.getIndex().x < mQuery.getGrid().getIndexXMax(); }
 			void Right::step(GridQuery& mQuery) { mQuery.setIndexX(mQuery.getIndex().x + 1); }
-			bool Right::getSorting(const GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().x > mB->getPosition().x; }
+			bool Right::getSorting(GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().x > mB->getPosition().x; }
 			bool Right::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getRight() < mQuery.getPos().x || mQuery.getPos().y < mShape.getTop() || mQuery.getPos().y > mShape.getBottom(); }
 			void Right::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mShape.getLeft()); mQuery.setOutY(mQuery.getPos().y); }
 
-			bool Up::isValid(const GridQuery& mQuery) { return mQuery.getIndex().y >= mQuery.getGrid().getIndexYMin(); }
+			bool Up::isValid(GridQuery& mQuery) { return mQuery.getIndex().y >= mQuery.getGrid().getIndexYMin(); }
 			void Up::step(GridQuery& mQuery) { mQuery.setIndexY(mQuery.getIndex().y - 1); }
-			bool Up::getSorting(const GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().y < mB->getPosition().y; }
+			bool Up::getSorting(GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().y < mB->getPosition().y; }
 			bool Up::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getTop() > mQuery.getPos().y || mQuery.getPos().x < mShape.getLeft() || mQuery.getPos().x > mShape.getRight(); }
 			void Up::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mShape.getBottom()); }
 
-			bool Down::isValid(const GridQuery& mQuery) { return mQuery.getIndex().y < mQuery.getGrid().getIndexYMax(); }
+			bool Down::isValid(GridQuery& mQuery) { return mQuery.getIndex().y < mQuery.getGrid().getIndexYMax(); }
 			void Down::step(GridQuery& mQuery) { mQuery.setIndexY(mQuery.getIndex().y + 1); }
-			bool Down::getSorting(const GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().y > mB->getPosition().y; }
+			bool Down::getSorting(GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().y > mB->getPosition().y; }
 			bool Down::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getBottom() < mQuery.getPos().y || mQuery.getPos().x < mShape.getLeft() || mQuery.getPos().x > mShape.getRight(); }
 			void Down::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mShape.getTop()); }
 		}
 
-		bool RayCast::isValid(const GridQuery& mQuery) { return mQuery.getGrid().isIndexValid(mQuery.getIndex()); }
+		bool RayCast::isValid(GridQuery& mQuery) { return mQuery.getGrid().isIndexValid(mQuery.getIndex()); }
 		void RayCast::step(GridQuery& mQuery)
 		{
 			const auto& index(mQuery.getIndex());
 			const auto& step(mQuery.getStep());
 			const auto& deltaDist(mQuery.getDeltaDist());
 			const auto& pos(mQuery.getPos());
-			auto& max(mQuery.getMax());
+			const auto& max(mQuery.getMax());
 		
 			mQuery.setOut(pos); 
 			mQuery.setPos(pos + mQuery.getIncrement());
 
 			if (max.x < max.y)
 			{
-				max.x += deltaDist.x;
+				mQuery.setMaxX(max.x + deltaDist.x);
 				mQuery.setIndexX(index.x + step.x);
 			}
 			else
 			{
-				max.y += deltaDist.y;
+				mQuery.setMaxY(max.y + deltaDist.y);
 				mQuery.setIndexY(index.y + step.y);
 			}
-
-			
 		}
-		bool RayCast::getSorting(const GridQuery& mQuery, const Body* mA, const Body* mB)
+		bool RayCast::getSorting(GridQuery& mQuery, const Body* mA, const Body* mB)
 		{
 			const auto& startPos(mQuery.getStartPos());
 			const auto& aPos(mA->getPosition());

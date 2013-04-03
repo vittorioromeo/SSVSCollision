@@ -76,18 +76,18 @@ namespace ssvsc
 			void reset();
 						
 			// Getters
-			Grid& getGrid() const;
-			sf::Vector2f getStartPos() const;
-			sf::Vector2i getStartIndex() const;
-			sf::Vector2f getPos() const;
-			sf::Vector2f getOut() const;
-			sf::Vector2i getIndex() const;
-			sf::Vector2f getDirection() const;
-			sf::Vector2i getStep() const;
-			sf::Vector2f getDeltaDist() const;
-			std::vector<sf::Vector2i> getVisitedIndexes() const; // TODO: cannot the indexes be returned while querying?
-			sf::Vector2f& getMax();
-			sf::Vector2f getIncrement() const;
+			Grid& getGrid();
+			const sf::Vector2f& getStartPos();
+			const sf::Vector2i& getStartIndex();
+			const sf::Vector2f& getPos();
+			const sf::Vector2f& getOut();
+			const sf::Vector2i& getIndex();
+			const sf::Vector2f& getDirection();
+			const sf::Vector2i& getStep();
+			const sf::Vector2f& getDeltaDist();
+			const std::vector<sf::Vector2i>& getVisitedIndexes(); // TODO: cannot the indexes be returned while querying?
+			const sf::Vector2f& getMax();
+			const sf::Vector2f& getIncrement();
 			
 			// Setters
 			void setBodies(std::vector<Body*> mBodies);
@@ -99,9 +99,9 @@ namespace ssvsc
 			void setOutY(float mOutY);
 			void setStepX(int mStepX);
 			void setStepY(int mStepY);
+			void setMaxX(float mMaxX);
+			void setMaxY(float mMaxY);
 			void setDirection(sf::Vector2f mDirection);
-			
-			// TODO: consider removing getters and setters and encapsulate everything in the same class or use friends
 	};
 	
 	// TODO: consider removing everything but raycasting and forget about QueryTraits
