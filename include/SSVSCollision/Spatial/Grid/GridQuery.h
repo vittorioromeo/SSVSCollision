@@ -21,7 +21,7 @@ namespace ssvsc
 			Grid& grid;
 			std::vector<Body*> bodies;
 			sf::Vector2i startIndex, index, step;
-			sf::Vector2f startPos, pos, direction, deltaDist, out,  max, increment;
+			sf::Vector2f startPos, pos, direction, deltaDist, out, max, increment;
 			std::vector<sf::Vector2i> visitedIndexes;
 
 			template<typename TQueryTraits, typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
