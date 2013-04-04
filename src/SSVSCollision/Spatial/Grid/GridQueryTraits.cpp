@@ -16,7 +16,7 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	namespace QueryTraits
+	namespace GridQueryTypes
 	{
 		namespace Bodies
 		{
@@ -26,28 +26,28 @@ namespace ssvsc
 
 		namespace Orthogonal
 		{
-			Left::Left(GridCRTPQuery<Left>& mQuery) : QueryTraitBase{mQuery} { }			
+			Left::Left(GridQuery<Left>& mQuery) : Base{mQuery} { }			
 			bool Left::isValid() { return query.index.x >= query.grid.getIndexXMin(); }
 			void Left::step() { --query.index.x; }
 			bool Left::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
 			bool Left::misses(const AABB& mShape) { return mShape.getLeft() > query.pos.x || query.pos.y < mShape.getTop() || query.pos.y > mShape.getBottom(); }
 			void Left::setOut(const AABB& mShape) { query.out = Vector2f(mShape.getRight(), query.pos.y); }
 
-			Right::Right(GridCRTPQuery<Right>& mQuery) : QueryTraitBase{mQuery} { }
+			Right::Right(GridQuery<Right>& mQuery) : Base{mQuery} { }
 			bool Right::isValid() { return query.index.x < query.grid.getIndexXMax(); }
 			void Right::step() { ++query.index.x; }
 			bool Right::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x > mB->getPosition().x; }
 			bool Right::misses(const AABB& mShape) { return mShape.getRight() < query.pos.x || query.pos.y < mShape.getTop() || query.pos.y > mShape.getBottom(); }
 			void Right::setOut(const AABB& mShape) { query.out = Vector2f(mShape.getLeft(), query.pos.y); }
 
-			Up::Up(GridCRTPQuery<Up>& mQuery) : QueryTraitBase{mQuery} { }
+			Up::Up(GridQuery<Up>& mQuery) : Base{mQuery} { }
 			bool Up::isValid() { return query.index.y >= query.grid.getIndexYMin(); }
 			void Up::step() { --query.index.y; }
 			bool Up::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().y < mB->getPosition().y; }
 			bool Up::misses(const AABB& mShape) { return mShape.getTop() > query.pos.y || query.pos.x < mShape.getLeft() || query.pos.x > mShape.getRight(); }
 			void Up::setOut(const AABB& mShape) { query.out = Vector2f(query.pos.x, mShape.getBottom()); }
 
-			Down::Down(GridCRTPQuery<Down>& mQuery) : QueryTraitBase{mQuery} { }
+			Down::Down(GridQuery<Down>& mQuery) : Base{mQuery} { }
 			bool Down::isValid() { return query.index.y < query.grid.getIndexYMax(); }
 			void Down::step() { ++query.index.y; }
 			bool Down::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().y > mB->getPosition().y; }
@@ -56,12 +56,12 @@ namespace ssvsc
 		}
 
 		
-		RayCast::RayCast(GridCRTPQuery<RayCast, Vector2f>& mQuery, Vector2f mDirection) : QueryTraitBase{mQuery}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
+		RayCast::RayCast(GridQuery<RayCast, Vector2f>& mQuery, Vector2f mDirection) : Base{mQuery}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
 			deltaDist{cellSize / abs(direction.x), cellSize / abs(direction.y)}, increment{direction * static_cast<float>(cellSize)},  
 			max{Vector2f(query.startIndex * cellSize) - query.startPos} 
 		{ 
-			stepVec.x = direction.x < 0 ? -1 : 1;
-			stepVec.y = direction.y < 0 ? -1 : 1;
+			next.x = direction.x < 0 ? -1 : 1;
+			next.y = direction.y < 0 ? -1 : 1;
 			if(direction.x >= 0) max.x += cellSize;
 			if(direction.y >= 0) max.y += cellSize;
 			max.x /= direction.x;
@@ -77,12 +77,12 @@ namespace ssvsc
 			if(max.x < max.y)
 			{
 				max.x += deltaDist.x;
-				query.index.x += stepVec.x;
+				query.index.x += next.x;
 			}
 			else
 			{
 				max.y += deltaDist.y;
-				query.index.y += stepVec.y;
+				query.index.y += next.y;
 			}
 		}
 		bool RayCast::getSorting(const Body* mA, const Body* mB)

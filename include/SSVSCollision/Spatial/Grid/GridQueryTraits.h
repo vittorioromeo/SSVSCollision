@@ -10,20 +10,16 @@
 
 namespace ssvsc
 {
-	class Grid;
-	class GridQuery;
-	template<typename T, typename... TArgs> class GridCRTPQuery;
 	class AABB;
 	class Body;
+	class Grid;
 
-	namespace QueryTraits
+	namespace GridQueryTypes
 	{
-		template<typename TDerived, typename... TArgs> struct QueryTraitBase
+		template<typename TDerived, typename... TArgs> struct Base
 		{
-			GridCRTPQuery<TDerived, TArgs...>& query;
-			
-			QueryTraitBase(GridCRTPQuery<TDerived, TArgs...>& mQuery) : query(mQuery) { }
-
+			GridQuery<TDerived, TArgs...>& query;
+			Base(GridQuery<TDerived, TArgs...>& mQuery) : query(mQuery) { }
 		};
 		
 		namespace Bodies
@@ -34,9 +30,9 @@ namespace ssvsc
 
 		namespace Orthogonal
 		{
-			struct Left : public QueryTraitBase<Left>					
+			struct Left : public Base<Left>					
 			{								
-				Left(GridCRTPQuery<Left>& mQuery);
+				Left(GridQuery<Left>& mQuery);
 					
 				bool isValid();
 				void step();
@@ -44,9 +40,9 @@ namespace ssvsc
 				bool misses(const AABB& mShape);
 				void setOut(const AABB& mShape);
 			};
-			struct Right : public QueryTraitBase<Right>
+			struct Right : public Base<Right>
 			{	
-				Right(GridCRTPQuery<Right>& mQuery);					
+				Right(GridQuery<Right>& mQuery);					
 					
 				bool isValid();
 				void step();
@@ -54,9 +50,9 @@ namespace ssvsc
 				bool misses(const AABB& mShape);
 				void setOut(const AABB& mShape);
 			};
-			struct Up : public QueryTraitBase<Up>
+			struct Up : public Base<Up>
 			{		
-				Up(GridCRTPQuery<Up>& mQuery);
+				Up(GridQuery<Up>& mQuery);
 					
 				bool isValid();
 				void step();
@@ -64,9 +60,9 @@ namespace ssvsc
 				bool misses(const AABB& mShape);
 				void setOut(const AABB& mShape);
 			};
-			struct Down : public QueryTraitBase<Down>
+			struct Down : public Base<Down>
 			{										
-				Down(GridCRTPQuery<Down>& mQuery);
+				Down(GridQuery<Down>& mQuery);
 					
 				bool isValid();
 				void step();
@@ -76,13 +72,13 @@ namespace ssvsc
 			};
 		}
 
-		struct RayCast : public QueryTraitBase<RayCast, sf::Vector2f>
+		struct RayCast : public Base<RayCast, sf::Vector2f>
 		{
 			int cellSize;
-			sf::Vector2i stepVec;
+			sf::Vector2i next;
 			sf::Vector2f direction, deltaDist, max, increment;
 						
-			RayCast(GridCRTPQuery<RayCast, sf::Vector2f>& mQuery, sf::Vector2f mDirection);
+			RayCast(GridQuery<RayCast, sf::Vector2f>& mQuery, sf::Vector2f mDirection);
 
 			bool isValid();
 			void step();

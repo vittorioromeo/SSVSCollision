@@ -15,7 +15,7 @@
 namespace ssvsc
 {
 	class Cell;
-	template<typename T, typename... TArgs> class GridCRTPQuery;
+	template<typename T, typename... TArgs> class GridQuery;
 
 	class Grid : public SpatialBase
 	{
@@ -47,9 +47,9 @@ namespace ssvsc
 			bool isIndexValid(sf::Vector2i mIndex) const;
 			std::vector<std::vector<Cell*>>& getCells();
 		
-			template<typename T, typename... TArgs> GridCRTPQuery<T, TArgs...> getQuery(sf::Vector2i mPoint, TArgs... mArgs) 
+			template<typename T, typename... TArgs> GridQuery<T, TArgs...> getQuery(sf::Vector2i mPoint, TArgs... mArgs) 
 			{ 
-				return GridCRTPQuery<T, TArgs...>{*this, mPoint, mArgs...}; 
+				return {*this, mPoint, mArgs...}; 
 			}
 	};
 }

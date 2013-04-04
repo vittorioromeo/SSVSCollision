@@ -15,60 +15,68 @@
 
 namespace ssvsc
 {
-	template<typename T, typename... TArgs> struct GridCRTPQuery
+	template<typename T, typename... TArgs> class GridQuery
 	{
-		Grid& grid;
-		sf::Vector2f startPos, pos, out;
-		sf::Vector2i startIndex, index;
-		std::vector<Body*> bodies;
-		std::vector<sf::Vector2i> visitedIndexes;
-		T traitBase;
-
-		GridCRTPQuery(Grid& mGrid, sf::Vector2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{sf::Vector2f(mStartPos)}, pos{startPos},
-			startIndex{grid.getIndex(mStartPos)}, index{startIndex}, traitBase(*this, mArgs...) { }
-
-		template<typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
-		{
-			while(traitBase.isValid())
+		friend class GridQueryTypes::Orthogonal::Left;
+		friend class GridQueryTypes::Orthogonal::Right;
+		friend class GridQueryTypes::Orthogonal::Up;
+		friend class GridQueryTypes::Orthogonal::Down;
+		friend class GridQueryTypes::RayCast;
+			
+		private:
+			Grid& grid;
+			sf::Vector2f startPos, pos, out;
+			sf::Vector2i startIndex, index;
+			std::vector<Body*> bodies;
+			std::vector<sf::Vector2i> visitedIndexes;
+			T internal;
+			
+			template<typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
 			{
-				if(bodies.empty())
+				while(internal.isValid())
 				{
-					visitedIndexes.push_back(index);
-					TCellTraits::getBodies(bodies, grid, index, mGroup);
-					traitBase.step();
-					ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return traitBase.getSorting(mA, mB); });
+					if(bodies.empty())
+					{
+						TCellTraits::getBodies(bodies, grid, index, mGroup);
+						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
+						visitedIndexes.push_back(index);
+						internal.step();
+					}
+	
+					while(!bodies.empty())
+					{
+						Body* body{bodies.back()};
+						const auto& shape(body->getShape());
+						bodies.pop_back();
+	
+						if(internal.misses(shape)) continue;
+	
+						internal.setOut(shape);
+						return body;
+					}
 				}
-
-				while(!bodies.empty())
-				{
-					Body* body{bodies.back()};
-					auto& shape(body->getShape());
-					bodies.pop_back();
-
-					if(traitBase.misses(shape)) continue;
-
-					traitBase.setOut(shape);
-					return body;
-				}
+	
+				return nullptr;
 			}
 
-			return nullptr;
-		}
+		public:
+			GridQuery(Grid& mGrid, sf::Vector2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{sf::Vector2f(mStartPos)}, pos{startPos},
+				startIndex{grid.getIndex(mStartPos)}, index{startIndex}, internal(*this, mArgs...) { }	
 
-		Body* next() { return nextImpl<QueryTraits::Bodies::All>(); }
-		Body* next(const std::string& mGroup) { return nextImpl<QueryTraits::Bodies::Grouped>(mGroup); }
+			Body* next() { return nextImpl<GridQueryTypes::Bodies::All>(); }
+			Body* next(const std::string& mGroup) { return nextImpl<GridQueryTypes::Bodies::Grouped>(mGroup); }
+	
+			void reset()
+			{
+				pos = startPos;
+				index = startIndex;
+				bodies.clear();
+				visitedIndexes.clear();
+			}
 
-		void reset()
-		{
-			pos = startPos;
-			index = startIndex;
-			bodies.clear();
-			visitedIndexes.clear();
-		}
-
-		// Getters
-		const sf::Vector2f& getOut() { return out; }
-		const std::vector<sf::Vector2i>& getVisitedIndexes() { return visitedIndexes; }
+			// Getters
+			const sf::Vector2f& getOut() { return out; }
+			const std::vector<sf::Vector2i>& getVisitedIndexes() { return visitedIndexes; }
 	};
 }
 
