@@ -75,7 +75,7 @@ namespace ssvsc
 		struct RayCast : public Base<RayCast, sf::Vector2f>
 		{
 			int cellSize;
-			sf::Vector2i next;
+			sf::Vector2i next{0, 0};
 			sf::Vector2f direction, deltaDist, max, increment;
 						
 			RayCast(GridQuery<RayCast, sf::Vector2f>& mQuery, sf::Vector2f mDirection);
