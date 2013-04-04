@@ -31,28 +31,28 @@ namespace ssvsc
 			void Left::step() { --query.index.x; }
 			bool Left::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
 			bool Left::misses(const AABB& mShape) { return mShape.getLeft() > query.pos.x || query.pos.y < mShape.getTop() || query.pos.y > mShape.getBottom(); }
-			void Left::setOut(const AABB& mShape) { query.out = Vector2f(mShape.getRight(), query.pos.y); }
+			void Left::setOut(const AABB& mShape) { query.lastPos = Vector2f(mShape.getRight(), query.pos.y); }
 
 			Right::Right(GridQuery<Right>& mQuery) : Base{mQuery} { }
 			bool Right::isValid() { return query.index.x < query.grid.getIndexXMax(); }
 			void Right::step() { ++query.index.x; }
 			bool Right::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x > mB->getPosition().x; }
 			bool Right::misses(const AABB& mShape) { return mShape.getRight() < query.pos.x || query.pos.y < mShape.getTop() || query.pos.y > mShape.getBottom(); }
-			void Right::setOut(const AABB& mShape) { query.out = Vector2f(mShape.getLeft(), query.pos.y); }
+			void Right::setOut(const AABB& mShape) { query.lastPos = Vector2f(mShape.getLeft(), query.pos.y); }
 
 			Up::Up(GridQuery<Up>& mQuery) : Base{mQuery} { }
 			bool Up::isValid() { return query.index.y >= query.grid.getIndexYMin(); }
 			void Up::step() { --query.index.y; }
 			bool Up::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().y < mB->getPosition().y; }
 			bool Up::misses(const AABB& mShape) { return mShape.getTop() > query.pos.y || query.pos.x < mShape.getLeft() || query.pos.x > mShape.getRight(); }
-			void Up::setOut(const AABB& mShape) { query.out = Vector2f(query.pos.x, mShape.getBottom()); }
+			void Up::setOut(const AABB& mShape) { query.lastPos = Vector2f(query.pos.x, mShape.getBottom()); }
 
 			Down::Down(GridQuery<Down>& mQuery) : Base{mQuery} { }
 			bool Down::isValid() { return query.index.y < query.grid.getIndexYMax(); }
 			void Down::step() { ++query.index.y; }
 			bool Down::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().y > mB->getPosition().y; }
 			bool Down::misses(const AABB& mShape) { return mShape.getBottom() < query.pos.y || query.pos.x < mShape.getLeft() || query.pos.x > mShape.getRight(); }
-			void Down::setOut(const AABB& mShape) { query.out = Vector2f(query.pos.x, mShape.getTop()); }
+			void Down::setOut(const AABB& mShape) { query.lastPos = Vector2f(query.pos.x, mShape.getTop()); }
 		}
 
 		
@@ -71,7 +71,7 @@ namespace ssvsc
 		bool RayCast::isValid() { return query.grid.isIndexValid(query.index); }
 		void RayCast::step()
 		{					
-			query.out = query.pos;
+			query.lastPos = query.pos;
 			query.pos += increment;
 
 			if(max.x < max.y)
@@ -112,7 +112,7 @@ namespace ssvsc
 				intersects = isSegmentInsersecting(ray, currentLine, intersection);
 			}
 
-			if(intersects) { query.out = intersection; return false; }
+			if(intersects) { query.lastPos = intersection; return false; }
 
 			return true;
 		}

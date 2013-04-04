@@ -25,7 +25,7 @@ namespace ssvsc
 			
 		private:
 			Grid& grid;
-			sf::Vector2f startPos, pos, out;
+			sf::Vector2f startPos, pos, lastPos;
 			sf::Vector2i startIndex, index;
 			std::vector<Body*> bodies;
 			std::vector<sf::Vector2i> visitedIndexes;
@@ -75,7 +75,7 @@ namespace ssvsc
 			}
 
 			// Getters
-			const sf::Vector2f& getOut() { return out; }
+			const sf::Vector2f& getLastPos() { return lastPos; }
 			const std::vector<sf::Vector2i>& getVisitedIndexes() { return visitedIndexes; }
 	};
 }
