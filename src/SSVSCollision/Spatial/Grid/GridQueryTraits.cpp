@@ -11,6 +11,7 @@
 using namespace std;
 using namespace sf;
 using namespace ssvu;
+using namespace ssvs::Utils;
 using namespace ssvsc::Utils;
 
 namespace ssvsc
@@ -19,71 +20,80 @@ namespace ssvsc
 	{
 		namespace Bodies
 		{
-			void All::getBodies(GridQuery& mQuery, const string&) { mQuery.setBodies(mQuery.getGrid().getCell(mQuery.getIndex()).getBodies()); }
-			void Grouped::getBodies(GridQuery& mQuery, const string& mGroup) { mQuery.setBodies(mQuery.getGrid().getCell(mQuery.getIndex()).getBodies(mGroup)); }
+			void All::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, const string&) { mBodies = mGrid.getCell(mIndex).getBodies(); }
+			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, const string& mGroup) { mBodies = mGrid.getCell(mIndex).getBodies(mGroup); }
 		}
 
 		namespace Orthogonal
 		{
-			bool Left::isValid(GridQuery& mQuery) { return mQuery.getIndex().x >= mQuery.getGrid().getIndexXMin(); }
-			void Left::step(GridQuery& mQuery) { mQuery.setIndexX(mQuery.getIndex().x - 1); }
-			bool Left::getSorting(GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
-			bool Left::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getLeft() > mQuery.getPos().x || mQuery.getPos().y < mShape.getTop() || mQuery.getPos().y > mShape.getBottom(); }
-			void Left::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mShape.getRight()); mQuery.setOutY(mQuery.getPos().y); }
+			Left::Left(GridCRTPQuery<Left>& mQuery) : QueryTraitBase{mQuery} { }			
+			bool Left::isValid() { return query.index.x >= query.grid.getIndexXMin(); }
+			void Left::step() { --query.index.x; }
+			bool Left::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
+			bool Left::misses(const AABB& mShape) { return mShape.getLeft() > query.pos.x || query.pos.y < mShape.getTop() || query.pos.y > mShape.getBottom(); }
+			void Left::setOut(const AABB& mShape) { query.out = Vector2f(mShape.getRight(), query.pos.y); }
 
-			bool Right::isValid(GridQuery& mQuery) { return mQuery.getIndex().x < mQuery.getGrid().getIndexXMax(); }
-			void Right::step(GridQuery& mQuery) { mQuery.setIndexX(mQuery.getIndex().x + 1); }
-			bool Right::getSorting(GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().x > mB->getPosition().x; }
-			bool Right::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getRight() < mQuery.getPos().x || mQuery.getPos().y < mShape.getTop() || mQuery.getPos().y > mShape.getBottom(); }
-			void Right::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mShape.getLeft()); mQuery.setOutY(mQuery.getPos().y); }
+			Right::Right(GridCRTPQuery<Right>& mQuery) : QueryTraitBase{mQuery} { }
+			bool Right::isValid() { return query.index.x < query.grid.getIndexXMax(); }
+			void Right::step() { ++query.index.x; }
+			bool Right::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x > mB->getPosition().x; }
+			bool Right::misses(const AABB& mShape) { return mShape.getRight() < query.pos.x || query.pos.y < mShape.getTop() || query.pos.y > mShape.getBottom(); }
+			void Right::setOut(const AABB& mShape) { query.out = Vector2f(mShape.getLeft(), query.pos.y); }
 
-			bool Up::isValid(GridQuery& mQuery) { return mQuery.getIndex().y >= mQuery.getGrid().getIndexYMin(); }
-			void Up::step(GridQuery& mQuery) { mQuery.setIndexY(mQuery.getIndex().y - 1); }
-			bool Up::getSorting(GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().y < mB->getPosition().y; }
-			bool Up::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getTop() > mQuery.getPos().y || mQuery.getPos().x < mShape.getLeft() || mQuery.getPos().x > mShape.getRight(); }
-			void Up::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mShape.getBottom()); }
+			Up::Up(GridCRTPQuery<Up>& mQuery) : QueryTraitBase{mQuery} { }
+			bool Up::isValid() { return query.index.y >= query.grid.getIndexYMin(); }
+			void Up::step() { --query.index.y; }
+			bool Up::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().y < mB->getPosition().y; }
+			bool Up::misses(const AABB& mShape) { return mShape.getTop() > query.pos.y || query.pos.x < mShape.getLeft() || query.pos.x > mShape.getRight(); }
+			void Up::setOut(const AABB& mShape) { query.out = Vector2f(query.pos.x, mShape.getBottom()); }
 
-			bool Down::isValid(GridQuery& mQuery) { return mQuery.getIndex().y < mQuery.getGrid().getIndexYMax(); }
-			void Down::step(GridQuery& mQuery) { mQuery.setIndexY(mQuery.getIndex().y + 1); }
-			bool Down::getSorting(GridQuery&, const Body* mA, const Body* mB) { return mA->getPosition().y > mB->getPosition().y; }
-			bool Down::misses(GridQuery& mQuery, const AABB& mShape) { return mShape.getBottom() < mQuery.getPos().y || mQuery.getPos().x < mShape.getLeft() || mQuery.getPos().x > mShape.getRight(); }
-			void Down::setOut(GridQuery& mQuery, const AABB& mShape) { mQuery.setOutX(mQuery.getPos().x); mQuery.setOutY(mShape.getTop()); }
+			Down::Down(GridCRTPQuery<Down>& mQuery) : QueryTraitBase{mQuery} { }
+			bool Down::isValid() { return query.index.y < query.grid.getIndexYMax(); }
+			void Down::step() { ++query.index.y; }
+			bool Down::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().y > mB->getPosition().y; }
+			bool Down::misses(const AABB& mShape) { return mShape.getBottom() < query.pos.y || query.pos.x < mShape.getLeft() || query.pos.x > mShape.getRight(); }
+			void Down::setOut(const AABB& mShape) { query.out = Vector2f(query.pos.x, mShape.getTop()); }
 		}
 
-		bool RayCast::isValid(GridQuery& mQuery) { return mQuery.getGrid().isIndexValid(mQuery.getIndex()); }
-		void RayCast::step(GridQuery& mQuery)
-		{
-			const auto& index(mQuery.getIndex());
-			const auto& step(mQuery.getStep());
-			const auto& deltaDist(mQuery.getDeltaDist());
-			const auto& pos(mQuery.getPos());
-			const auto& max(mQuery.getMax());
 		
-			mQuery.setOut(pos); 
-			mQuery.setPos(pos + mQuery.getIncrement());
+		RayCast::RayCast(GridCRTPQuery<RayCast, Vector2f>& mQuery, Vector2f mDirection) : QueryTraitBase{mQuery}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
+			deltaDist{cellSize / abs(direction.x), cellSize / abs(direction.y)}, increment{direction * static_cast<float>(cellSize)},  
+			max{Vector2f(query.startIndex * cellSize) - query.startPos} 
+		{ 
+			stepVec.x = direction.x < 0 ? -1 : 1;
+			stepVec.y = direction.y < 0 ? -1 : 1;
+			if(direction.x >= 0) max.x += cellSize;
+			if(direction.y >= 0) max.y += cellSize;
+			max.x /= direction.x;
+			max.y /= direction.y;	
+		}
 
-			if (max.x < max.y)
+		bool RayCast::isValid() { return query.grid.isIndexValid(query.index); }
+		void RayCast::step()
+		{					
+			query.out = query.pos;
+			query.pos += increment;
+
+			if(max.x < max.y)
 			{
-				mQuery.setMaxX(max.x + deltaDist.x);
-				mQuery.setIndexX(index.x + step.x);
+				max.x += deltaDist.x;
+				query.index.x += stepVec.x;
 			}
 			else
 			{
-				mQuery.setMaxY(max.y + deltaDist.y);
-				mQuery.setIndexY(index.y + step.y);
+				max.y += deltaDist.y;
+				query.index.y += stepVec.y;
 			}
 		}
-		bool RayCast::getSorting(GridQuery& mQuery, const Body* mA, const Body* mB)
+		bool RayCast::getSorting(const Body* mA, const Body* mB)
 		{
-			const auto& startPos(mQuery.getStartPos());
 			const auto& aPos(mA->getPosition());
 			const auto& bPos(mB->getPosition());
-			return sqrt(pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2)) > sqrt(pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2));
+			return sqrt(pow((aPos.x - query.startPos.x), 2) + pow((aPos.y - query.startPos.y), 2)) > sqrt(pow((bPos.x - query.startPos.x), 2) + pow((bPos.y - query.startPos.y), 2));
 		}
-		bool RayCast::misses(GridQuery& mQuery, const AABB& mShape)
+		bool RayCast::misses(const AABB& mShape)
 		{
-			const auto& direction(mQuery.getDirection());
-			Segment<float> ray{mQuery.getStartPos(), mQuery.getPos()};
+			Segment<float> ray{query.startPos, query.pos};
 			vector<Segment<float>> lines;
 
 			if(direction.x > 0) lines.push_back(mShape.getLeftSegment<float>());
@@ -102,10 +112,10 @@ namespace ssvsc
 				intersects = isSegmentInsersecting(ray, currentLine, intersection);
 			}
 
-			if(intersects) { mQuery.setOut(intersection); return false; }
+			if(intersects) { query.out = intersection; return false; }
 
 			return true;
 		}
-		void RayCast::setOut(GridQuery&, const AABB&) { }
+		void RayCast::setOut(const AABB&) { }
 	}
 }

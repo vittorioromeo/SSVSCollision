@@ -12,59 +12,83 @@ namespace ssvsc
 {
 	class Grid;
 	class GridQuery;
+	template<typename T, typename... TArgs> class GridCRTPQuery;
 	class AABB;
+	class Body;
 
 	namespace QueryTraits
 	{
+		template<typename TDerived, typename... TArgs> struct QueryTraitBase
+		{
+			GridCRTPQuery<TDerived, TArgs...>& query;
+			
+			QueryTraitBase(GridCRTPQuery<TDerived, TArgs...>& mQuery) : query(mQuery) { }
+
+		};
+		
 		namespace Bodies
 		{
-			struct All { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
-			struct Grouped { static void getBodies(GridQuery& mQuery, const std::string& mGroup); };
+			struct All { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, const std::string& mGroup); };
+			struct Grouped { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, const std::string& mGroup); };
 		}
 
 		namespace Orthogonal
 		{
-			struct Left
-			{
-				static bool isValid(GridQuery& mQuery);
-				static void step(GridQuery& mQuery);
-				static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
-				static bool misses(GridQuery& mQuery, const AABB& mShape);
-				static void setOut(GridQuery& mQuery, const AABB& mShape);
+			struct Left : public QueryTraitBase<Left>					
+			{								
+				Left(GridCRTPQuery<Left>& mQuery);
+					
+				bool isValid();
+				void step();
+				bool getSorting(const Body* mA, const Body* mB);
+				bool misses(const AABB& mShape);
+				void setOut(const AABB& mShape);
 			};
-			struct Right
-			{
-				static bool isValid(GridQuery& mQuery);
-				static void step(GridQuery& mQuery);
-				static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
-				static bool misses(GridQuery& mQuery, const AABB& mShape);
-				static void setOut(GridQuery& mQuery, const AABB& mShape);
+			struct Right : public QueryTraitBase<Right>
+			{	
+				Right(GridCRTPQuery<Right>& mQuery);					
+					
+				bool isValid();
+				void step();
+				bool getSorting(const Body* mA, const Body* mB);
+				bool misses(const AABB& mShape);
+				void setOut(const AABB& mShape);
 			};
-			struct Up
-			{
-				static bool isValid(GridQuery& mQuery);
-				static void step(GridQuery& mQuery);
-				static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
-				static bool misses(GridQuery& mQuery, const AABB& mShape);
-				static void setOut(GridQuery& mQuery, const AABB& mShape);
+			struct Up : public QueryTraitBase<Up>
+			{		
+				Up(GridCRTPQuery<Up>& mQuery);
+					
+				bool isValid();
+				void step();
+				bool getSorting(const Body* mA, const Body* mB);
+				bool misses(const AABB& mShape);
+				void setOut(const AABB& mShape);
 			};
-			struct Down
-			{
-				static bool isValid(GridQuery& mQuery);
-				static void step(GridQuery& mQuery);
-				static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
-				static bool misses(GridQuery& mQuery, const AABB& mShape);
-				static void setOut(GridQuery& mQuery, const AABB& mShape);
+			struct Down : public QueryTraitBase<Down>
+			{										
+				Down(GridCRTPQuery<Down>& mQuery);
+					
+				bool isValid();
+				void step();
+				bool getSorting(const Body* mA, const Body* mB);
+				bool misses(const AABB& mShape);
+				void setOut(const AABB& mShape);
 			};
 		}
 
-		struct RayCast
+		struct RayCast : public QueryTraitBase<RayCast, sf::Vector2f>
 		{
-			static bool isValid(GridQuery& mQuery);
-			static void step(GridQuery& mQuery);
-			static bool getSorting(GridQuery& mQuery, const Body* mA, const Body* mB);
-			static bool misses(GridQuery& mQuery, const AABB& mShape);
-			static void setOut(GridQuery& mQuery, const AABB& mShape);
+			int cellSize;
+			sf::Vector2i stepVec;
+			sf::Vector2f direction, deltaDist, max, increment;
+						
+			RayCast(GridCRTPQuery<RayCast, sf::Vector2f>& mQuery, sf::Vector2f mDirection);
+
+			bool isValid();
+			void step();
+			bool getSorting(const Body* mA, const Body* mB);
+			bool misses(const AABB& mShape);
+			void setOut(const AABB& mShape);
 		};
 	}
 }

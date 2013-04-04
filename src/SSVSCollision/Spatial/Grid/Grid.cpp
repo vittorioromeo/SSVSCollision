@@ -4,7 +4,7 @@
 
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
-#include "SSVSCollision/Spatial/Grid/GridQuery.h"
+
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 #include "SSVSCollision/Body/Body.h"
 
@@ -55,6 +55,5 @@ namespace ssvsc
 	int Grid::getColumns() const { return columns; }
 	int Grid::getOffset() const { return offset; }
 	bool Grid::isIndexValid(Vector2i mIndex) const { return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
-	GridQuery Grid::getQuery(Vector2i mPoint) { return GridQuery{*this, mPoint}; }
 	vector<vector<Cell*>>& Grid::getCells() { return cells; }
 }
