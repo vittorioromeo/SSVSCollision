@@ -2,13 +2,17 @@ cmake_minimum_required(VERSION 2.8)
 project(SSVSCollision)
 
 set(SSVSCOLLISION_BUILD_SHARED_LIB FALSE CACHE BOOL "Build shared libraries.")
-set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type." FORCE)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" CACHE STRING "" FORCE)
+set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type." FORCE)
+set(CMAKE_CXX_FLAGS "-std=c++11" CACHE STRING "" FORCE)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extlibs/SSVUtils/cmake/Modules/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extlibs/SSVStart/cmake/Modules/;${CMAKE_MODULE_PATH}")
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -pg -Og" CACHE STRING "" FORCE)
+set(CMAKE_CXX_FLAGS_DEBUG "-Og -g2 -gstabs+" CACHE STRING "" FORCE)
+
+IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
+	message("debug mode")
+ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
 
 set(SPARSEHASH_INCLUDE_DIR "" CACHE STRING "google::sparsehash include directory")
 

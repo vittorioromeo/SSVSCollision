@@ -26,7 +26,7 @@ namespace ssvsc
 
 		namespace Orthogonal
 		{
-			Left::Left(GridQuery<Left>& mQuery) : Base{mQuery} { }			
+			Left::Left(GridQuery<Left>& mQuery) : Base{mQuery} { }
 			bool Left::isValid() { return query.index.x >= query.grid.getIndexXMin(); }
 			void Left::step() { --query.index.x; }
 			bool Left::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
@@ -55,22 +55,22 @@ namespace ssvsc
 			void Down::setOut(const AABB& mShape) { query.lastPos = Vector2f(query.pos.x, mShape.getTop()); }
 		}
 
-		
+
 		RayCast::RayCast(GridQuery<RayCast, Vector2f>& mQuery, Vector2f mDirection) : Base{mQuery}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
-			deltaDist{cellSize / abs(direction.x), cellSize / abs(direction.y)}, increment{direction * static_cast<float>(cellSize)},  
-			max{Vector2f(query.startIndex * cellSize) - query.startPos} 
-		{ 
+			deltaDist{cellSize / abs(direction.x), cellSize / abs(direction.y)}, increment{direction * static_cast<float>(cellSize)},
+			max{Vector2f(query.startIndex * cellSize) - query.startPos}
+		{
 			next.x = direction.x < 0 ? -1 : 1;
 			next.y = direction.y < 0 ? -1 : 1;
 			if(direction.x >= 0) max.x += cellSize;
 			if(direction.y >= 0) max.y += cellSize;
 			max.x /= direction.x;
-			max.y /= direction.y;	
+			max.y /= direction.y;
 		}
 
 		bool RayCast::isValid() { return query.grid.isIndexValid(query.index); }
 		void RayCast::step()
-		{					
+		{
 			query.lastPos = query.pos;
 			query.pos += increment;
 

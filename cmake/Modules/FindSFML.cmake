@@ -64,7 +64,8 @@ endif()
 # find the SFML include directory
 find_path(SFML_INCLUDE_DIR SFML/Config.hpp
           PATH_SUFFIXES include
-          PATHS "${PROJECT_SOURCE_DIR}/../SFML/"
+          PATHS "D:/Vee/Software/GitHub/OHWorkspace/SFML/"
+          "${PROJECT_SOURCE_DIR}/../SFML/"
           "${PROJECT_SOURCE_DIR}/extlibs/SFML/"
           ${SFML_ROOT}
           $ENV{SFML_ROOT}
@@ -116,6 +117,8 @@ endif()
 # find the requested modules
 set(SFML_FOUND TRUE) # will be set to false if one of the required modules is not found
 set(FIND_SFML_LIB_PATHS
+	"D:/Vee/Software/GitHub/OHWorkspace/SFML/"
+	"D:/Vee/Software/GitHub/OHWorkspace/SFML/lib/"
     "${PROJECT_SOURCE_DIR}/../SFML/"
     "${PROJECT_SOURCE_DIR}/../SFML/lib/"
     "${PROJECT_SOURCE_DIR}/../SFML/build2/lib/"
@@ -152,6 +155,7 @@ foreach(FIND_SFML_COMPONENT ${SFML_FIND_COMPONENTS})
     # release library
     find_library(SFML_${FIND_SFML_COMPONENT_UPPER}_LIBRARY_RELEASE
                  NAMES ${FIND_SFML_COMPONENT_NAME}
+                 ${FIND_SFML_COMPONENT_NAME}-2
                  PATH_SUFFIXES lib64/ lib/
                  PATHS ${FIND_SFML_LIB_PATHS})
 
