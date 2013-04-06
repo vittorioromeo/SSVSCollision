@@ -28,12 +28,12 @@ namespace ssvsc
 	void Body::update(float mFrameTime)
 	{
 		onPreUpdate();
-		
+
 		if(_static) { spatialInfo.preUpdate(); return; }
 		if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
 
 		oldShape = shape;
-		integrate(mFrameTime); 	
+		integrate(mFrameTime);
 		spatialInfo.preUpdate();
 		vector<Body*> bodiesToResolve;
 
@@ -51,7 +51,7 @@ namespace ssvsc
 		}
 
 		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
-		if(oldShape != shape) spatialInfo.invalidate(); 
+		if(oldShape != shape) spatialInfo.invalidate();
 
 		spatialInfo.postUpdate();
 		onPostUpdate();

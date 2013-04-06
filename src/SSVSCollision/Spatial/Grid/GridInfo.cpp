@@ -9,6 +9,7 @@
 
 using namespace std;
 using namespace google;
+using namespace ssvu;
 
 namespace ssvsc
 {
@@ -20,6 +21,11 @@ namespace ssvsc
 		const AABB& oldShape(body.getOldShape());
 		const AABB& shape(body.getShape());
 
+		oldStartX = startX;
+		oldStartY = startY;
+		oldEndX = endX;
+		oldEndY = endY;
+
 		startX = grid.getIndex(min(oldShape.getLeft(), shape.getLeft()));
 		startY = grid.getIndex(min(oldShape.getTop(), shape.getTop()));
 		endX = grid.getIndex(max(oldShape.getRight(), shape.getRight()));
@@ -27,11 +33,6 @@ namespace ssvsc
 
 		if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells();
 		else invalid = false;
-
-		oldStartX = startX;
-		oldStartY = startY;
-		oldEndX = endX;
-		oldEndY = endY;
 	}
 
 	void GridInfo::clear()
@@ -45,6 +46,9 @@ namespace ssvsc
 
 		if(grid.isOutside(startX, startY, endX, endY)) { body.setOutOfBounds(true); return; }
 		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(&grid.getCell(iX, iY));
+
+		//log(toStr(startX) + " -> " + toStr(endX));
+		//log(toStr(startY) + " -> " + toStr(endY));
 
 		for(auto& cell : cells)
 		{
@@ -60,11 +64,18 @@ namespace ssvsc
 	void GridInfo::postUpdate() { }
 	vector<Body*>& GridInfo::getBodiesToCheck()
 	{
-		//vector<Body*> result; result.reserve(100); //result.set_empty_key(nullptr);
+		//dense_hash_set<Body*> result; result.set_empty_key(nullptr);
+		//for(auto& query : queries) for(auto& body : *query) result.insert(body);
+		//return result;
+
+		//log(toStr(bodiesToCheck.size()));
+		//vector<Body*> result; result.reserve(100);
+		//for(auto& query : queries) for(auto& body : *query) if(!ssvu::contains(result, body)) result.push_back(body);
+		//return result;
+
 		bodiesToCheck.clear();
 		for(auto& query : queries) for(auto& body : *query) if(!ssvu::contains(bodiesToCheck, body)) bodiesToCheck.push_back(body);
 		return bodiesToCheck;
-		//return result;
 	}
 	void GridInfo::destroy() { grid.delSpatialInfo(*this); }
 }
