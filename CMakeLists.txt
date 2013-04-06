@@ -1,50 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
+
+set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type.")
 project(SSVSCollision)
 
-set(SSVSCOLLISION_BUILD_SHARED_LIB FALSE CACHE BOOL "Build shared libraries.")
-set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type." FORCE)
-set(CMAKE_CXX_FLAGS "-std=c++11" CACHE STRING "" FORCE)
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -W -pedantic" CACHE STRING "" FORCE)
+set(CMAKE_CXX_FLAGS_DEBUG "-fno-omit-frame-pointer -g3 -gdwarf-2 -O3" CACHE STRING "" FORCE)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extlibs/SSVUtils/cmake/Modules/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extlibs/SSVStart/cmake/Modules/;${CMAKE_MODULE_PATH}")
-
-set(CMAKE_CXX_FLAGS_DEBUG "-Og -g2 -gstabs+" CACHE STRING "" FORCE)
-
-IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
-	message("debug mode")
-ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
-
-set(SPARSEHASH_INCLUDE_DIR "" CACHE STRING "google::sparsehash include directory")
-
-set(SFML_STATIC_LIBRARIES FALSE CACHE BOOL "Look for static SFML libraries.")
-
-find_package(SFML 2 COMPONENTS system)
-if(SFML_FOUND)
-	include_directories(${SFML_INCLUDE_DIR})
-	message("\nSFML found and included\n")
-else()
-	set(SFML_INCLUDE_DIR "" CACHE STRING "SFML2 include directory")
-	set(SFML_SYSTEM_LIBRARY "" CACHE STRING "SFML2 System library file")
-	message("\n-> SFML directory not found. Set include and libraries manually.")
-endif()
-
-find_package(SSVUtils REQUIRED)
-if(SSVUTILS_FOUND)
-	include_directories(${SSVUTILS_INCLUDE_DIR})
-	message("\nSSVUtils found and included\n")
-else()
-	set(SSVUTILS_ROOT "" CACHE PATH "SSVUtils top-level directory")
-	message("\n-> SSVUtils directory not found. Set SSVUTILS_ROOT to SSVUtils' top-level path (containing both \"include\" and \"lib\" directories).")
-endif()
-
-find_package(SSVStart REQUIRED)
-if(SSVSTART_FOUND)
-	include_directories(${SSVSTART_INCLUDE_DIR})
-	message("\nSSVStart found and included\n")
-else()
-	set(SSVSTART_ROOT "" CACHE PATH "SSVStart top-level directory")
-	message("\n-> SSVStart directory not found. Set SSVSTART_ROOT to SSVStart's top-level path (containing both \"include\" and \"lib\" directories).")
-endif()
+set(SSVSCOLLISION_BUILD_SHARED_LIB FALSE CACHE BOOL "Build shared libraries.")
 
 if(SSVSCOLLISION_BUILD_SHARED_LIB)
 	set(LIB_TYPE SHARED)
@@ -52,43 +16,50 @@ else()
 	set(LIB_TYPE STATIC)
 endif()
 
+set(SPARSEHASH_INCLUDE_DIR "" CACHE STRING "google::sparsehash include directory")
+
+set(SFML_STATIC_LIBRARIES FALSE CACHE BOOL "Look for static SFML libraries.")
+find_package(SFML 2 COMPONENTS system)
+if(NOT SFML_FOUND)
+	set(SFML_INCLUDE_DIR "" CACHE STRING "SFML2 include directory")
+	set(SFML_SYSTEM_LIBRARY "" CACHE STRING "SFML2 System library file")
+	message("\n-> SFML directory not found. Set include and libraries manually.")
+endif()
+
+find_package(SSVUtils REQUIRED)
+find_package(SSVStart REQUIRED)
+
 set(SRC_DIR "src")
 set(INC_DIR "include")
 
-set(
-	SOURCES
-	${INC_DIR}/${PROJECT_NAME}/AABB/AABB.h
-	${INC_DIR}/${PROJECT_NAME}/Body/Body.h
-	${INC_DIR}/${PROJECT_NAME}/Body/CallbackInfo.h
-	${INC_DIR}/${PROJECT_NAME}/Resolver/ResolverBase.h
-	${INC_DIR}/${PROJECT_NAME}/Resolver/Retro/Retro.h
-	${INC_DIR}/${PROJECT_NAME}/Spatial/SpatialBase.h
-	${INC_DIR}/${PROJECT_NAME}/Spatial/SpatialInfoBase.h
-	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/Cell.h
-	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/Grid.h
-	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridInfo.h
-	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridQuery.h
-	${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridQueryTraits.h
-	${INC_DIR}/${PROJECT_NAME}/Utils/Segment.h
-	${INC_DIR}/${PROJECT_NAME}/Utils/Utils.h
-	${INC_DIR}/${PROJECT_NAME}/World/World.h
-	${SRC_DIR}/${PROJECT_NAME}/AABB/AABB.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Body/Body.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Body/BodyProperties.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Resolver/Retro/Retro.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/Cell.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/Grid.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridInfo.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridQuery.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/GridQueryTraits.cpp
-	${SRC_DIR}/${PROJECT_NAME}/Utils/Utils.cpp
-	${SRC_DIR}/${PROJECT_NAME}/World/World.cpp
+file(GLOB SRC_LIST
+	"${INC_DIR}/${PROJECT_NAME}/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/AABB/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/AABB/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/Body/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/Body/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/Resolver/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/Resolver/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/Resolver/Retro/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/Resolver/Retro/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/Spatial/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/Spatial/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/Spatial/Grid/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/Spatial/Grid/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/Utils/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/Utils/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/World/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/World/*.cpp"
 )
 
 include_directories(${INC_DIR})
 include_directories(${SPARSEHASH_INCLUDE_DIR})
+include_directories(${SFML_INCLUDE_DIR})
+include_directories(${SSVUTILS_INCLUDE_DIR})
+include_directories(${SSVSTART_INCLUDE_DIR})
 
-add_library(${PROJECT_NAME} ${LIB_TYPE} ${SOURCES})
+add_library(${PROJECT_NAME} ${LIB_TYPE} ${SRC_LIST})
 target_link_libraries(SSVSCollision ${SFML_SYSTEM_LIBRARY})
 target_link_libraries(SSVSCollision ${SSVUTILS_LIBRARY})
 target_link_libraries(SSVSCollision ${SSVSTART_LIBRARY})
@@ -101,16 +72,9 @@ else()
 endif()
 
 if(WIN32)
-	install(TARGETS ${PROJECT_NAME}
-		RUNTIME DESTINATION bin
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib)
+	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 else()
-	install(TARGETS ${PROJECT_NAME}
-		RUNTIME DESTINATION lib
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib)
+	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 endif()
 
-install(DIRECTORY ${INC_DIR}
-	DESTINATION .)
+install(DIRECTORY ${INC_DIR} DESTINATION .)
