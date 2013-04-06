@@ -9,7 +9,7 @@
 #include "SSVSCollision/Utils/Segment.h"
 
 namespace ssvsc
-{	
+{
 	class AABB
 	{
 		private:
@@ -27,7 +27,7 @@ namespace ssvsc
 			void setSize(sf::Vector2i mSize);
 			void setWidth(int mWidth);
 			void setHeight(int mHeight);
-			
+
 			sf::Vector2i getPosition() const;
 			int getX() const;
 			int getY() const;

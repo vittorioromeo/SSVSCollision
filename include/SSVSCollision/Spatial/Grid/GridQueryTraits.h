@@ -21,7 +21,7 @@ namespace ssvsc
 			GridQuery<TDerived, TArgs...>& query;
 			Base(GridQuery<TDerived, TArgs...>& mQuery) : query(mQuery) { }
 		};
-		
+
 		namespace Bodies
 		{
 			struct All { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, const std::string& mGroup); };
@@ -30,10 +30,10 @@ namespace ssvsc
 
 		namespace Orthogonal
 		{
-			struct Left : public Base<Left>					
-			{								
+			struct Left : public Base<Left>
+			{
 				Left(GridQuery<Left>& mQuery);
-					
+
 				bool isValid();
 				void step();
 				bool getSorting(const Body* mA, const Body* mB);
@@ -41,9 +41,9 @@ namespace ssvsc
 				void setOut(const AABB& mShape);
 			};
 			struct Right : public Base<Right>
-			{	
-				Right(GridQuery<Right>& mQuery);					
-					
+			{
+				Right(GridQuery<Right>& mQuery);
+
 				bool isValid();
 				void step();
 				bool getSorting(const Body* mA, const Body* mB);
@@ -51,9 +51,9 @@ namespace ssvsc
 				void setOut(const AABB& mShape);
 			};
 			struct Up : public Base<Up>
-			{		
+			{
 				Up(GridQuery<Up>& mQuery);
-					
+
 				bool isValid();
 				void step();
 				bool getSorting(const Body* mA, const Body* mB);
@@ -61,9 +61,9 @@ namespace ssvsc
 				void setOut(const AABB& mShape);
 			};
 			struct Down : public Base<Down>
-			{										
+			{
 				Down(GridQuery<Down>& mQuery);
-					
+
 				bool isValid();
 				void step();
 				bool getSorting(const Body* mA, const Body* mB);
@@ -77,7 +77,7 @@ namespace ssvsc
 			int cellSize;
 			sf::Vector2i next{0, 0};
 			sf::Vector2f direction, deltaDist, max, increment;
-						
+
 			RayCast(GridQuery<RayCast, sf::Vector2f>& mQuery, sf::Vector2f mDirection);
 
 			bool isValid();

@@ -7,16 +7,10 @@
 
 #include <SFML/System.hpp>
 
-template<typename T> class Segment
+template<typename T> struct Segment
 {
-	private:
-		sf::Vector2<T> start, end;
-	
-	public:
-		Segment(sf::Vector2<T> mStart, sf::Vector2<T> mEnd) : start{mStart}, end{mEnd} { }
-		
-		sf::Vector2<T> getStart() const { return start; }
-		sf::Vector2<T> getEnd() const { return end; }
+	sf::Vector2<T> start, end;
+	Segment(sf::Vector2<T> mStart, sf::Vector2<T> mEnd) : start{mStart}, end{mEnd} { }
 };
 
 #endif

@@ -27,7 +27,7 @@ namespace ssvsc
 			virtual void invalidate() = 0;
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
-			virtual google::dense_hash_set<Body*> getBodiesToCheck() = 0;
+			virtual std::vector<Body*>& getBodiesToCheck() = 0;
 			virtual void destroy() = 0;
 	};
 }

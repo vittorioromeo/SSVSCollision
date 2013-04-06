@@ -12,7 +12,7 @@ using namespace google;
 
 namespace ssvsc
 {
-	GridInfo::GridInfo(Grid& mGrid, Body& mBody) : SpatialInfoBase(mGrid, mBody), grid(mGrid) { }
+	GridInfo::GridInfo(Grid& mGrid, Body& mBody) : SpatialInfoBase(mGrid, mBody), grid(mGrid) { bodiesToCheck.reserve(100); }
 	GridInfo::~GridInfo() { clear(); }
 
 	void GridInfo::calcEdges()
@@ -58,12 +58,13 @@ namespace ssvsc
 	void GridInfo::invalidate() { invalid = true; }
 	void GridInfo::preUpdate() { if(invalid) calcEdges();  }
 	void GridInfo::postUpdate() { }
-	dense_hash_set<Body*> GridInfo::getBodiesToCheck()
+	vector<Body*>& GridInfo::getBodiesToCheck()
 	{
-		dense_hash_set<Body*> result; result.set_empty_key(nullptr);
-		for(auto& query : queries) for(auto& body : *query) result.insert(body);
-		return result;
+		//vector<Body*> result; result.reserve(100); //result.set_empty_key(nullptr);
+		bodiesToCheck.clear();
+		for(auto& query : queries) for(auto& body : *query) if(!ssvu::contains(bodiesToCheck, body)) bodiesToCheck.push_back(body);
+		return bodiesToCheck;
+		//return result;
 	}
 	void GridInfo::destroy() { grid.delSpatialInfo(*this); }
 }
-

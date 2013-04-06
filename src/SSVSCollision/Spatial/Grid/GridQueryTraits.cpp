@@ -89,30 +89,20 @@ namespace ssvsc
 		{
 			const auto& aPos(mA->getPosition());
 			const auto& bPos(mB->getPosition());
-			return sqrt(pow((aPos.x - query.startPos.x), 2) + pow((aPos.y - query.startPos.y), 2)) > sqrt(pow((bPos.x - query.startPos.x), 2) + pow((bPos.y - query.startPos.y), 2));
+			return pow((aPos.x - query.startPos.x), 2) + pow((aPos.y - query.startPos.y), 2) > pow((bPos.x - query.startPos.x), 2) + pow((bPos.y - query.startPos.y), 2);
 		}
 		bool RayCast::misses(const AABB& mShape)
 		{
 			Segment<float> ray{query.startPos, query.pos};
-			vector<Segment<float>> lines;
+			Segment<float> test1{direction.x > 0 ? mShape.getLeftSegment<float>() : mShape.getRightSegment<float>()};
+			Segment<float> test2{direction.y > 0 ? mShape.getTopSegment<float>() : mShape.getBottomSegment<float>()};
 
-			if(direction.x > 0) lines.push_back(mShape.getLeftSegment<float>());
-			else lines.push_back(mShape.getRightSegment<float>());
-
-			if(direction.y > 0) lines.push_back(mShape.getTopSegment<float>());
-			else lines.push_back(mShape.getBottomSegment<float>());
-
-			bool intersects{false};
 			Vector2f intersection;
-
-			while(!intersects && !lines.empty())
+			if(isSegmentInsersecting(ray, test1, intersection) || isSegmentInsersecting(ray, test2, intersection))
 			{
-				auto currentLine(lines.back());
-				lines.pop_back();
-				intersects = isSegmentInsersecting(ray, currentLine, intersection);
+				query.lastPos = intersection;
+				return false;
 			}
-
-			if(intersects) { query.lastPos = intersection; return false; }
 
 			return true;
 		}

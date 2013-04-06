@@ -23,6 +23,7 @@ namespace ssvsc
 
 			std::vector<Cell*> cells;
 			std::vector<std::vector<Body*>*> queries; // Cell vector ptrs to query
+			std::vector<Body*> bodiesToCheck;
 			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
 			int oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1};
 			bool invalid{true};
@@ -38,7 +39,7 @@ namespace ssvsc
 			void invalidate() override;
 			void preUpdate() override;
 			void postUpdate() override;
-			google::dense_hash_set<Body*> getBodiesToCheck() override;
+			std::vector<Body*>& getBodiesToCheck() override;
 			void destroy() override;
 	};
 }

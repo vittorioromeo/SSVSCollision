@@ -7,7 +7,7 @@
 using namespace sf;
 
 namespace ssvsc
-{	
+{
 	AABB::AABB(Vector2i mPosition, Vector2i mHalfSize) : position{mPosition}, halfSize{mHalfSize} { }
 
 	void AABB::move(sf::Vector2i mOffset) { position += mOffset; }
