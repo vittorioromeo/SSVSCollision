@@ -8,7 +8,6 @@
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 
 using namespace std;
-using namespace google;
 using namespace ssvu;
 
 namespace ssvsc
@@ -47,9 +46,6 @@ namespace ssvsc
 		if(!grid.isIndexValid(startX, startY, endX, endY)) { body.setOutOfBounds(true); return; }
 		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(&grid.getCell(iX, iY));
 
-		//log(toStr(startX) + " -> " + toStr(endX));
-		//log(toStr(startY) + " -> " + toStr(endY));
-
 		for(auto& cell : cells)
 		{
 			cell->add(&body);
@@ -64,17 +60,8 @@ namespace ssvsc
 	void GridInfo::postUpdate() { }
 	const vector<Body*>& GridInfo::getBodiesToCheck()
 	{
-		//dense_hash_set<Body*> result; result.set_empty_key(nullptr);
-		//for(auto& query : queries) for(auto& body : *query) result.insert(body);
-		//return result;
-
-		//log(toStr(bodiesToCheck.size()));
-		//vector<Body*> result; result.reserve(100);
-		//for(auto& query : queries) for(auto& body : *query) if(!ssvu::contains(result, body)) result.push_back(body);
-		//return result;
-
 		bodiesToCheck.clear();
-		for(auto& query : queries) for(auto& body : *query) if(!ssvu::contains(bodiesToCheck, body)) bodiesToCheck.push_back(body);
+		for(auto& query : queries) for(auto& body : *query) if(!contains(bodiesToCheck, body)) bodiesToCheck.push_back(body);
 		return bodiesToCheck;
 	}
 	void GridInfo::destroy() { grid.delSpatialInfo(*this); }

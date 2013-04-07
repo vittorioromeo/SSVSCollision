@@ -6,8 +6,6 @@
 #define SSVSC_SPATIALINFOBASE
 
 #include "SSVSCollision/Spatial/SpatialBase.h"
-#pragma GCC system_header
-#include <google/dense_hash_set>
 
 namespace ssvsc
 {

@@ -35,7 +35,7 @@ namespace ssvsc
 		oldShape = shape;
 		integrate(mFrameTime);
 		spatialInfo.preUpdate();
-		vector<Body*> bodiesToResolve;
+		bodiesToResolve.clear();
 
 		for(auto& body : spatialInfo.getBodiesToCheck())
 		{
@@ -46,8 +46,8 @@ namespace ssvsc
 			onDetection({*body, mFrameTime, body->getUserData(), intersection});
 			body->onDetection({*this, mFrameTime, userData, -intersection});
 
-			if(!resolve) continue;
-			if(!containsAny(body->getGroups(), groupsNoResolve)) bodiesToResolve.push_back(body);
+			if(!resolve || containsAny(body->getGroups(), groupsNoResolve)) continue;
+			bodiesToResolve.push_back(body);
 		}
 
 		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);

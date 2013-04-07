@@ -7,8 +7,6 @@
 
 #include <vector>
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
-#pragma GCC system_header
-#include <google/dense_hash_set>
 
 namespace ssvsc
 {

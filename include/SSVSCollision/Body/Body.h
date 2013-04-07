@@ -29,9 +29,10 @@ namespace ssvsc
 			sf::Vector2f velocity, acceleration;
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData{nullptr};
+			std::vector<Body*> bodiesToResolve;
 
 			void integrate(float mFrameTime);
-			
+
 		public:
 			ssvu::Delegate<void> onPreUpdate;
 			ssvu::Delegate<void> onPostUpdate;
@@ -51,39 +52,39 @@ namespace ssvsc
 
 			// Setters
 			void setPosition(sf::Vector2i mPosition);
-			void setVelocity(sf::Vector2f mVelocity);
-			void setAcceleration(sf::Vector2f mAcceleration);
-			void setStatic(bool mStatic);
-			void setUserData(void* mUserData);
 			void setX(int mX);
 			void setY(int mY);
-			void setVelocityX(float mX);
-			void setVelocityY(float mY);
 			void setSize(sf::Vector2i mSize);
 			void setWidth(int mWidth);
 			void setHeight(int mHeight);
-			void setOutOfBounds(bool mOutOfBounds);
-			void setResolve(bool mResolve);
+			inline void setVelocity(sf::Vector2f mVelocity) 			{ velocity = mVelocity; }
+			inline void setAcceleration(sf::Vector2f mAcceleration)	{ acceleration = mAcceleration; }
+			inline void setStatic(bool mStatic) 					{ _static = mStatic; }
+			inline void setUserData(void* mUserData) 			{ userData = mUserData; }
+			inline void setVelocityX(float mX)				 	{ velocity.x = mX; }
+			inline void setVelocityY(float mY)				 	{ velocity.y = mY; }
+			inline void setOutOfBounds(bool mOutOfBounds)		{ outOfBounds = mOutOfBounds; }
+			inline void setResolve(bool mResolve)				{ resolve = mResolve; }
 
 			// Getters
-			World& getWorld();
-			AABB& getShape();
-			AABB& getOldShape();
-			const std::vector<std::string>& getGroups();
-			const std::vector<std::string>& getGroupsToCheck();
-			const std::vector<std::string>& getGroupsNoResolve();
-			sf::Vector2i getPosition() const;
-			sf::Vector2f getVelocity() const;
-			sf::Vector2f getAcceleration() const;
-			sf::Vector2i getSize() const;
-			int getWidth() const;
-			int getHeight() const;
-			bool isStatic() const;
-			void* getUserData() const;
-			bool hasMovedLeft() const;
-			bool hasMovedRight() const;
-			bool hasMovedUp() const;
-			bool hasMovedDown() const;
+			inline World& getWorld()					{ return world; }
+			inline AABB& getShape()						{ return shape; }
+			inline AABB& getOldShape() 					{ return oldShape; }
+			inline sf::Vector2i getPosition() const		{ return shape.getPosition(); }
+			inline sf::Vector2f getVelocity() const		{ return velocity; }
+			inline sf::Vector2f getAcceleration() const	{ return acceleration; }
+			inline sf::Vector2i getSize() const			{ return shape.getSize(); }
+			inline int getWidth() const					{ return shape.getWidth(); }
+			inline int getHeight() const				{ return shape.getHeight(); }
+			inline bool isStatic() const				{ return _static; }
+			inline void* getUserData() const			{ return userData; }
+			inline bool hasMovedLeft() const			{ return shape.getX() < oldShape.getX(); }
+			inline bool hasMovedRight() const			{ return shape.getX() > oldShape.getX(); }
+			inline bool hasMovedUp() const				{ return shape.getY() < oldShape.getY(); }
+			inline bool hasMovedDown() const			{ return shape.getY() > oldShape.getY(); }
+			inline const std::vector<std::string>& getGroups()			{ return groups; }
+			inline const std::vector<std::string>& getGroupsToCheck()	{ return groupsToCheck; }
+			inline const std::vector<std::string>& getGroupsNoResolve()	{ return groupsNoResolve; }
 	};
 }
 
