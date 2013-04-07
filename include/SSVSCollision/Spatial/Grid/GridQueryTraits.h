@@ -76,7 +76,7 @@ namespace ssvsc
 		{
 			int cellSize;
 			sf::Vector2i next{0, 0};
-			sf::Vector2f direction, deltaDist, max, increment;
+			sf::Vector2f direction, deltaDist, increment, max;
 
 			RayCast(GridQuery<RayCast, sf::Vector2f>& mQuery, sf::Vector2f mDirection);
 

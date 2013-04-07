@@ -59,12 +59,26 @@ namespace ssvsc
 				return nullptr;
 			}
 
+
+
 		public:
 			GridQuery(Grid& mGrid, sf::Vector2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{sf::Vector2f(mStartPos)}, pos{startPos},
 				startIndex{grid.getIndex(mStartPos)}, index{startIndex}, internal(*this, mArgs...) { }
 
 			Body* next() { return nextImpl<GridQueryTypes::Bodies::All>(); }
 			Body* next(const std::string& mGroup) { return nextImpl<GridQueryTypes::Bodies::Grouped>(mGroup); }
+			std::vector<Cell*> getAllCells()
+			{
+				std::vector<Cell*> result;
+
+				while(internal.isValid())
+				{
+					result.push_back(&grid.getCell(index));
+					internal.step();
+				}
+
+				return result;
+			}
 
 			void reset()
 			{
@@ -72,6 +86,7 @@ namespace ssvsc
 				index = startIndex;
 				bodies.clear();
 				visitedIndexes.clear();
+				// TODO: call internal.reset() ?
 			}
 
 			// Getters
