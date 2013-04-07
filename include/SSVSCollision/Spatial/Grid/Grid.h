@@ -31,26 +31,26 @@ namespace ssvsc
 			SpatialInfoBase& createSpatialInfo(Body& mBody) override;
 			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
 
-			int getCellSize() const;
-			Cell& getCell(int mX, int mY);
-			Cell& getCell(sf::Vector2i mIndex);
-			int getIndex(int mValue) const;
-			sf::Vector2i getIndex(sf::Vector2i mPosition) const;
-			bool isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const;
-			int getIndexXMin() const;
-			int getIndexYMin() const;
-			int getIndexXMax() const;
-			int getIndexYMax() const;
-			int getRows() const;
-			int getColumns() const;
-			int getOffset() const;
-			bool isIndexValid(sf::Vector2i mIndex) const;
-			std::vector<std::vector<Cell*>>& getCells();
-		
-			template<typename T, typename... TArgs> GridQuery<T, TArgs...> getQuery(sf::Vector2i mPoint, TArgs... mArgs) 
-			{ 
-				return {*this, mPoint, mArgs...}; 
-			}
+			inline int getIndexXMin() const			{ return 0 - offset; }
+			inline int getIndexYMin() const			{ return 0 - offset; }
+			inline int getIndexXMax() const			{ return columns - offset; }
+			inline int getIndexYMax() const			{ return rows - offset; }
+			inline int getRows() const				{ return rows; }
+			inline int getColumns() const			{ return columns; }
+			inline int getOffset() const			{ return offset; }
+			inline int getCellSize() const			{ return cellSize; }
+
+			inline int getIndex(int mValue) const						{ return mValue / cellSize; }
+			inline sf::Vector2i getIndex(sf::Vector2i mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
+
+			inline Cell& getCell(int mX, int mY)		{ return *(cells[mX + offset][mY + offset]); }
+			inline Cell& getCell(sf::Vector2i mIndex)	{ return getCell(mIndex.x, mIndex.y); }
+
+			inline const std::vector<std::vector<Cell*>>& getCells() { return cells; }
+			inline bool isIndexValid(sf::Vector2i mIndex) const { return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
+			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const { return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
+
+			template<typename T, typename... TArgs> GridQuery<T, TArgs...> getQuery(sf::Vector2i mPoint, TArgs... mArgs) { return {*this, mPoint, mArgs...}; }
 	};
 }
 

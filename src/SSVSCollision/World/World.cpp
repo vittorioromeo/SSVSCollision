@@ -14,12 +14,7 @@ using namespace ssvsc::Utils;
 namespace ssvsc
 {
 	World::World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver{&mResolver}, spatial{&mSpatial} { }
-	World::~World() 
-	{ 
-		clear();
-		delete resolver; 
-		delete spatial; 
-	}
+	World::~World() { clear(); delete resolver;  delete spatial; }
 
 	Body& World::create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic)
 	{
@@ -37,7 +32,7 @@ namespace ssvsc
 		for(auto& body : memoryManager.getItems()) body->destroy();
 		memoryManager.cleanUp();
 	}
-	
+
 	vector<Body*>& World::getBodies()	{ return memoryManager.getItems(); }
 	ResolverBase& World::getResolver() 	{ return *resolver; }
 	SpatialBase& World::getSpatial() 	{ return *spatial; }

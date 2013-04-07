@@ -26,10 +26,10 @@ namespace ssvsc
 
 			const AABB& s(b->getShape());
 			const AABB& os(b->getOldShape());
-			
+
 			auto intersection(getMinIntersection(shape, s));
 			Vector2i resolution{getMin1DIntersection(shape, s)};
-			
+
 			mBody.onResolution({*b, b->getUserData(), intersection, resolution, noResolvePosition, noResolveVelocity});
 
 			if(!noResolvePosition) shape.move(resolution);

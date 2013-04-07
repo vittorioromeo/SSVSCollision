@@ -26,13 +26,14 @@ namespace ssvsc
 			void add(Body* mBody);
 			void del(Body* mBody);
 
-			std::vector<Body*>& getBodies();
-			std::vector<Body*>& getBodies(const std::string& mGroup);
-			int getLeft() const;
-			int getRight() const;
-			int getTop() const;
-			int getBottom() const;
-			bool hasGroup(const std::string& mGroup) const;
+			inline const std::vector<Body*>& getBodies()							{ return bodies; }
+			inline const std::vector<Body*>& getBodies(const std::string& mGroup)	{ return groupedBodies[mGroup]; }
+			inline bool hasGroup(const std::string& mGroup) const					{ return groupedBodies.count(mGroup) > 0; }
+
+			inline int getLeft() const		{ return left; }
+			inline int getRight() const 	{ return right; }
+			inline int getTop() const		{ return top; }
+			inline int getBottom() const	{ return bottom; }
 	};
 }
 

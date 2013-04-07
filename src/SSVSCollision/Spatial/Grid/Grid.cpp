@@ -38,22 +38,7 @@ namespace ssvsc
 		memoryManager.cleanUp();
 	}
 
-	int Grid::getCellSize() const { return cellSize; }
-	Cell& Grid::getCell(int mX, int mY) { return *(cells[mX + offset][mY + offset]); }
-	Cell& Grid::getCell(Vector2i mIndex) { return getCell(mIndex.x, mIndex.y); }
-	int Grid::getIndex(int mValue) const { return mValue / cellSize; }
-	Vector2i Grid::getIndex(Vector2i mPosition) const { return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
-	bool Grid::isOutside(int mStartX, int mStartY, int mEndX, int mEndY) const
-	{
-		return mStartX < 0 - offset || mEndX >= columns - offset || mStartY < 0 - offset || mEndY >= rows - offset;
-	}
-	int Grid::getIndexXMin() const { return 0 - offset; }
-	int Grid::getIndexYMin() const { return 0 - offset; }
-	int Grid::getIndexXMax() const { return columns - offset; }
-	int Grid::getIndexYMax() const { return rows - offset; }
-	int Grid::getRows() const { return rows; }
-	int Grid::getColumns() const { return columns; }
-	int Grid::getOffset() const { return offset; }
-	bool Grid::isIndexValid(Vector2i mIndex) const { return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
-	vector<vector<Cell*>>& Grid::getCells() { return cells; }
+
+
+
 }

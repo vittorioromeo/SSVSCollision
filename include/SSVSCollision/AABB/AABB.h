@@ -18,45 +18,46 @@ namespace ssvsc
 		public:
 			AABB(sf::Vector2i mPosition, sf::Vector2i mHalfSize);
 
-			void move(sf::Vector2i mOffset);
+			void move(sf::Vector2i mOffset) { position += mOffset; }
 
-			void setPosition(sf::Vector2i mPosition);
-			void setX(int mX);
-			void setY(int mY);
-			void setHalfSize(sf::Vector2i mHalfSize);
-			void setSize(sf::Vector2i mSize);
-			void setWidth(int mWidth);
-			void setHeight(int mHeight);
+			inline void setPosition(sf::Vector2i mPosition) { position = mPosition; }
+			inline void setX(int mX)				 		{ position.x = mX; }
+			inline void setY(int mY)				 		{ position.y = mY; }
+			inline void setHalfSize(sf::Vector2i mHalfSize)	{ halfSize = mHalfSize; }
+			inline void setSize(sf::Vector2i mSize)			{ halfSize = mSize / 2; }
+			inline void setWidth(int mWidth)				{ halfSize.x = mWidth / 2; }
+			inline void setHeight(int mHeight)				{ halfSize.y = mHeight / 2; }
 
-			sf::Vector2i getPosition() const;
-			int getX() const;
-			int getY() const;
-			int getLeft() const;
-			int getRight() const;
-			int getTop() const;
-			int getBottom() const;
-			sf::Vector2i getHalfSize() const;
-			int getHalfWidth() const;
-			int getHalfHeight() const;
-			sf::Vector2i getSize() const;
-			int getWidth() const;
-			int getHeight() const;
-			template<typename T> sf::Vector2<T> getNWCorner() const	{ return sf::Vector2<T>(getLeft(), getTop()); }
-			template<typename T> sf::Vector2<T> getNECorner() const	{ return sf::Vector2<T>(getRight(), getTop()); }
-			template<typename T> sf::Vector2<T> getSWCorner() const	{ return sf::Vector2<T>(getLeft(), getBottom()); }
-			template<typename T> sf::Vector2<T> getSECorner() const	{ return sf::Vector2<T>(getRight(), getBottom()); }
-			template<typename T> Segment<T> getLeftSegment() const	{ return {getNWCorner<T>(), getSWCorner<T>()}; }
-			template<typename T> Segment<T> getRightSegment() const	{ return {getNECorner<T>(), getSECorner<T>()}; }
-			template<typename T> Segment<T> getTopSegment() const	{ return {getNWCorner<T>(), getNECorner<T>()}; }
-			template<typename T> Segment<T> getBottomSegment() const{ return {getSWCorner<T>(), getSECorner<T>()}; }
+			inline sf::Vector2i getPosition() const { return position; }
+			inline int getX() const					{ return position.x; }
+			inline int getY() const					{ return position.y; }
+			inline int getLeft() const				{ return position.x - halfSize.x; }
+			inline int getRight() const				{ return position.x + halfSize.x; }
+			inline int getTop() const				{ return position.y - halfSize.y; }
+			inline int getBottom() const			{ return position.y + halfSize.y; }
+			inline sf::Vector2i getHalfSize() const { return halfSize; }
+			inline int getHalfWidth() const 		{ return halfSize.x; }
+			inline int getHalfHeight() const 		{ return halfSize.y; }
+			inline sf::Vector2i getSize() const 	{ return halfSize * 2; }
+			inline int getWidth() const 			{ return halfSize.x * 2; }
+			inline int getHeight() const 			{ return halfSize.y * 2; }
 
-			bool isLeftOf(const AABB& mAABB) const;
-			bool isRightOf(const AABB& mAABB) const;
-			bool isAbove(const AABB& mAABB) const;
-			bool isBelow(const AABB& mAABB) const;
+			template<typename T> inline sf::Vector2<T> getNWCorner() const	{ return sf::Vector2<T>(getLeft(), getTop()); }
+			template<typename T> inline sf::Vector2<T> getNECorner() const	{ return sf::Vector2<T>(getRight(), getTop()); }
+			template<typename T> inline sf::Vector2<T> getSWCorner() const	{ return sf::Vector2<T>(getLeft(), getBottom()); }
+			template<typename T> inline sf::Vector2<T> getSECorner() const	{ return sf::Vector2<T>(getRight(), getBottom()); }
+			template<typename T> inline Segment<T> getLeftSegment() const	{ return {getNWCorner<T>(), getSWCorner<T>()}; }
+			template<typename T> inline Segment<T> getRightSegment() const	{ return {getNECorner<T>(), getSECorner<T>()}; }
+			template<typename T> inline Segment<T> getTopSegment() const	{ return {getNWCorner<T>(), getNECorner<T>()}; }
+			template<typename T> inline Segment<T> getBottomSegment() const	{ return {getSWCorner<T>(), getSECorner<T>()}; }
 
-			bool operator==(const AABB& mOther) const;
-			bool operator!=(const AABB& mOther) const;
+			inline bool isLeftOf(const AABB& mAABB) const	{ return getRight() <= mAABB.getLeft(); }
+			inline bool isRightOf(const AABB& mAABB) const	{ return getLeft() >= mAABB.getRight(); }
+			inline bool isAbove(const AABB& mAABB) const	{ return getBottom() <= mAABB.getTop(); }
+			inline bool isBelow(const AABB& mAABB) const	{ return getTop() >= mAABB.getBottom(); }
+
+			inline bool operator==(const AABB& mOther) const { return position == mOther.position && halfSize == mOther.halfSize; }
+			inline bool operator!=(const AABB& mOther) const { return position != mOther.position || halfSize != mOther.halfSize; }
 	};
 }
 

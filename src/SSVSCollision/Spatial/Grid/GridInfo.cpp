@@ -44,7 +44,7 @@ namespace ssvsc
 	{
 		clear();
 
-		if(grid.isOutside(startX, startY, endX, endY)) { body.setOutOfBounds(true); return; }
+		if(!grid.isIndexValid(startX, startY, endX, endY)) { body.setOutOfBounds(true); return; }
 		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(&grid.getCell(iX, iY));
 
 		//log(toStr(startX) + " -> " + toStr(endX));
@@ -62,7 +62,7 @@ namespace ssvsc
 	void GridInfo::invalidate() { invalid = true; }
 	void GridInfo::preUpdate() { if(invalid) calcEdges();  }
 	void GridInfo::postUpdate() { }
-	vector<Body*>& GridInfo::getBodiesToCheck()
+	const vector<Body*>& GridInfo::getBodiesToCheck()
 	{
 		//dense_hash_set<Body*> result; result.set_empty_key(nullptr);
 		//for(auto& query : queries) for(auto& body : *query) result.insert(body);
