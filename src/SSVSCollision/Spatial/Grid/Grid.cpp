@@ -37,8 +37,4 @@ namespace ssvsc
 		memoryManager.del(&(static_cast<GridInfo&>(mSpatialInfo)));
 		memoryManager.cleanUp();
 	}
-
-
-
-
 }

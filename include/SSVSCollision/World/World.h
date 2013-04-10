@@ -42,8 +42,8 @@ namespace ssvsc
 
 		private:
 			ssvu::MemoryManager<Body, std::vector<Body*>, google::dense_hash_set<Body*>> memoryManager;
-			ResolverBase* resolver; // owned
-			SpatialBase* spatial; // owned
+			ResolverBase& resolver; // owned
+			SpatialBase& spatial; // owned
 
 			void del(Body* mBody);
 

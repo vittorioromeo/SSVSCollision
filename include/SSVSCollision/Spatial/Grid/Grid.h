@@ -31,16 +31,16 @@ namespace ssvsc
 			SpatialInfoBase& createSpatialInfo(Body& mBody) override;
 			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
 
-			inline int getIndexXMin() const			{ return 0 - offset; }
-			inline int getIndexYMin() const			{ return 0 - offset; }
-			inline int getIndexXMax() const			{ return columns - offset; }
-			inline int getIndexYMax() const			{ return rows - offset; }
-			inline int getRows() const				{ return rows; }
-			inline int getColumns() const			{ return columns; }
-			inline int getOffset() const			{ return offset; }
-			inline int getCellSize() const			{ return cellSize; }
+			inline int getIndexXMin() const	{ return 0 - offset; }
+			inline int getIndexYMin() const	{ return 0 - offset; }
+			inline int getIndexXMax() const	{ return columns - offset; }
+			inline int getIndexYMax() const	{ return rows - offset; }
+			inline int getRows() const		{ return rows; }
+			inline int getColumns() const	{ return columns; }
+			inline int getOffset() const	{ return offset; }
+			inline int getCellSize() const	{ return cellSize; }
 
-			inline int getIndex(int mValue) const						{ return mValue / cellSize; }
+			inline int getIndex(int mValue) const { return mValue / cellSize; }
 			inline sf::Vector2i getIndex(sf::Vector2i mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 
 			inline Cell& getCell(int mX, int mY)		{ return *(cells[mX + offset][mY + offset]); }

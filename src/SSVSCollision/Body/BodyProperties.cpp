@@ -10,10 +10,10 @@ using namespace sf;
 
 namespace ssvsc
 {
-	void Body::setPosition(Vector2i mPosition) 			{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
-	void Body::setX(int mX)				 				{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
-	void Body::setY(int mY)				 				{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
-	void Body::setSize(Vector2i mSize)					{ shape.setSize(mSize); spatialInfo.invalidate(); }
-	void Body::setWidth(int mWidth)						{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
-	void Body::setHeight(int mHeight)					{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
+	void Body::setPosition(Vector2i mPosition) 	{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
+	void Body::setX(int mX)				 		{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
+	void Body::setY(int mY)				 		{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
+	void Body::setSize(Vector2i mSize)			{ shape.setSize(mSize); spatialInfo.invalidate(); }
+	void Body::setWidth(int mWidth)				{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
+	void Body::setHeight(int mHeight)			{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
 }

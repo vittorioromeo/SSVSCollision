@@ -57,14 +57,14 @@ namespace ssvsc
 			void setSize(sf::Vector2i mSize);
 			void setWidth(int mWidth);
 			void setHeight(int mHeight);
-			inline void setVelocity(sf::Vector2f mVelocity) 			{ velocity = mVelocity; }
+			inline void setVelocity(sf::Vector2f mVelocity) 		{ velocity = mVelocity; }
 			inline void setAcceleration(sf::Vector2f mAcceleration)	{ acceleration = mAcceleration; }
 			inline void setStatic(bool mStatic) 					{ _static = mStatic; }
-			inline void setUserData(void* mUserData) 			{ userData = mUserData; }
-			inline void setVelocityX(float mX)				 	{ velocity.x = mX; }
-			inline void setVelocityY(float mY)				 	{ velocity.y = mY; }
-			inline void setOutOfBounds(bool mOutOfBounds)		{ outOfBounds = mOutOfBounds; }
-			inline void setResolve(bool mResolve)				{ resolve = mResolve; }
+			inline void setUserData(void* mUserData)				{ userData = mUserData; }
+			inline void setVelocityX(float mX)						{ velocity.x = mX; }
+			inline void setVelocityY(float mY)						{ velocity.y = mY; }
+			inline void setOutOfBounds(bool mOutOfBounds)			{ outOfBounds = mOutOfBounds; }
+			inline void setResolve(bool mResolve)					{ resolve = mResolve; }
 
 			// Getters
 			inline World& getWorld()					{ return world; }
