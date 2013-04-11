@@ -42,6 +42,8 @@ file(GLOB SRC_LIST
 	"${SRC_DIR}/${PROJECT_NAME}/Body/*.cpp"
 	"${INC_DIR}/${PROJECT_NAME}/Resolver/*.h"
 	"${SRC_DIR}/${PROJECT_NAME}/Resolver/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/Resolver/Impulse/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/Resolver/Impulse/*.cpp"
 	"${INC_DIR}/${PROJECT_NAME}/Resolver/Retro/*.h"
 	"${SRC_DIR}/${PROJECT_NAME}/Resolver/Retro/*.cpp"
 	"${INC_DIR}/${PROJECT_NAME}/Spatial/*.h"
