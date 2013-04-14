@@ -55,9 +55,8 @@ namespace ssvsc
 			if(noResolvePosition) continue;
 
 			const float k_slop{0.05f};
-			const float percent{0.5f};
-			Vector2f correction{(max(getMagnitude(resolution)- k_slop, 0.0f)  / (invMassA + invMassB) * percent) * normal};
-
+			const float percent{0.8f};
+			Vector2f correction{(max(getMagnitude(Vector2f(resolution)) - k_slop, 0.0f) / (invMassA + invMassB) * percent) * normal};
 			shape.move(-Vector2i(invMassA * correction));
 			s.move(Vector2i(invMassB * correction));
 		}
