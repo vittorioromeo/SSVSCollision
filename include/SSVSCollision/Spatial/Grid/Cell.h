@@ -28,7 +28,6 @@ namespace ssvsc
 
 			inline const std::vector<Body*>& getBodies()							{ return bodies; }
 			inline const std::vector<Body*>& getBodies(const std::string& mGroup)	{ return groupedBodies[mGroup]; }
-			inline bool hasGroup(const std::string& mGroup) const					{ return groupedBodies.count(mGroup) > 0; }
 
 			inline int getLeft() const		{ return left; }
 			inline int getRight() const 	{ return right; }
