@@ -4,7 +4,6 @@
 
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
-
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 #include "SSVSCollision/Body/Body.h"
 
