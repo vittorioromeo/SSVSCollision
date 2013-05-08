@@ -72,9 +72,9 @@ namespace ssvsc
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();
 
-			inline void addGroups(const StringVector& mGroups) { groupData.addGroups(mGroups); spatialInfo.invalidate(); }
-			inline void addGroupsToCheck(const StringVector& mGroups) { groupData.addGroupsToCheck(mGroups); spatialInfo.invalidate(); }
-			inline void addGroupsNoResolve(const StringVector& mGroups) { groupData.addGroupsNoResolve(mGroups); }
+			inline void addGroups(const StringVector& mGroups)			{ groupData.addGroups(mGroups); spatialInfo.invalidate(); }
+			inline void addGroupsToCheck(const StringVector& mGroups)	{ groupData.addGroupsToCheck(mGroups); spatialInfo.invalidate(); }
+			inline void addGroupsNoResolve(const StringVector& mGroups)	{ groupData.addGroupsNoResolve(mGroups); }
 
 			void update(float mFrameTime);
 			void applyForce(sf::Vector2f mForce);

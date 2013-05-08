@@ -21,8 +21,6 @@ namespace ssvsc
 		spatialInfo(world.getSpatial().createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
-
-
 	void Body::update(float mFrameTime)
 	{
 		onPreUpdate();
