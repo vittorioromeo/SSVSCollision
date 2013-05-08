@@ -21,9 +21,7 @@ namespace ssvsc
 		spatialInfo(world.getSpatial().createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
-	void Body::addGroups(const vector<string>& mGroups) { for(auto& group : mGroups) groups.push_back(group); spatialInfo.invalidate(); }
-	void Body::addGroupsToCheck(const vector<string>& mGroups) { for(auto& group : mGroups) groupsToCheck.push_back(group); spatialInfo.invalidate(); }
-	void Body::addGroupsNoResolve(const vector<string>& mGroups) { for(auto& group : mGroups) groupsNoResolve.push_back(group); }
+
 
 	void Body::update(float mFrameTime)
 	{
@@ -46,7 +44,7 @@ namespace ssvsc
 			onDetection({*body, mFrameTime, body->getUserData(), intersection});
 			body->onDetection({*this, mFrameTime, userData, -intersection});
 
-			if(!resolve || containsAny(body->getGroups(), groupsNoResolve)) continue;
+			if(!resolve || containsAny(body->getGroups(), getGroupsNoResolve())) continue;
 			bodiesToResolve.push_back(body);
 		}
 

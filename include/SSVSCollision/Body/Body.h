@@ -15,6 +15,34 @@
 
 namespace ssvsc
 {
+	using StringVector = std::vector<std::string>;
+
+	struct MassData
+	{
+		float mass{1}, invMass{1};
+
+		// Setters
+		inline void setMass(float mMass) { mass = mMass; invMass = mMass == 0 ? 0 : 1.f / mMass; }
+
+		// Getters
+		inline float getMass() const	{ return mass; }
+		inline float getInvMass() const	{ return invMass; }
+	};
+
+	struct GroupData
+	{
+		StringVector groups, groupsToCheck, groupsNoResolve;
+
+		inline void addGroups(const StringVector& mGroups)			{ for(auto& group : mGroups) groups.push_back(group); }
+		inline void addGroupsToCheck(const StringVector& mGroups)	{ for(auto& group : mGroups) groupsToCheck.push_back(group); }
+		inline void addGroupsNoResolve(const StringVector& mGroups)	{ for(auto& group : mGroups) groupsNoResolve.push_back(group); }
+
+		// Getters
+		inline const StringVector& getGroups()			{ return groups; }
+		inline const StringVector& getGroupsToCheck()	{ return groupsToCheck; }
+		inline const StringVector& getGroupsNoResolve()	{ return groupsNoResolve; }
+	};
+
 	class World;
 	class ResolverBase;
 
@@ -27,8 +55,8 @@ namespace ssvsc
 			AABB shape, oldShape;
 			bool _static, outOfBounds{false}, resolve{true};
 			sf::Vector2f velocity, acceleration;
-			float mass{1}, invMass{1};
-			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
+			MassData massData;
+			GroupData groupData;
 			void* userData{nullptr};
 			std::vector<Body*> bodiesToResolve;
 
@@ -44,20 +72,21 @@ namespace ssvsc
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();
 
-			void addGroups(const std::vector<std::string>& mGroups);
-			void addGroupsToCheck(const std::vector<std::string>& mGroups);
-			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
+			inline void addGroups(const StringVector& mGroups) { groupData.addGroups(mGroups); spatialInfo.invalidate(); }
+			inline void addGroupsToCheck(const StringVector& mGroups) { groupData.addGroupsToCheck(mGroups); spatialInfo.invalidate(); }
+			inline void addGroupsNoResolve(const StringVector& mGroups) { groupData.addGroupsNoResolve(mGroups); }
+
 			void update(float mFrameTime);
 			void applyForce(sf::Vector2f mForce);
 			void destroy();
 
 			// Setters
-			inline void setPosition(sf::Vector2i mPosition)	{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
-			inline void setX(int mX)				 		{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
-			inline void setY(int mY)				 		{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
-			inline void setSize(sf::Vector2i mSize)			{ shape.setSize(mSize); spatialInfo.invalidate(); }
-			inline void setWidth(int mWidth)				{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
-			inline void setHeight(int mHeight)				{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
+			inline void setPosition(sf::Vector2i mPosition)			{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
+			inline void setX(int mX)								{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
+			inline void setY(int mY)								{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
+			inline void setSize(sf::Vector2i mSize)					{ shape.setSize(mSize); spatialInfo.invalidate(); }
+			inline void setWidth(int mWidth)						{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
+			inline void setHeight(int mHeight)						{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
 			inline void setVelocity(sf::Vector2f mVelocity) 		{ velocity = mVelocity; }
 			inline void setAcceleration(sf::Vector2f mAcceleration)	{ acceleration = mAcceleration; }
 			inline void setStatic(bool mStatic) 					{ _static = mStatic; }
@@ -66,30 +95,30 @@ namespace ssvsc
 			inline void setVelocityY(float mY)						{ velocity.y = mY; }
 			inline void setOutOfBounds(bool mOutOfBounds)			{ outOfBounds = mOutOfBounds; }
 			inline void setResolve(bool mResolve)					{ resolve = mResolve; }
-			inline void setMass(float mMass)						{ mass = mMass; invMass = mMass == 0 ? 0 : 1.f / mMass; }
+			inline void setMass(float mMass)						{ massData.setMass(mMass); }
 
 			// Getters
-			inline SpatialInfoBase& getSpatialInfo()	{ return spatialInfo; }
-			inline World& getWorld()					{ return world; }
-			inline AABB& getShape()						{ return shape; }
-			inline AABB& getOldShape() 					{ return oldShape; }
-			inline sf::Vector2i getPosition() const		{ return shape.getPosition(); }
-			inline sf::Vector2f getVelocity() const		{ return velocity; }
-			inline sf::Vector2f getAcceleration() const	{ return acceleration; }
-			inline sf::Vector2i getSize() const			{ return shape.getSize(); }
-			inline float getMass() const				{ return _static ? 0 : mass; }
-			inline float getInvMass() const				{ return _static ? 0 : invMass; }
-			inline int getWidth() const					{ return shape.getWidth(); }
-			inline int getHeight() const				{ return shape.getHeight(); }
-			inline bool isStatic() const				{ return _static; }
-			inline void* getUserData() const			{ return userData; }
-			inline bool hasMovedLeft() const			{ return shape.getX() < oldShape.getX(); }
-			inline bool hasMovedRight() const			{ return shape.getX() > oldShape.getX(); }
-			inline bool hasMovedUp() const				{ return shape.getY() < oldShape.getY(); }
-			inline bool hasMovedDown() const			{ return shape.getY() > oldShape.getY(); }
-			inline const std::vector<std::string>& getGroups()			{ return groups; }
-			inline const std::vector<std::string>& getGroupsToCheck()	{ return groupsToCheck; }
-			inline const std::vector<std::string>& getGroupsNoResolve()	{ return groupsNoResolve; }
+			inline SpatialInfoBase& getSpatialInfo()		{ return spatialInfo; }
+			inline World& getWorld()						{ return world; }
+			inline AABB& getShape()							{ return shape; }
+			inline AABB& getOldShape()						{ return oldShape; }
+			inline sf::Vector2i getPosition() const			{ return shape.getPosition(); }
+			inline sf::Vector2f getVelocity() const			{ return velocity; }
+			inline sf::Vector2f getAcceleration() const		{ return acceleration; }
+			inline sf::Vector2i getSize() const				{ return shape.getSize(); }
+			inline float getMass() const					{ return _static ? 0 : massData.getMass(); }
+			inline float getInvMass() const					{ return _static ? 0 : massData.getInvMass(); }
+			inline int getWidth() const						{ return shape.getWidth(); }
+			inline int getHeight() const					{ return shape.getHeight(); }
+			inline bool isStatic() const					{ return _static; }
+			inline void* getUserData() const				{ return userData; }
+			inline bool hasMovedLeft() const				{ return shape.getX() < oldShape.getX(); }
+			inline bool hasMovedRight() const				{ return shape.getX() > oldShape.getX(); }
+			inline bool hasMovedUp() const					{ return shape.getY() < oldShape.getY(); }
+			inline bool hasMovedDown() const				{ return shape.getY() > oldShape.getY(); }
+			inline const StringVector& getGroups()			{ return groupData.getGroups(); }
+			inline const StringVector& getGroupsToCheck()	{ return groupData.getGroupsToCheck(); }
+			inline const StringVector& getGroupsNoResolve()	{ return groupData.getGroupsNoResolve(); }
 	};
 }
 
