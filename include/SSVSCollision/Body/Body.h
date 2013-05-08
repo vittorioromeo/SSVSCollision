@@ -51,9 +51,6 @@ namespace ssvsc
 			void applyForce(sf::Vector2f mForce);
 			void destroy();
 
-			void testResolution(Body& mBody);
-			void postUpdate(float mFrameTime);
-
 			// Setters
 			void setPosition(sf::Vector2i mPosition);
 			void setX(int mX);
