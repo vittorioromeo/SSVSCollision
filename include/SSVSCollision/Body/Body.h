@@ -52,12 +52,12 @@ namespace ssvsc
 			void destroy();
 
 			// Setters
-			void setPosition(sf::Vector2i mPosition);
-			void setX(int mX);
-			void setY(int mY);
-			void setSize(sf::Vector2i mSize);
-			void setWidth(int mWidth);
-			void setHeight(int mHeight);
+			inline void setPosition(sf::Vector2i mPosition)	{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
+			inline void setX(int mX)				 		{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
+			inline void setY(int mY)				 		{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
+			inline void setSize(sf::Vector2i mSize)			{ shape.setSize(mSize); spatialInfo.invalidate(); }
+			inline void setWidth(int mWidth)				{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
+			inline void setHeight(int mHeight)				{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
 			inline void setVelocity(sf::Vector2f mVelocity) 		{ velocity = mVelocity; }
 			inline void setAcceleration(sf::Vector2f mAcceleration)	{ acceleration = mAcceleration; }
 			inline void setStatic(bool mStatic) 					{ _static = mStatic; }
