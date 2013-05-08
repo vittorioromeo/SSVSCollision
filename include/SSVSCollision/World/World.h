@@ -45,6 +45,8 @@ namespace ssvsc
 			ResolverBase& resolver; // owned
 			SpatialBase& spatial; // owned
 
+			std::vector<std::pair<Body*, Body*>> pairs;
+
 			void del(Body* mBody);
 
 		public:
@@ -54,6 +56,7 @@ namespace ssvsc
 			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
 			void update(float mFrameTime);
 			void clear();
+			void generatePairs();
 
 			std::vector<Body*>& getBodies();
 			ResolverBase& getResolver();

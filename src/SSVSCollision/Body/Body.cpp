@@ -35,9 +35,11 @@ namespace ssvsc
 		oldShape = shape;
 		integrate(mFrameTime);
 		spatialInfo.preUpdate();
-		bodiesToResolve.clear();
+//		bodiesToResolve.clear();
 
-		for(auto& body : spatialInfo.getBodiesToCheck())
+
+
+		/*for(auto& body : spatialInfo.getBodiesToCheck())
 		{
 			if(body == this || !isOverlapping(shape, body->getShape())) continue;
 
@@ -54,7 +56,16 @@ namespace ssvsc
 		if(oldShape != shape) spatialInfo.invalidate();
 
 		spatialInfo.postUpdate();
+		onPostUpdate();*/
+	}
+	void Body::postUpdate(float mFrameTime)
+	{
+		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
+		if(oldShape != shape) spatialInfo.invalidate();
+
+		spatialInfo.postUpdate();
 		onPostUpdate();
+		bodiesToResolve.clear();
 	}
 
 	void Body::integrate(float mFrameTime)
@@ -67,5 +78,12 @@ namespace ssvsc
 	void Body::applyForce(sf::Vector2f mForce) { if(!_static) acceleration += mForce; }
 
 	void Body::destroy() { world.del(this); }
+
+	void Body::testResolution(Body& mBody)
+	{
+		if(_static) return;
+		if(!resolve || containsAny(mBody.getGroups(), groupsNoResolve)) return;
+		bodiesToResolve.push_back(&mBody);
+	}
 }
 

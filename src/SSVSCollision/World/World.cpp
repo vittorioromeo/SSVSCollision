@@ -26,11 +26,48 @@ namespace ssvsc
 	{
 		memoryManager.cleanUp();
 		for(auto& body : memoryManager.getItems()) body->update(mFrameTime);
+		generatePairs();
+		for(auto& body : memoryManager.getItems()) body->postUpdate(mFrameTime);
 	}
 	void World::clear()
 	{
 		for(auto& body : memoryManager.getItems()) body->destroy();
 		memoryManager.cleanUp();
+	}
+
+	void World::generatePairs()
+	{
+		for(auto& bodyA : getBodies())
+			for(auto& bodyB : bodyA->getSpatialInfo().getBodiesToCheck())
+			{
+				if(bodyA == bodyB) continue;
+				pairs.emplace_back(bodyA, bodyB);
+			}
+
+		//cout << "count: " << pairs.size();
+
+		sort(begin(pairs), end(pairs));
+		pairs.erase(unique(begin(pairs), end(pairs)), end(pairs));
+
+		//cout << "aftercount: " << pairs.size();
+
+		for(auto& pair : pairs)
+		{
+			Body& bodyA(*pair.first);
+			Body& bodyB(*pair.second);
+			AABB& shapeA(bodyA.getShape());
+			AABB& shapeB(bodyB.getShape());
+
+			if(!isOverlapping(shapeA, shapeB)) continue;
+
+			auto intersection(getMinIntersection(shapeA, shapeB));
+
+			bodyA.onDetection({bodyB, 1, bodyB.getUserData(), intersection});
+			bodyB.onDetection({bodyA, 1, bodyA.getUserData(), -intersection});
+
+			bodyA.testResolution(bodyB);
+			bodyB.testResolution(bodyA);
+		}
 	}
 
 	vector<Body*>& World::getBodies()	{ return memoryManager.getItems(); }

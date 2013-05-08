@@ -11,12 +11,12 @@
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
+#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 
 namespace ssvsc
 {
 	class World;
 	class ResolverBase;
-	class SpatialInfoBase;
 
 	class Body
 	{
@@ -27,6 +27,7 @@ namespace ssvsc
 			AABB shape, oldShape;
 			bool _static, outOfBounds{false}, resolve{true};
 			sf::Vector2f velocity, acceleration;
+			float mass{1}, invMass{1};
 			std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
 			void* userData{nullptr};
 			std::vector<Body*> bodiesToResolve;
@@ -50,6 +51,9 @@ namespace ssvsc
 			void applyForce(sf::Vector2f mForce);
 			void destroy();
 
+			void testResolution(Body& mBody);
+			void postUpdate(float mFrameTime);
+
 			// Setters
 			void setPosition(sf::Vector2i mPosition);
 			void setX(int mX);
@@ -65,8 +69,10 @@ namespace ssvsc
 			inline void setVelocityY(float mY)						{ velocity.y = mY; }
 			inline void setOutOfBounds(bool mOutOfBounds)			{ outOfBounds = mOutOfBounds; }
 			inline void setResolve(bool mResolve)					{ resolve = mResolve; }
+			inline void setMass(float mMass)						{ mass = mMass; invMass = mMass == 0 ? 0 : 1.f / mMass; }
 
 			// Getters
+			inline SpatialInfoBase& getSpatialInfo()	{ return spatialInfo; }
 			inline World& getWorld()					{ return world; }
 			inline AABB& getShape()						{ return shape; }
 			inline AABB& getOldShape() 					{ return oldShape; }
@@ -74,6 +80,8 @@ namespace ssvsc
 			inline sf::Vector2f getVelocity() const		{ return velocity; }
 			inline sf::Vector2f getAcceleration() const	{ return acceleration; }
 			inline sf::Vector2i getSize() const			{ return shape.getSize(); }
+			inline float getMass() const				{ return _static ? 0 : mass; }
+			inline float getInvMass() const				{ return _static ? 0 : invMass; }
 			inline int getWidth() const					{ return shape.getWidth(); }
 			inline int getHeight() const				{ return shape.getHeight(); }
 			inline bool isStatic() const				{ return _static; }

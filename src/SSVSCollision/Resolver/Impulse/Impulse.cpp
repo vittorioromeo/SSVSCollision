@@ -31,10 +31,7 @@ namespace ssvsc
 			mBody.onResolution({*b, b->getUserData(), intersection, resolution, noResolvePosition, noResolveVelocity});
 
 			Vector2f normal(getNormalized(-resolution));
-			float massA{1}, massB{1};
-			if(mBody.isStatic()) massA = 0;
-			if(b->isStatic()) massB = 0;
-			float invMassA{massA == 0 ? 0 : 1 / massA}, invMassB{massB == 0 ? 0 : 1 / massB};
+			float invMassA{mBody.getInvMass()}, invMassB{b->getInvMass()};
 
 			if(noResolveVelocity) continue;
 
@@ -42,7 +39,8 @@ namespace ssvsc
 			float velAlongNormal{getDotProduct(rv, normal)};
 			if(velAlongNormal <= 0)
 			{
-				float restitutionA{0.1f}, restitutionB{0.1f};
+				float restitutionA{0.8f}, restitutionB{0.8f};
+				if(b->isStatic()) restitutionB = 0.1f;
 				float restitution{min(restitutionA, restitutionB)};
 
 				float impulseMultiplier{(1 + restitution) * -velAlongNormal};
@@ -55,7 +53,7 @@ namespace ssvsc
 			if(noResolvePosition) continue;
 
 			const float k_slop{0.05f};
-			const float percent{0.8f};
+			const float percent{0.98f};
 			Vector2f correction{(max(getMagnitude(Vector2f(resolution)) - k_slop, 0.0f) / (invMassA + invMassB) * percent) * normal};
 			shape.move(-Vector2i(invMassA * correction));
 			s.move(Vector2i(invMassB * correction));

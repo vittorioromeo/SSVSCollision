@@ -3,7 +3,6 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include "SSVSCollision/Body/Body.h"
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 
 using namespace std;
 using namespace sf;
