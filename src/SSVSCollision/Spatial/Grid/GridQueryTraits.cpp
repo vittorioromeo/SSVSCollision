@@ -20,8 +20,8 @@ namespace ssvsc
 	{
 		namespace Bodies
 		{
-			void All::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, const string&) { mBodies = mGrid.getCell(mIndex).getBodies(); }
-			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, const string& mGroup) { mBodies = mGrid.getCell(mIndex).getBodies(mGroup); }
+			void All::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, int) { mBodies = mGrid.getCell(mIndex).getBodies(); }
+			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, int mGroupId) { mBodies = mGrid.getCell(mIndex).getBodies(mGroupId); }
 		}
 
 		namespace Orthogonal

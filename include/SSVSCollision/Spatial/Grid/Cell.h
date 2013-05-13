@@ -7,7 +7,6 @@
 
 #include <unordered_map>
 #include <vector>
-#include <string>
 
 namespace ssvsc
 {
@@ -18,7 +17,7 @@ namespace ssvsc
 		private:
 			int left, right, top, bottom;
 			std::vector<Body*> bodies;
-			std::unordered_map<std::string, std::vector<Body*>> groupedBodies;
+			std::unordered_map<int, std::vector<Body*>> groupedBodies;
 
 		public:
 			Cell(int mLeft, int mRight, int mTop, int mBottom);
@@ -26,8 +25,8 @@ namespace ssvsc
 			void add(Body* mBody);
 			void del(Body* mBody);
 
-			inline const std::vector<Body*>& getBodies()							{ return bodies; }
-			inline const std::vector<Body*>& getBodies(const std::string& mGroup)	{ return groupedBodies[mGroup]; }
+			inline const std::vector<Body*>& getBodies()				{ return bodies; }
+			inline const std::vector<Body*>& getBodies(int mGroupId)	{ return groupedBodies[mGroupId]; }
 
 			inline int getLeft() const		{ return left; }
 			inline int getRight() const 	{ return right; }

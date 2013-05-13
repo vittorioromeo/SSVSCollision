@@ -15,7 +15,11 @@
 
 namespace ssvsc
 {
+	using IntVector = std::vector<int>;
 	using StringVector = std::vector<std::string>;
+
+	class World;
+	class ResolverBase;
 
 	struct MassData
 	{
@@ -31,20 +35,32 @@ namespace ssvsc
 
 	struct GroupData
 	{
+		IntVector groupIds, groupIdsToCheck, groupIdsNoResolve;
 		StringVector groups, groupsToCheck, groupsNoResolve;
 
-		inline void addGroups(const StringVector& mGroups)			{ for(auto& group : mGroups) groups.push_back(group); }
-		inline void addGroupsToCheck(const StringVector& mGroups)	{ for(auto& group : mGroups) groupsToCheck.push_back(group); }
-		inline void addGroupsNoResolve(const StringVector& mGroups)	{ for(auto& group : mGroups) groupsNoResolve.push_back(group); }
+		inline void addGroupId(int mGroupId)							{ groupIds.push_back(mGroupId); }
+		inline void addGroupIdToCheck(int mGroupId)						{ groupIdsToCheck.push_back(mGroupId); }
+		inline void addGroupIdNoResolve(int mGroupId)					{ groupIdsNoResolve.push_back(mGroupId); }
+		inline void addGroupIds(const IntVector& mGroupIds)				{ for(auto& groupId : mGroupIds) addGroupId(groupId); }
+		inline void addGroupIdsToCheck(const IntVector& mGroupIds)		{ for(auto& groupId : mGroupIds) addGroupIdToCheck(groupId); }
+		inline void addGroupIdsNoResolve(const IntVector& mGroupIds)	{ for(auto& groupId : mGroupIds) addGroupIdNoResolve(groupId); }
+
+		inline void addGroup(const std::string& mGroup)					{ groups.push_back(mGroup); }
+		inline void addGroupToCheck(const std::string& mGroup)			{ groupsToCheck.push_back(mGroup); }
+		inline void addGroupNoResolve(const std::string& mGroup)		{ groupsNoResolve.push_back(mGroup); }
+		inline void addGroups(const StringVector& mGroups)				{ for(auto& group : mGroups) addGroup(group); }
+		inline void addGroupsToCheck(const StringVector& mGroups)		{ for(auto& group : mGroups) addGroupToCheck(group); }
+		inline void addGroupsNoResolve(const StringVector& mGroups)		{ for(auto& group : mGroups) addGroupNoResolve(group); }
 
 		// Getters
+		inline const IntVector& getGroupIds()			{ return groupIds; }
+		inline const IntVector& getGroupIdsToCheck()	{ return groupIdsToCheck; }
+		inline const IntVector& getGroupIdsNoResolve()	{ return groupIdsNoResolve; }
+
 		inline const StringVector& getGroups()			{ return groups; }
 		inline const StringVector& getGroupsToCheck()	{ return groupsToCheck; }
 		inline const StringVector& getGroupsNoResolve()	{ return groupsNoResolve; }
 	};
-
-	class World;
-	class ResolverBase;
 
 	class Body
 	{
@@ -72,9 +88,9 @@ namespace ssvsc
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();
 
-			inline void addGroups(const StringVector& mGroups)			{ groupData.addGroups(mGroups); spatialInfo.invalidate(); }
-			inline void addGroupsToCheck(const StringVector& mGroups)	{ groupData.addGroupsToCheck(mGroups); spatialInfo.invalidate(); }
-			inline void addGroupsNoResolve(const StringVector& mGroups)	{ groupData.addGroupsNoResolve(mGroups); }
+			void addGroups(const StringVector& mGroups);
+			void addGroupsToCheck(const StringVector& mGroups);
+			void addGroupsNoResolve(const StringVector& mGroups);
 
 			void update(float mFrameTime);
 			void applyForce(sf::Vector2f mForce);
@@ -116,6 +132,9 @@ namespace ssvsc
 			inline bool hasMovedRight() const				{ return shape.getX() > oldShape.getX(); }
 			inline bool hasMovedUp() const					{ return shape.getY() < oldShape.getY(); }
 			inline bool hasMovedDown() const				{ return shape.getY() > oldShape.getY(); }
+			inline const IntVector& getGroupIds()			{ return groupData.getGroupIds(); }
+			inline const IntVector& getGroupIdsToCheck()	{ return groupData.getGroupIdsToCheck(); }
+			inline const IntVector& getGroupIdsNoResolve()	{ return groupData.getGroupIdsNoResolve(); }
 			inline const StringVector& getGroups()			{ return groupData.getGroups(); }
 			inline const StringVector& getGroupsToCheck()	{ return groupData.getGroupsToCheck(); }
 			inline const StringVector& getGroupsNoResolve()	{ return groupData.getGroupsNoResolve(); }

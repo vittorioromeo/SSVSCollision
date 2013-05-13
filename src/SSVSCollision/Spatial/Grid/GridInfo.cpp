@@ -49,7 +49,7 @@ namespace ssvsc
 		for(auto& cell : cells)
 		{
 			cell->add(&body);
-			for(auto& group : body.getGroupsToCheck()) queries.push_back(&cell->getBodies(group));
+			for(auto& groupId : body.getGroupIdsToCheck()) queries.push_back(&cell->getBodies(groupId));
 		}
 
 		invalid = false;

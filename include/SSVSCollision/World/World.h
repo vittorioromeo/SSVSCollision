@@ -5,6 +5,7 @@
 #ifndef SSVSC_WORLD
 #define SSVSC_WORLD
 
+#include <map>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SSVStart/SSVStart.h>
@@ -36,11 +37,24 @@ namespace ssvsc
 	class ResolverBase;
 	class SpatialBase;
 
+	class GroupManager
+	{
+		private:
+			int currentIndex{0};
+			std::map<std::string, int> ids;
+
+		public:
+			GroupManager() = default;
+
+			int getGroupId(const std::string& mGroup);
+	};
+
 	class World
 	{
 		friend class Body;
 
 		private:
+			GroupManager groupManager;
 			ssvu::MemoryManager<Body, std::vector<Body*>, google::dense_hash_set<Body*>> memoryManager;
 			ResolverBase& resolver; // owned
 			SpatialBase& spatial; // owned
@@ -55,6 +69,7 @@ namespace ssvsc
 			void update(float mFrameTime);
 			void clear();
 
+			GroupManager& getGroupManager();
 			std::vector<Body*>& getBodies();
 			ResolverBase& getResolver();
 			SpatialBase& getSpatial();

@@ -13,6 +13,17 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
+	int GroupManager::getGroupId(const string& mGroup)
+	{
+		if(ids.find(mGroup) == end(ids))
+		{
+			ids[mGroup] = currentIndex;
+			++currentIndex;
+		}
+
+		return ids[mGroup];
+	}
+
 	World::World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver(mResolver), spatial(mSpatial) { }
 	World::~World() { clear(); delete &resolver; delete &spatial; }
 
@@ -33,7 +44,8 @@ namespace ssvsc
 		memoryManager.cleanUp();
 	}
 
-	vector<Body*>& World::getBodies()	{ return memoryManager.getItems(); }
-	ResolverBase& World::getResolver()	{ return resolver; }
-	SpatialBase& World::getSpatial()	{ return spatial; }
+	GroupManager& World::getGroupManager()	{ return groupManager; }
+	vector<Body*>& World::getBodies()		{ return memoryManager.getItems(); }
+	ResolverBase& World::getResolver()		{ return resolver; }
+	SpatialBase& World::getSpatial()		{ return spatial; }
 }

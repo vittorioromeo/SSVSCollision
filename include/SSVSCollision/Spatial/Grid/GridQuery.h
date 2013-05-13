@@ -31,13 +31,13 @@ namespace ssvsc
 			std::vector<sf::Vector2i> visitedIndexes;
 			T internal;
 
-			template<typename TCellTraits> Body* nextImpl(const std::string& mGroup = "")
+			template<typename TCellTraits> Body* nextImpl(int mGroupId = -1)
 			{
 				while(internal.isValid())
 				{
 					if(bodies.empty())
 					{
-						TCellTraits::getBodies(bodies, grid, index, mGroup);
+						TCellTraits::getBodies(bodies, grid, index, mGroupId);
 						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
 						visitedIndexes.push_back(index);
 						internal.step();
@@ -66,7 +66,7 @@ namespace ssvsc
 				startIndex{grid.getIndex(mStartPos)}, index{startIndex}, internal(*this, mArgs...) { }
 
 			Body* next() { return nextImpl<GridQueryTypes::Bodies::All>(); }
-			Body* next(const std::string& mGroup) { return nextImpl<GridQueryTypes::Bodies::Grouped>(mGroup); }
+			Body* next(int mGroupId) { return nextImpl<GridQueryTypes::Bodies::Grouped>(mGroupId); }
 			std::vector<Cell*> getAllCells()
 			{
 				std::vector<Cell*> result;
