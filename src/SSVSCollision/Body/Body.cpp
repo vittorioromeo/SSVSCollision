@@ -23,19 +23,19 @@ namespace ssvsc
 
 	void Body::addGroups(const StringVector& mGroups)
 	{
-		for(auto& group : mGroups) groupData.addGroupId(world.getGroupManager().getGroupId(group));
+		for(const auto& group : mGroups) groupData.addGroupId(world.getGroupManager().getGroupId(group));
 		groupData.addGroups(mGroups);
 		spatialInfo.invalidate();
 	}
 	void Body::addGroupsToCheck(const StringVector& mGroups)
 	{
-		for(auto& group : mGroups) groupData.addGroupIdToCheck(world.getGroupManager().getGroupId(group));
+		for(const auto& group : mGroups) groupData.addGroupIdToCheck(world.getGroupManager().getGroupId(group));
 		groupData.addGroupsToCheck(mGroups);
 		spatialInfo.invalidate();
 	}
 	void Body::addGroupsNoResolve(const StringVector& mGroups)
 	{
-		for(auto& group : mGroups) groupData.addGroupIdNoResolve(world.getGroupManager().getGroupId(group));
+		for(const auto& group : mGroups) groupData.addGroupIdNoResolve(world.getGroupManager().getGroupId(group));
 		groupData.addGroupsNoResolve(mGroups);
 	}
 
@@ -51,7 +51,7 @@ namespace ssvsc
 		spatialInfo.preUpdate();
 		bodiesToResolve.clear();
 
-		for(auto& body : spatialInfo.getBodiesToCheck())
+		for(const auto& body : spatialInfo.getBodiesToCheck())
 		{
 			if(body == this || !isOverlapping(shape, body->getShape())) continue;
 

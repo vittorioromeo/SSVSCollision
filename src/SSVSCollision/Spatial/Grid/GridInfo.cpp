@@ -36,7 +36,7 @@ namespace ssvsc
 
 	void GridInfo::clear()
 	{
-		for(auto& cell : cells) cell->del(&body);
+		for(const auto& cell : cells) cell->del(&body);
 		cells.clear(); queries.clear();
 	}
 	void GridInfo::calcCells()
@@ -46,10 +46,10 @@ namespace ssvsc
 		if(!grid.isIndexValid(startX, startY, endX, endY)) { body.setOutOfBounds(true); return; }
 		for(int iY{startY}; iY <= endY; iY++) for(int iX{startX}; iX <= endX; iX++) cells.push_back(&grid.getCell(iX, iY));
 
-		for(auto& cell : cells)
+		for(const auto& cell : cells)
 		{
 			cell->add(&body);
-			for(auto& groupId : body.getGroupIdsToCheck()) queries.push_back(&cell->getBodies(groupId));
+			for(const auto& groupId : body.getGroupIdsToCheck()) queries.push_back(&cell->getBodies(groupId));
 		}
 
 		invalid = false;
@@ -61,7 +61,7 @@ namespace ssvsc
 	const vector<Body*>& GridInfo::getBodiesToCheck()
 	{
 		bodiesToCheck.clear();
-		for(auto& query : queries) for(auto& body : *query) if(!contains(bodiesToCheck, body)) bodiesToCheck.push_back(body);
+		for(const auto& query : queries) for(const auto& body : *query) if(!contains(bodiesToCheck, body)) bodiesToCheck.push_back(body);
 		return bodiesToCheck;
 	}
 	void GridInfo::destroy() { grid.delSpatialInfo(*this); }

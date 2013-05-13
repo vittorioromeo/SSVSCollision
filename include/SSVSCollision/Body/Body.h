@@ -41,16 +41,16 @@ namespace ssvsc
 		inline void addGroupId(int mGroupId)							{ groupIds.push_back(mGroupId); }
 		inline void addGroupIdToCheck(int mGroupId)						{ groupIdsToCheck.push_back(mGroupId); }
 		inline void addGroupIdNoResolve(int mGroupId)					{ groupIdsNoResolve.push_back(mGroupId); }
-		inline void addGroupIds(const IntVector& mGroupIds)				{ for(auto& groupId : mGroupIds) addGroupId(groupId); }
-		inline void addGroupIdsToCheck(const IntVector& mGroupIds)		{ for(auto& groupId : mGroupIds) addGroupIdToCheck(groupId); }
-		inline void addGroupIdsNoResolve(const IntVector& mGroupIds)	{ for(auto& groupId : mGroupIds) addGroupIdNoResolve(groupId); }
+		inline void addGroupIds(const IntVector& mGroupIds)				{ for(const auto& groupId : mGroupIds) addGroupId(groupId); }
+		inline void addGroupIdsToCheck(const IntVector& mGroupIds)		{ for(const auto& groupId : mGroupIds) addGroupIdToCheck(groupId); }
+		inline void addGroupIdsNoResolve(const IntVector& mGroupIds)	{ for(const auto& groupId : mGroupIds) addGroupIdNoResolve(groupId); }
 
 		inline void addGroup(const std::string& mGroup)					{ groups.push_back(mGroup); }
 		inline void addGroupToCheck(const std::string& mGroup)			{ groupsToCheck.push_back(mGroup); }
 		inline void addGroupNoResolve(const std::string& mGroup)		{ groupsNoResolve.push_back(mGroup); }
-		inline void addGroups(const StringVector& mGroups)				{ for(auto& group : mGroups) addGroup(group); }
-		inline void addGroupsToCheck(const StringVector& mGroups)		{ for(auto& group : mGroups) addGroupToCheck(group); }
-		inline void addGroupsNoResolve(const StringVector& mGroups)		{ for(auto& group : mGroups) addGroupNoResolve(group); }
+		inline void addGroups(const StringVector& mGroups)				{ for(const auto& group : mGroups) addGroup(group); }
+		inline void addGroupsToCheck(const StringVector& mGroups)		{ for(const auto& group : mGroups) addGroupToCheck(group); }
+		inline void addGroupsNoResolve(const StringVector& mGroups)		{ for(const auto& group : mGroups) addGroupNoResolve(group); }
 
 		// Getters
 		inline const IntVector& getGroupIds()			{ return groupIds; }

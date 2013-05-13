@@ -46,7 +46,16 @@ namespace ssvsc
 		public:
 			GroupManager() = default;
 
-			int getGroupId(const std::string& mGroup);
+			inline int getGroupId(const std::string& mGroup)
+			{
+				if(ids.find(mGroup) == end(ids))
+				{
+					ids[mGroup] = currentIndex;
+					++currentIndex;
+				}
+
+				return ids[mGroup];
+			}
 	};
 
 	class World
@@ -69,13 +78,15 @@ namespace ssvsc
 			void update(float mFrameTime);
 			void clear();
 
-			GroupManager& getGroupManager();
-			std::vector<Body*>& getBodies();
-			ResolverBase& getResolver();
-			SpatialBase& getSpatial();
+			inline GroupManager& getGroupManager()	{ return groupManager; }
+			inline std::vector<Body*>& getBodies()	{ return memoryManager.getItems(); }
+			inline ResolverBase& getResolver()		{ return resolver; }
+			inline SpatialBase& getSpatial()		{ return spatial; }
 
-			template<typename T> T& getResolver() { return static_cast<T&>(getResolver()); }
-			template<typename T> T& getSpatial() { return static_cast<T&>(getSpatial()); }
+			inline int getGroupId(const std::string& mGroup) { return groupManager.getGroupId(mGroup); }
+
+			template<typename T> T& getResolver()	{ return static_cast<T&>(getResolver()); }
+			template<typename T> T& getSpatial()	{ return static_cast<T&>(getSpatial()); }
 	};
 }
 

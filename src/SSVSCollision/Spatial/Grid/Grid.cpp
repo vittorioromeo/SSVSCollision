@@ -27,7 +27,7 @@ namespace ssvsc
 	Grid::~Grid()
 	{
 		memoryManager.clear();
-		for(auto& vector : cells) for(auto& cell : vector) delete cell;
+		for(const auto& vector : cells) for(const auto& cell : vector) delete cell;
 	}
 
 	SpatialInfoBase& Grid::createSpatialInfo(Body& mBody) { return memoryManager.create(*this, mBody); }

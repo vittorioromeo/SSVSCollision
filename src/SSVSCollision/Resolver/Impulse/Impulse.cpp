@@ -21,7 +21,7 @@ namespace ssvsc
 		AABB& shape(mBody.getShape());
 		sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return getOverlapArea(shape, mA->getShape()) > getOverlapArea(shape, mB->getShape()); });
 
-		for(auto& b : mBodiesToResolve)
+		for(const auto& b : mBodiesToResolve)
 		{
 			bool noResolvePosition{false}, noResolveVelocity{false};
 			AABB& s(b->getShape());
