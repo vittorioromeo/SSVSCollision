@@ -16,12 +16,12 @@ namespace ssvsc
 	void Cell::add(Body* mBody)
 	{
 		bodies.push_back(mBody);
-		for(const auto& groupId : mBody->getGroupIds()) groupedBodies[groupId].push_back(mBody);
+		for(const auto& uid : mBody->getGroupUids()) groupedBodies[uid].push_back(mBody);
 	}
 	void Cell::del(Body* mBody)
 	{
 		eraseRemove(bodies, mBody);
-		for(const auto& groupId : mBody->getGroupIds()) eraseRemove(groupedBodies[groupId], mBody);
+		for(const auto& uid : mBody->getGroupUids()) eraseRemove(groupedBodies[uid], mBody);
 	}
 }
 

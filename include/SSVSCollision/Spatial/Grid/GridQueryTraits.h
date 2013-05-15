@@ -24,8 +24,8 @@ namespace ssvsc
 
 		namespace Bodies
 		{
-			struct All { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, int mGroupId); };
-			struct Grouped { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, int mGroupId); };
+			struct All { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, int mGroupUid); };
+			struct Grouped { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, int mGroupUid); };
 		}
 
 		namespace Orthogonal

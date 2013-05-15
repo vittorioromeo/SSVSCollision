@@ -31,13 +31,13 @@ namespace ssvsc
 			std::vector<sf::Vector2i> visitedIndexes;
 			T internal;
 
-			template<typename TCellTraits> Body* nextImpl(int mGroupId = -1)
+			template<typename TCellTraits> Body* nextImpl(int mGroupUid = -1)
 			{
 				while(internal.isValid())
 				{
 					if(bodies.empty())
 					{
-						TCellTraits::getBodies(bodies, grid, index, mGroupId);
+						TCellTraits::getBodies(bodies, grid, index, mGroupUid);
 						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
 						visitedIndexes.push_back(index);
 						internal.step();
