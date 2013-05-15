@@ -16,7 +16,7 @@ namespace ssvsc
 			sf::Vector2i position, halfSize;
 
 		public:
-			AABB(sf::Vector2i mPosition, sf::Vector2i mHalfSize);
+			inline AABB(sf::Vector2i mPosition, sf::Vector2i mHalfSize) : position{mPosition}, halfSize{mHalfSize} { }
 
 			void move(sf::Vector2i mOffset) { position += mOffset; }
 

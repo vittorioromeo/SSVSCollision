@@ -37,7 +37,6 @@ file(GLOB SRC_LIST
 	"${INC_DIR}/${PROJECT_NAME}/*.h"
 	"${SRC_DIR}/${PROJECT_NAME}/*.cpp"
 	"${INC_DIR}/${PROJECT_NAME}/AABB/*.h"
-	"${SRC_DIR}/${PROJECT_NAME}/AABB/*.cpp"
 	"${INC_DIR}/${PROJECT_NAME}/Body/*.h"
 	"${SRC_DIR}/${PROJECT_NAME}/Body/*.cpp"
 	"${INC_DIR}/${PROJECT_NAME}/Resolver/*.h"

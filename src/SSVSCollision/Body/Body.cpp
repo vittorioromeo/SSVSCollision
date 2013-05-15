@@ -23,19 +23,19 @@ namespace ssvsc
 
 	void Body::addGroups(const StringVector& mGroups)
 	{
-		for(const auto& group : mGroups) groupData.addGroupId(world.getGroupId(group));
+		for(const auto& group : mGroups) groupData.addGroupId(world.getGroupUid(group));
 		groupData.addGroups(mGroups);
 		spatialInfo.invalidate();
 	}
 	void Body::addGroupsToCheck(const StringVector& mGroups)
 	{
-		for(const auto& group : mGroups) groupData.addGroupIdToCheck(world.getGroupId(group));
+		for(const auto& group : mGroups) groupData.addGroupIdToCheck(world.getGroupUid(group));
 		groupData.addGroupsToCheck(mGroups);
 		spatialInfo.invalidate();
 	}
 	void Body::addGroupsNoResolve(const StringVector& mGroups)
 	{
-		for(const auto& group : mGroups) groupData.addGroupIdNoResolve(world.getGroupId(group));
+		for(const auto& group : mGroups) groupData.addGroupIdNoResolve(world.getGroupUid(group));
 		groupData.addGroupsNoResolve(mGroups);
 	}
 

@@ -40,21 +40,21 @@ namespace ssvsc
 	class GroupManager
 	{
 		private:
-			int currentIndex{0};
-			std::map<std::string, int> ids;
+			int lastUid{0};
+			std::map<std::string, int> uids;
 
 		public:
 			GroupManager() = default;
 
-			inline int getGroupId(const std::string& mGroup)
+			inline int getUid(const std::string& mGroup)
 			{
-				if(ids.find(mGroup) == end(ids))
+				if(uids.find(mGroup) == end(uids))
 				{
-					ids[mGroup] = currentIndex;
-					++currentIndex;
+					uids[mGroup] = lastUid;
+					++lastUid;
 				}
 
-				return ids[mGroup];
+				return uids[mGroup];
 			}
 	};
 
@@ -83,7 +83,7 @@ namespace ssvsc
 			inline ResolverBase& getResolver()		{ return resolver; }
 			inline SpatialBase& getSpatial()		{ return spatial; }
 
-			inline int getGroupId(const std::string& mGroup) { return groupManager.getGroupId(mGroup); }
+			inline int getGroupUid(const std::string& mGroup) { return groupManager.getUid(mGroup); }
 
 			template<typename T> T& getResolver()	{ return static_cast<T&>(getResolver()); }
 			template<typename T> T& getSpatial()	{ return static_cast<T&>(getSpatial()); }

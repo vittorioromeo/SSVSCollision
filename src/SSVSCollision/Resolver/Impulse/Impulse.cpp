@@ -50,10 +50,10 @@ namespace ssvsc
 				mBody.setVelocity(mBody.getVelocity() - invMassA * impulse);
 				b->setVelocity(b->getVelocity() + invMassB * impulse);
 			}
+
 			if(noResolvePosition) continue;
 
-			const float k_slop{0.05f};
-			const float percent{0.98f};
+			const float k_slop{0.05f}, percent{0.98f};
 			Vector2f correction{(max(getMagnitude(Vector2f(resolution)) - k_slop, 0.0f) / (invMassA + invMassB) * percent) * normal};
 			shape.move(-Vector2i(invMassA * correction));
 			s.move(Vector2i(invMassB * correction));
