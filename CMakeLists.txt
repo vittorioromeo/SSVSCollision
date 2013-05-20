@@ -17,8 +17,6 @@ else()
 	set(LIB_TYPE STATIC)
 endif()
 
-set(SPARSEHASH_INCLUDE_DIR "" CACHE STRING "google::sparsehash include directory")
-
 set(SFML_STATIC_LIBRARIES FALSE CACHE BOOL "Look for static SFML libraries.")
 find_package(SFML 2 COMPONENTS system)
 if(NOT SFML_FOUND)
@@ -27,6 +25,7 @@ if(NOT SFML_FOUND)
 	message("\n-> SFML directory not found. Set include and libraries manually.")
 endif()
 
+find_package(Sparsehash REQUIRED)
 find_package(SSVUtils REQUIRED)
 find_package(SSVStart REQUIRED)
 
