@@ -17,11 +17,11 @@ namespace ssvsc
 {
 	template<typename T, typename... TArgs> class GridQuery
 	{
-		friend class GridQueryTypes::Orthogonal::Left;
-		friend class GridQueryTypes::Orthogonal::Right;
-		friend class GridQueryTypes::Orthogonal::Up;
-		friend class GridQueryTypes::Orthogonal::Down;
-		friend class GridQueryTypes::RayCast;
+		friend struct GridQueryTypes::Orthogonal::Left;
+		friend struct GridQueryTypes::Orthogonal::Right;
+		friend struct GridQueryTypes::Orthogonal::Up;
+		friend struct GridQueryTypes::Orthogonal::Down;
+		friend struct GridQueryTypes::RayCast;
 
 		private:
 			Grid& grid;

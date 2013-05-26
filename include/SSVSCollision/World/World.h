@@ -34,8 +34,8 @@ namespace ssvu
 namespace ssvsc
 {
 	class Body;
-	class ResolverBase;
-	class SpatialBase;
+	struct ResolverBase;
+	struct SpatialBase;
 
 	class GroupManager
 	{

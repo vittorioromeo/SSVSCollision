@@ -12,8 +12,8 @@
 
 namespace ssvsc
 {
-	class ResolverBase;
-	class SpatialBase;
+	struct ResolverBase;
+	struct SpatialBase;
 
 	namespace Utils
 	{

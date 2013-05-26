@@ -13,7 +13,7 @@ namespace ssvsc
 
 	class SpatialInfoBase
 	{
-		private:
+		protected:
 			SpatialBase& spatial;
 
 		public:

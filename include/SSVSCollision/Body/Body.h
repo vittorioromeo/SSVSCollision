@@ -19,7 +19,7 @@ namespace ssvsc
 	using StringVector = std::vector<std::string>;
 
 	class World;
-	class ResolverBase;
+	struct ResolverBase;
 
 	struct MassData
 	{
