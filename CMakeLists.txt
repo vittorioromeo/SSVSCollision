@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-fno-omit-frame-pointer -g3 -gdwarf-2 -O0" CACHE STRI
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extlibs/SSVUtils/cmake/modules/;${CMAKE_MODULE_PATH}")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/extlibs/SSVStart/cmake/modules/;${CMAKE_MODULE_PATH}")
-set(SSVSCOLLISION_BUILD_SHARED_LIB FALSE CACHE BOOL "Build shared libraries.")
+set(SSVSCOLLISION_BUILD_SHARED_LIB TRUE CACHE BOOL "Build shared libraries.")
 
 if(SSVSCOLLISION_BUILD_SHARED_LIB)
 	set(LIB_TYPE SHARED)
