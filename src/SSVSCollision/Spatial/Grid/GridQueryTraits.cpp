@@ -107,5 +107,51 @@ namespace ssvsc
 			return true;
 		}
 		void RayCast::setOut(const AABB&) { }
+
+
+		Distance::Distance(GridQuery<Distance, int>& mQuery, int mDistance) : Base{mQuery}, cellSize{query.grid.getCellSize()}, distance{mDistance},
+			cellRadius{distance / cellSize}
+		{
+			for(int iRadius{0}; iRadius < cellRadius + 1; ++iRadius)
+			{
+				for(int iY{-iRadius}; iY <= iRadius; ++iY)
+				{
+					offsets.push({iRadius, iY});
+					if(-iRadius != iRadius) offsets.push({-iRadius, iY});
+				}
+
+				for(int iX{-iRadius + 1}; iX <= iRadius -1; ++iX)
+				{
+					offsets.push({iX, iRadius});
+					offsets.push({iX, -iRadius});
+				}
+			}
+		}
+
+		bool Distance::isValid() { return !offsets.empty() && query.grid.isIndexValid(query.index); }
+		void Distance::step()
+		{
+			query.lastPos = query.pos;
+			query.index = query.startIndex + offsets.front();
+
+			if(!offsets.empty()) offsets.pop();
+		}
+		bool Distance::getSorting(const Body* mA, const Body* mB)
+		{
+			const auto& aPos(mA->getPosition());
+			const auto& bPos(mB->getPosition());
+			return pow((aPos.x - query.startPos.x), 2) + pow((aPos.y - query.startPos.y), 2) > pow((bPos.x - query.startPos.x), 2) + pow((bPos.y - query.startPos.y), 2);
+		}
+		bool Distance::misses(const AABB& mShape)
+		{
+			int testX{query.startPos.x < mShape.getX() ? mShape.getLeft() : mShape.getRight()};
+			int testY{query.startPos.y < mShape.getY() ? mShape.getTop() : mShape.getBottom()};
+
+			if(pow((testX - query.startPos.x), 2) + pow((testY - query.startPos.y), 2) > pow(distance, 2)) return true;
+
+			query.lastPos = {testX, testY};
+			return false;
+		}
+		void Distance::setOut(const AABB&) { }
 	}
 }

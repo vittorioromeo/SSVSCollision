@@ -22,6 +22,7 @@ namespace ssvsc
 		friend struct GridQueryTypes::Orthogonal::Up;
 		friend struct GridQueryTypes::Orthogonal::Down;
 		friend struct GridQueryTypes::RayCast;
+		friend struct GridQueryTypes::Distance;
 
 		private:
 			Grid& grid;

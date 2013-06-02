@@ -6,6 +6,7 @@
 #define SSVSC_GRIDQUERYTRAITS
 
 #include <vector>
+#include <queue>
 #include <SFML/System.hpp>
 
 namespace ssvsc
@@ -79,6 +80,20 @@ namespace ssvsc
 			sf::Vector2f direction, deltaDist, increment, max;
 
 			RayCast(GridQuery<RayCast, sf::Vector2f>& mQuery, sf::Vector2f mDirection);
+
+			bool isValid();
+			void step();
+			bool getSorting(const Body* mA, const Body* mB);
+			bool misses(const AABB& mShape);
+			void setOut(const AABB& mShape);
+		};
+
+		struct Distance : public Base<Distance, int>
+		{
+			int cellSize, distance, cellRadius;
+			std::queue<sf::Vector2i> offsets;
+
+			Distance(GridQuery<Distance, int>& mQuery, int mDistance);
 
 			bool isValid();
 			void step();
