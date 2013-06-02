@@ -149,7 +149,7 @@ namespace ssvsc
 
 			if(pow((testX - query.startPos.x), 2) + pow((testY - query.startPos.y), 2) > pow(distance, 2)) return true;
 
-			query.lastPos = {testX, testY};
+			query.lastPos = Vector2f(testX, testY);
 			return false;
 		}
 		void Distance::setOut(const AABB&) { }
