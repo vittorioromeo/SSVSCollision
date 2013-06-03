@@ -79,6 +79,7 @@ namespace ssvsc
 	}
 
 	void Body::applyForce(sf::Vector2f mForce) { if(!_static) acceleration += mForce; }
+	void Body::applyImpulse(sf::Vector2f mImpulse) { velocity += getInvMass() * mImpulse; }
 
 	void Body::destroy() { world.del(this); }
 }

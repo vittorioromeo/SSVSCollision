@@ -94,6 +94,7 @@ namespace ssvsc
 
 			void update(float mFrameTime);
 			void applyForce(sf::Vector2f mForce);
+			void applyImpulse(sf::Vector2f mImpulse);
 			void destroy();
 
 			// Setters
