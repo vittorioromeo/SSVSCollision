@@ -5,12 +5,12 @@
 #ifndef SSVSC_WORLD
 #define SSVSC_WORLD
 
-#include <map>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SSVStart/SSVStart.h>
 #pragma GCC system_header
 #include <google/dense_hash_set>
+#include "SSVSCollision/World/GroupManager.h"
 
 namespace ssvu
 {
@@ -36,27 +36,6 @@ namespace ssvsc
 	class Body;
 	struct ResolverBase;
 	struct SpatialBase;
-
-	class GroupManager
-	{
-		private:
-			int lastUid{0};
-			std::map<std::string, int> uids;
-
-		public:
-			GroupManager() = default;
-
-			inline int getUid(const std::string& mGroup)
-			{
-				if(uids.find(mGroup) == end(uids))
-				{
-					uids[mGroup] = lastUid;
-					++lastUid;
-				}
-
-				return uids[mGroup];
-			}
-	};
 
 	class World
 	{
