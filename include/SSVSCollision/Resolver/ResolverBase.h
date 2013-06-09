@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_RESOLVERBASE
-#define SSVSC_RESOLVERBASE
+#ifndef SSVSC_RESOLVER_BASE
+#define SSVSC_RESOLVER_BASE
 
 #include <vector>
 

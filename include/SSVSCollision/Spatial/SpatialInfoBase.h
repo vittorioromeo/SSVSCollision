@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_SPATIALINFOBASE
-#define SSVSC_SPATIALINFOBASE
+#ifndef SSVSC_SPATIAL_INFOBASE
+#define SSVSC_SPATIAL_INFOBASE
 
 #include "SSVSCollision/Spatial/SpatialBase.h"
 

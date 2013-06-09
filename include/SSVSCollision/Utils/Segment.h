@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_SEGMENT
-#define SSVSC_SEGMENT
+#ifndef SSVSC_UTILS_SEGMENT
+#define SSVSC_UTILS_SEGMENT
 
 #include <SFML/System.hpp>
 

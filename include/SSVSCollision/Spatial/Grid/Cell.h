@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_CELL
-#define SSVSC_CELL
+#ifndef SSVSC_SPATIAL_GRID_CELL
+#define SSVSC_SPATIAL_GRID_CELL
 
 #include <unordered_map>
 #include <vector>

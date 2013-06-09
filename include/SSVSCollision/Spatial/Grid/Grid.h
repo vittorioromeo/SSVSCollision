@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_GRID
-#define SSVSC_GRID
+#ifndef SSVSC_SPATIAL_GRID
+#define SSVSC_SPATIAL_GRID
 
 #include <vector>
 #include <SFML/System.hpp>

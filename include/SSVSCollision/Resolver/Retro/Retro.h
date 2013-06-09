@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_RETRO
-#define SSVSC_RETRO
+#ifndef SSVSC_RESOLVER_RETRO
+#define SSVSC_RESOLVER_RETRO
 
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Resolver/ResolverBase.h"

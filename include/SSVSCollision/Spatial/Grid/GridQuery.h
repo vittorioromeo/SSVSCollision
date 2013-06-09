@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_GRIDQUERY
-#define SSVSC_GRIDQUERY
+#ifndef SSVSC_SPATIAL_GRIDQUERY
+#define SSVSC_SPATIAL_GRIDQUERY
 
 #include <vector>
 #include <SFML/System.hpp>
@@ -11,7 +11,7 @@
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 #include "SSVSCollision/Body/Body.h"
-#include "SSVSCollision/Spatial/Grid/GridQueryTraits.h"
+#include "SSVSCollision/Spatial/Grid/GridQueryTypes.h"
 
 namespace ssvsc
 {
