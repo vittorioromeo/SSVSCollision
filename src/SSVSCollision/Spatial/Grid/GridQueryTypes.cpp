@@ -4,7 +4,7 @@
 
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Body/Body.h"
-#include "SSVSCollision/Spatial/Grid/GridQueryTraits.h"
+#include "SSVSCollision/Spatial/Grid/GridQueryTypes.h"
 #include "SSVSCollision/Spatial/Grid/GridQuery.h"
 #include "SSVSCollision/Utils/Utils.h"
 
