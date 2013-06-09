@@ -11,56 +11,14 @@
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
+#include "SSVSCollision/Body/MassData.h"
+#include "SSVSCollision/Body/GroupData.h"
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
 
 namespace ssvsc
 {
-	using IntVector = std::vector<int>;
-	using StringVector = std::vector<std::string>;
-
 	class World;
 	struct ResolverBase;
-
-	struct MassData
-	{
-		float mass{1}, invMass{1};
-
-		// Setters
-		inline void setMass(float mMass) { mass = mMass; invMass = mMass == 0 ? 0 : 1.f / mMass; }
-
-		// Getters
-		inline float getMass() const	{ return mass; }
-		inline float getInvMass() const	{ return invMass; }
-	};
-
-	struct GroupData
-	{
-		IntVector uids, uidsToCheck, uidsNoResolve;
-		StringVector groups, groupsToCheck, groupsNoResolve;
-
-		inline void addUid(int mUid)									{ uids.push_back(mUid); }
-		inline void addUidToCheck(int mUid)								{ uidsToCheck.push_back(mUid); }
-		inline void addUidNoResolve(int mUid)							{ uidsNoResolve.push_back(mUid); }
-		inline void addGroupIds(const IntVector& mGroupUids)			{ for(const auto& uid : mGroupUids) addUid(uid); }
-		inline void addGroupIdsToCheck(const IntVector& mGroupUids)		{ for(const auto& uid : mGroupUids) addUidToCheck(uid); }
-		inline void addGroupIdsNoResolve(const IntVector& mGroupUids)	{ for(const auto& uid : mGroupUids) addUidNoResolve(uid); }
-
-		inline void addGroup(const std::string& mGroup)					{ groups.push_back(mGroup); }
-		inline void addGroupToCheck(const std::string& mGroup)			{ groupsToCheck.push_back(mGroup); }
-		inline void addGroupNoResolve(const std::string& mGroup)		{ groupsNoResolve.push_back(mGroup); }
-		inline void addGroups(const StringVector& mGroups)				{ for(const auto& g : mGroups) addGroup(g); }
-		inline void addGroupsToCheck(const StringVector& mGroups)		{ for(const auto& g : mGroups) addGroupToCheck(g); }
-		inline void addGroupsNoResolve(const StringVector& mGroups)		{ for(const auto& g : mGroups) addGroupNoResolve(g); }
-
-		// Getters
-		inline const IntVector& getUids()			{ return uids; }
-		inline const IntVector& getUidsToCheck()	{ return uidsToCheck; }
-		inline const IntVector& getUidsNoResolve()	{ return uidsNoResolve; }
-
-		inline const StringVector& getGroups()			{ return groups; }
-		inline const StringVector& getGroupsToCheck()	{ return groupsToCheck; }
-		inline const StringVector& getGroupsNoResolve()	{ return groupsNoResolve; }
-	};
 
 	class Body
 	{
@@ -88,9 +46,9 @@ namespace ssvsc
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();
 
-			void addGroups(const StringVector& mGroups);
-			void addGroupsToCheck(const StringVector& mGroups);
-			void addGroupsNoResolve(const StringVector& mGroups);
+			void addGroups(const std::vector<std::string>& mGroups);
+			void addGroupsToCheck(const std::vector<std::string>& mGroups);
+			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
 
 			void update(float mFrameTime);
 			void applyForce(sf::Vector2f mForce);
@@ -133,12 +91,12 @@ namespace ssvsc
 			inline bool hasMovedRight() const				{ return shape.getX() > oldShape.getX(); }
 			inline bool hasMovedUp() const					{ return shape.getY() < oldShape.getY(); }
 			inline bool hasMovedDown() const				{ return shape.getY() > oldShape.getY(); }
-			inline const IntVector& getGroupUids()			{ return groupData.getUids(); }
-			inline const IntVector& getGroupUidsToCheck()	{ return groupData.getUidsToCheck(); }
-			inline const IntVector& getGroupUidsNoResolve()	{ return groupData.getUidsNoResolve(); }
-			inline const StringVector& getGroups()			{ return groupData.getGroups(); }
-			inline const StringVector& getGroupsToCheck()	{ return groupData.getGroupsToCheck(); }
-			inline const StringVector& getGroupsNoResolve()	{ return groupData.getGroupsNoResolve(); }
+			inline const std::vector<int>& getGroupUids()				{ return groupData.getUids(); }
+			inline const std::vector<int>& getGroupUidsToCheck()		{ return groupData.getUidsToCheck(); }
+			inline const std::vector<int>& getGroupUidsNoResolve()		{ return groupData.getUidsNoResolve(); }
+			inline const std::vector<std::string>& getGroups()			{ return groupData.getGroups(); }
+			inline const std::vector<std::string>& getGroupsToCheck()	{ return groupData.getGroupsToCheck(); }
+			inline const std::vector<std::string>& getGroupsNoResolve()	{ return groupData.getGroupsNoResolve(); }
 	};
 }
 

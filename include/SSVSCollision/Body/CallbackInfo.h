@@ -2,10 +2,10 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_CALLBACKINFO
-#define SSVSC_CALLBACKINFO
+#ifndef SSVSC_BODY_CALLBACKINFO
+#define SSVSC_BODY_CALLBACKINFO
 
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 namespace ssvsc
 {
@@ -23,8 +23,7 @@ namespace ssvsc
 	{
 		Body& body;
 		void* userData;
-		sf::Vector2i intersection;
-		sf::Vector2i resolution;
+		sf::Vector2i intersection, resolution;
 		bool& noResolvePosition;
 		bool& noResolveVelocity;
 	};
