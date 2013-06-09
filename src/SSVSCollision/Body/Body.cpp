@@ -21,19 +21,19 @@ namespace ssvsc
 		spatialInfo(world.getSpatial().createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
-	void Body::addGroups(const StringVector& mGroups)
+	void Body::addGroups(const std::vector<std::string>& mGroups)
 	{
 		for(const auto& g : mGroups) groupData.addUid(world.getGroupUid(g));
 		groupData.addGroups(mGroups);
 		spatialInfo.invalidate();
 	}
-	void Body::addGroupsToCheck(const StringVector& mGroups)
+	void Body::addGroupsToCheck(const std::vector<std::string>& mGroups)
 	{
 		for(const auto& g : mGroups) groupData.addUidToCheck(world.getGroupUid(g));
 		groupData.addGroupsToCheck(mGroups);
 		spatialInfo.invalidate();
 	}
-	void Body::addGroupsNoResolve(const StringVector& mGroups)
+	void Body::addGroupsNoResolve(const std::vector<std::string>& mGroups)
 	{
 		for(const auto& g : mGroups) groupData.addUidNoResolve(world.getGroupUid(g));
 		groupData.addGroupsNoResolve(mGroups);
