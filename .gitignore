@@ -186,3 +186,4 @@ pip-log.txt
 *.project
 *.so/CMakeLists.txt.user.7626ec3
 /CMakeLists.txt.user.7626ec3
+CMakeLists.txt.user.*
