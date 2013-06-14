@@ -61,7 +61,7 @@ namespace ssvsc
 	const vector<Body*>& GridInfo::getBodiesToCheck()
 	{
 		bodiesToCheck.clear();
-		for(const auto& query : queries) for(const auto& body : *query) if(!contains(bodiesToCheck, body)) bodiesToCheck.push_back(body);
+		for(const auto& q : queries) for(const auto& b : *q) if(!contains(bodiesToCheck, b)) bodiesToCheck.push_back(b);
 		return bodiesToCheck;
 	}
 	void GridInfo::destroy() { grid.delSpatialInfo(*this); }
