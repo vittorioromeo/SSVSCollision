@@ -14,10 +14,10 @@ namespace ssvsc
 {
 	Grid::Grid(int mColumns, int mRows, int mCellSize, int mOffset) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset}
 	{
-		for(int iX{0}; iX < columns; iX++)
+		for(int iX{0}; iX < columns; ++iX)
 		{
 			cells.push_back(vector<Cell*>(rows));
-			for(int iY{0}; iY < rows; iY++)
+			for(int iY{0}; iY < rows; ++iY)
 			{
 				int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
 				cells[iX][iY] = new Cell{left, right, top, bottom};
