@@ -25,11 +25,11 @@ namespace ssvsc
 	void World::update(float mFrameTime)
 	{
 		memoryManager.cleanUp();
-		for(const auto& body : memoryManager.getItems()) body->update(mFrameTime);
+		for(const auto& body : memoryManager) body->update(mFrameTime);
 	}
 	void World::clear()
 	{
-		for(const auto& body : memoryManager.getItems()) body->destroy();
+		for(const auto& body : memoryManager) body->destroy();
 		memoryManager.cleanUp();
 	}
 }
