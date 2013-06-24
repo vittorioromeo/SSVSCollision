@@ -15,7 +15,7 @@ namespace ssvsc
 	class Cell
 	{
 		private:
-			int left, right, top, bottom;
+			int left, right, top, bottom; // TODO: AABB?
 			std::vector<Body*> bodies;
 			std::unordered_map<int, std::vector<Body*>> groupedBodies;
 
