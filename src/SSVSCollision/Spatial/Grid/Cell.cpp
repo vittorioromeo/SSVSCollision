@@ -11,7 +11,7 @@ using namespace ssvu;
 
 namespace ssvsc
 {
-	Cell::Cell(int mLeft, int mRight, int mTop, int mBottom) : left{mLeft}, right{mRight}, top{mTop}, bottom{mBottom} { }
+	Cell::Cell(int mLeft, int mRight, int mTop, int mBottom) : aabb{mLeft, mRight, mTop, mBottom} { }
 
 	void Cell::add(Body* mBody)
 	{
