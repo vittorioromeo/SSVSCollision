@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include "SSVSCollision/AABB/AABB.h"
 
 namespace ssvsc
 {
@@ -15,7 +16,7 @@ namespace ssvsc
 	class Cell
 	{
 		private:
-			int left, right, top, bottom; // TODO: AABB?
+			AABB aabb;
 			std::vector<Body*> bodies;
 			std::unordered_map<int, std::vector<Body*>> groupedBodies;
 
@@ -28,10 +29,10 @@ namespace ssvsc
 			inline const std::vector<Body*>& getBodies()				{ return bodies; }
 			inline const std::vector<Body*>& getBodies(int mGroupId)	{ return groupedBodies[mGroupId]; }
 
-			inline int getLeft() const		{ return left; }
-			inline int getRight() const 	{ return right; }
-			inline int getTop() const		{ return top; }
-			inline int getBottom() const	{ return bottom; }
+			inline int getLeft() const		{ return aabb.getLeft(); }
+			inline int getRight() const 	{ return aabb.getRight(); }
+			inline int getTop() const		{ return aabb.getTop(); }
+			inline int getBottom() const	{ return aabb.getBottom(); }
 	};
 }
 
