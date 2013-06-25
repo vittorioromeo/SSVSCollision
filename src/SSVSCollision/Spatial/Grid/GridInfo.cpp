@@ -36,7 +36,7 @@ namespace ssvsc
 
 	void GridInfo::clear()
 	{
-		for(const auto& cell : cells) cell->del(&body);
+		for(const auto& c : cells) c->del(&body);
 		cells.clear(); queries.clear();
 	}
 	void GridInfo::calcCells()
@@ -46,10 +46,10 @@ namespace ssvsc
 		if(!grid.isIndexValid(startX, startY, endX, endY)) { body.setOutOfBounds(true); return; }
 		for(int iX{startX}; iX <= endX; ++iX) for(int iY{startY}; iY <= endY; ++iY) cells.push_back(&grid.getCell(iX, iY));
 
-		for(const auto& cell : cells)
+		for(const auto& c : cells)
 		{
-			cell->add(&body);
-			for(const auto& uid : body.getGroupUidsToCheck()) queries.push_back(&cell->getBodies(uid));
+			c->add(&body);
+			for(const auto& uid : body.getGroupUidsToCheck()) queries.push_back(&c->getBodies(uid));
 		}
 
 		invalid = false;
