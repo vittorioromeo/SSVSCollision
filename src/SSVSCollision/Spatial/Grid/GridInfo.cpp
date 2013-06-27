@@ -53,15 +53,22 @@ namespace ssvsc
 		}
 
 		invalid = false;
+
+		mustGather = true;
 	}
 
-	void GridInfo::invalidate() { invalid = true; }
-	void GridInfo::preUpdate() { if(invalid) calcEdges();  }
-	void GridInfo::postUpdate() { }
-	const vector<Body*>& GridInfo::getBodiesToCheck()
+	void GridInfo::gather()
 	{
 		bodiesToCheck.clear();
 		for(const auto& q : queries) for(const auto& b : *q) if(!contains(bodiesToCheck, b)) bodiesToCheck.push_back(b);
+	}
+
+	void GridInfo::invalidate() { invalid = true; }
+	void GridInfo::preUpdate() { if(invalid) calcEdges(); }
+	void GridInfo::postUpdate() { }
+	const vector<Body*>& GridInfo::getBodiesToCheck()
+	{
+		if(mustGather) { gather(); mustGather = false; }
 		return bodiesToCheck;
 	}
 	void GridInfo::destroy() { grid.delSpatialInfo(*this); }

@@ -24,6 +24,8 @@ namespace ssvsc
 			std::vector<std::vector<Cell*>> cells; // owned
 			int columns, rows, cellSize, offset;
 
+			std::vector<Cell*> usedCells;
+
 		public:
 			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0);
 			~Grid();
@@ -43,7 +45,7 @@ namespace ssvsc
 			inline int getIndex(int mValue) const { return mValue / cellSize; }
 			inline sf::Vector2i getIndex(sf::Vector2i mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 
-			inline Cell& getCell(int mX, int mY)		{ return *(cells[mX + offset][mY + offset]); }
+			inline Cell& getCell(int mX, int mY)		{ Cell* c = (cells[mX + offset][mY + offset]); usedCells.push_back(c); return  *c;}
 			inline Cell& getCell(sf::Vector2i mIndex)	{ return getCell(mIndex.x, mIndex.y); }
 
 			inline const std::vector<std::vector<Cell*>>& getCells() { return cells; }
