@@ -30,9 +30,13 @@ namespace ssvsc
 			void calcCells();
 			void clear();
 
+			void gather();
+
 		public:
 			GridInfo(Grid& mGrid, Body& mBody);
 			~GridInfo();
+
+			bool mustGather{true};
 
 			void invalidate() override;
 			void preUpdate() override;

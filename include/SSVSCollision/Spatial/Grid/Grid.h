@@ -43,7 +43,7 @@ namespace ssvsc
 			inline int getIndex(int mValue) const { return mValue / cellSize; }
 			inline sf::Vector2i getIndex(sf::Vector2i mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 
-			inline Cell& getCell(int mX, int mY)		{ return *(cells[mX + offset][mY + offset]); }
+			inline Cell& getCell(int mX, int mY)		{ return *cells[mX + offset][mY + offset]; }
 			inline Cell& getCell(sf::Vector2i mIndex)	{ return getCell(mIndex.x, mIndex.y); }
 
 			inline const std::vector<std::vector<Cell*>>& getCells() { return cells; }

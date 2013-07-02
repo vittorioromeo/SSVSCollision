@@ -5,6 +5,7 @@
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
+#include "SSVSCollision/Spatial/Grid/GridInfo.h"
 
 using namespace std;
 using namespace ssvu;
@@ -17,6 +18,7 @@ namespace ssvsc
 	{
 		bodies.push_back(mBody);
 		for(const auto& uid : mBody->getGroupUids()) groupedBodies[uid].push_back(mBody);
+		for(auto& b : bodies) static_cast<GridInfo&>(b->getSpatialInfo()).mustGather = true;
 	}
 	void Cell::del(Body* mBody)
 	{
