@@ -30,13 +30,13 @@ namespace ssvsc
 		inline void addGroupsNoResolve(const std::vector<std::string>& mGroups)		{ for(const auto& g : mGroups) addGroupNoResolve(g); }
 
 		// Getters
-		inline const std::vector<int>& getUids()					{ return uids; }
-		inline const std::vector<int>& getUidsToCheck()				{ return uidsToCheck; }
-		inline const std::vector<int>& getUidsNoResolve()			{ return uidsNoResolve; }
+		inline const std::vector<int>& getUids()									{ return uids; }
+		inline const std::vector<int>& getUidsToCheck()								{ return uidsToCheck; }
+		inline const std::vector<int>& getUidsNoResolve()							{ return uidsNoResolve; }
 
-		inline const std::vector<std::string>& getGroups()			{ return groups; }
-		inline const std::vector<std::string>& getGroupsToCheck()	{ return groupsToCheck; }
-		inline const std::vector<std::string>& getGroupsNoResolve()	{ return groupsNoResolve; }
+		inline const std::vector<std::string>& getGroups()							{ return groups; }
+		inline const std::vector<std::string>& getGroupsToCheck()					{ return groupsToCheck; }
+		inline const std::vector<std::string>& getGroupsNoResolve()					{ return groupsNoResolve; }
 	};
 }
 

@@ -2,8 +2,6 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include <algorithm>
-#include <stack>
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Resolver/ResolverBase.h"
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
@@ -17,23 +15,22 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), resolver(mWorld.getResolver()),
-		spatialInfo(world.getSpatial().createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
-	Body::~Body() { spatialInfo.destroy(); }
+	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : Base(mWorld), resolver(mWorld.getResolver()),
+		shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 
-	void Body::addGroups(const std::vector<std::string>& mGroups)
+	void Body::addGroups(const vector<string>& mGroups)
 	{
 		for(const auto& g : mGroups) groupData.addUid(world.getGroupUid(g));
 		groupData.addGroups(mGroups);
 		spatialInfo.invalidate();
 	}
-	void Body::addGroupsToCheck(const std::vector<std::string>& mGroups)
+	void Body::addGroupsToCheck(const vector<string>& mGroups)
 	{
 		for(const auto& g : mGroups) groupData.addUidToCheck(world.getGroupUid(g));
 		groupData.addGroupsToCheck(mGroups);
 		spatialInfo.invalidate();
 	}
-	void Body::addGroupsNoResolve(const std::vector<std::string>& mGroups)
+	void Body::addGroupsNoResolve(const vector<string>& mGroups)
 	{
 		for(const auto& g : mGroups) groupData.addUidNoResolve(world.getGroupUid(g));
 		groupData.addGroupsNoResolve(mGroups);
@@ -60,7 +57,7 @@ namespace ssvsc
 			onDetection({*body, mFrameTime, body->getUserData(), intersection});
 			body->onDetection({*this, mFrameTime, userData, -intersection});
 
-			if(!resolve || containsAny(body->getGroups(), getGroupsNoResolve())) continue;
+			if(!resolve || containsAny(body->getGroupUids(), getGroupUidsNoResolve())) continue;
 			bodiesToResolve.push_back(body);
 		}
 
@@ -81,6 +78,6 @@ namespace ssvsc
 	void Body::applyForce(sf::Vector2f mForce) { if(!_static) acceleration += mForce; }
 	void Body::applyImpulse(sf::Vector2f mImpulse) { velocity += getInvMass() * mImpulse; }
 
-	void Body::destroy() { world.del(this); }
+	void Body::destroy() { world.delBody(this); }
 }
 

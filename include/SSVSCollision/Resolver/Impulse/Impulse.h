@@ -5,11 +5,12 @@
 #ifndef SSVSC_RESOLVER_IMPULSE
 #define SSVSC_RESOLVER_IMPULSE
 
-#include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Resolver/ResolverBase.h"
 
 namespace ssvsc
 {
+	class Body;
+
 	struct Impulse : public ResolverBase
 	{
 		void resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve) override;

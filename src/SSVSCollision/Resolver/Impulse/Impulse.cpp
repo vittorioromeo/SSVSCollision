@@ -7,6 +7,7 @@
 #include <SSVStart/SSVStart.h>
 #include "SSVSCollision/Resolver/Impulse/Impulse.h"
 #include "SSVSCollision/Utils/Utils.h"
+#include "SSVSCollision/Body/Body.h"
 
 using namespace std;
 using namespace sf;

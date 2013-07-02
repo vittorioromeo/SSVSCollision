@@ -9,6 +9,7 @@
 
 namespace ssvsc
 {
+	class Base;
 	class Body;
 
 	class SpatialInfoBase
@@ -17,9 +18,9 @@ namespace ssvsc
 			SpatialBase& spatial;
 
 		public:
-			Body& body;
+			Base& base;
 
-			SpatialInfoBase(SpatialBase& mSpatial, Body& mBody) : spatial(mSpatial), body(mBody) { }
+			SpatialInfoBase(SpatialBase& mSpatial, Base& mBase) : spatial(mSpatial), base(mBase) { }
 			virtual ~SpatialInfoBase() { }
 
 			virtual void invalidate() = 0;

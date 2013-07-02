@@ -28,7 +28,7 @@ namespace ssvsc
 			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0);
 			~Grid();
 
-			SpatialInfoBase& createSpatialInfo(Body& mBody) override;
+			SpatialInfoBase& createSpatialInfo(Base& mBase) override;
 			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
 
 			inline int getIndexXMin() const	{ return 0 - offset; }

@@ -4,6 +4,7 @@
 
 #include <SFML/System.hpp>
 #include <SSVUtils/SSVUtils.h>
+#include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Resolver/Retro/Retro.h"
 #include "SSVSCollision/Utils/Utils.h"
 

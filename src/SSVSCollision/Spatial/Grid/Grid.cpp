@@ -5,7 +5,6 @@
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
-#include "SSVSCollision/Body/Body.h"
 
 using namespace std;
 using namespace sf;
@@ -27,10 +26,10 @@ namespace ssvsc
 	Grid::~Grid()
 	{
 		memoryManager.clear();
-		for(const auto& vector : cells) for(const auto& cell : vector) delete cell;
+		for(int iX{0}; iX < columns; ++iX) for(int iY{0}; iY < rows; ++iY) delete cells[iX][iY];
 	}
 
-	SpatialInfoBase& Grid::createSpatialInfo(Body& mBody) { return memoryManager.create(*this, mBody); }
+	SpatialInfoBase& Grid::createSpatialInfo(Base& mBase) { return memoryManager.create(*this, mBase); }
 	void Grid::delSpatialInfo(SpatialInfoBase& mSpatialInfo)
 	{
 		memoryManager.del(&(static_cast<GridInfo&>(mSpatialInfo)));

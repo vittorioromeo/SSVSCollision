@@ -33,32 +33,42 @@ namespace ssvu
 
 namespace ssvsc
 {
+	class Base;
 	class Body;
+	class Sensor;
 	struct ResolverBase;
 	struct SpatialBase;
 
 	class World
 	{
+		friend class Base;
 		friend class Body;
+		friend class Sensor;
 
 		private:
 			GroupManager groupManager;
-			ssvu::MemoryManager<Body, std::vector<Body*>, google::dense_hash_set<Body*>> memoryManager;
+			ssvu::MemoryManager<Base, std::vector<Base*>, google::dense_hash_set<Base*>> memoryManager;
 			ResolverBase& resolver; // owned
 			SpatialBase& spatial; // owned
 
-			void del(Body* mBody);
+			std::vector<Body*> bodies;
+
+			void delBase(Base* mBase);
+			void delBody(Body* mBody);
 
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
 			~World();
 
 			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
+			Sensor& createSensor(sf::Vector2i mPosition, sf::Vector2i mSize);
+
 			void update(float mFrameTime);
 			void clear();
 
 			inline GroupManager& getGroupManager()	{ return groupManager; }
-			inline std::vector<Body*>& getBodies()	{ return memoryManager.getItems(); }
+			inline std::vector<Base*>& getBases()	{ return memoryManager.getItems(); }
+			inline std::vector<Body*>& getBodies()	{ return bodies; }
 			inline ResolverBase& getResolver()		{ return resolver; }
 			inline SpatialBase& getSpatial()		{ return spatial; }
 

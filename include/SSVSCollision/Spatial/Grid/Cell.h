@@ -8,24 +8,31 @@
 #include <unordered_map>
 #include <vector>
 #include "SSVSCollision/AABB/AABB.h"
+#include "SSVSCollision/Body/Enums.h"
 
 namespace ssvsc
 {
+	class Base;
 	class Body;
 
 	class Cell
 	{
 		private:
 			AABB aabb;
+			std::vector<Base*> bases;
 			std::vector<Body*> bodies;
 			std::unordered_map<int, std::vector<Body*>> groupedBodies;
+
+			void addBody(Body* mBody);
+			void delBody(Body* mBody);
 
 		public:
 			Cell(int mLeft, int mRight, int mTop, int mBottom);
 
-			void add(Body* mBody);
-			void del(Body* mBody);
+			void add(Base* mBase, Type mType);
+			void del(Base* mBase, Type mType);
 
+			inline const std::vector<Base*>& getBases()					{ return bases; }
 			inline const std::vector<Body*>& getBodies()				{ return bodies; }
 			inline const std::vector<Body*>& getBodies(int mGroupId)	{ return groupedBodies[mGroupId]; }
 

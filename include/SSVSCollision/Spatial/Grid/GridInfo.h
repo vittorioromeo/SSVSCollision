@@ -10,6 +10,7 @@
 
 namespace ssvsc
 {
+	class Base;
 	class Body;
 	class Grid;
 	class Cell;
@@ -33,7 +34,7 @@ namespace ssvsc
 			void gather();
 
 		public:
-			GridInfo(Grid& mGrid, Body& mBody);
+			GridInfo(Grid& mGrid, Base& mBase);
 			~GridInfo();
 
 			bool mustGather{true};
