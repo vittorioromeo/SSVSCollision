@@ -16,8 +16,8 @@ using namespace ssvu;
 namespace ssvsc
 {
 	void World::delBase(Base* mBase)		{ memoryManager.del(mBase); memoryManager.cleanUp(); }
-	void World::delBody(Body* mBody)		{ eraseRemove(bodies, mBody); delBase(mBody); }
-	void World::delSensor(Sensor* mSensor)	{ eraseRemove(sensors, mSensor); delBase(mSensor); }
+	void World::delBody(Body* mBody)		{ eraseRemove(bodies, mBody); }
+	void World::delSensor(Sensor* mSensor)	{ eraseRemove(sensors, mSensor); }
 
 	World::World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver(mResolver), spatial(mSpatial) { }
 	World::~World() { delete &resolver; delete &spatial; }

@@ -15,6 +15,7 @@ using namespace ssvsc::Utils;
 namespace ssvsc
 {
 	Sensor::Sensor(World& mWorld, Vector2i mPosition, Vector2i mSize) : Base(mWorld), shape{mPosition, mSize / 2} { }
+	Sensor::~Sensor() { spatialInfo.destroy(); }
 
 	void Sensor::addGroupsToCheck(const vector<string>& mGroups)
 	{
@@ -35,5 +36,5 @@ namespace ssvsc
 		}
 		spatialInfo.postUpdate();
 	}
-	void Sensor::destroy() { world.delSensor(this); }
+	void Sensor::destroy() { world.delSensor(this); Base::destroy(); }
 }

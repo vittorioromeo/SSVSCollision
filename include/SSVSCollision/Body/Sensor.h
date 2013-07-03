@@ -28,10 +28,11 @@ namespace ssvsc
 			ssvu::Delegate<void, DetectionInfo> onDetection;
 
 			Sensor(World& mWorld, sf::Vector2i mPosition, sf::Vector2i mSize);
+			~Sensor();
 
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
 
-			inline Type getType() { return Type::Sensor; }
+			inline Type getType() override { return Type::Sensor; }
 			void update(float mFrameTime) override;
 			void destroy() override;
 

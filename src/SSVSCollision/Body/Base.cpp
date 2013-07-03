@@ -11,6 +11,6 @@ using namespace std;
 namespace ssvsc
 {
 	Base::Base(World& mWorld) : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
-	Base::~Base() { spatialInfo.destroy(); }
+	Base::~Base() { }
 	void Base::destroy() { world.delBase(this); }
 }

@@ -16,6 +16,7 @@ namespace ssvsc
 {
 	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : Base(mWorld), resolver(mWorld.getResolver()),
 		shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+	Body::~Body() { spatialInfo.destroy(); }
 
 	void Body::addGroups(const vector<string>& mGroups)
 	{
@@ -77,6 +78,6 @@ namespace ssvsc
 	void Body::applyForce(sf::Vector2f mForce) { if(!_static) acceleration += mForce; }
 	void Body::applyImpulse(sf::Vector2f mImpulse) { velocity += getInvMass() * mImpulse; }
 
-	void Body::destroy() { world.delBody(this); }
+	void Body::destroy() { world.delBody(this); Base::destroy(); }
 }
 

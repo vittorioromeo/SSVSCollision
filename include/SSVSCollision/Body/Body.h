@@ -42,12 +42,13 @@ namespace ssvsc
 			ssvu::Delegate<void> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
+			~Body();
 
 			void addGroups(const std::vector<std::string>& mGroups);
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
 			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
 
-			inline Type getType() { return Type::Body; }
+			inline Type getType() override { return Type::Body; }
 			void update(float mFrameTime) override;
 			void destroy() override;
 
