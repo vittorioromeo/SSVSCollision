@@ -36,7 +36,7 @@ namespace ssvsc
 
 	void GridInfo::clear()
 	{
-		for(const auto& c : cells) c->delBase(&base, base.getType());
+		for(const auto& c : cells) c->del(&base);
 		cells.clear(); queries.clear();
 	}
 	void GridInfo::calcCells()
@@ -48,12 +48,11 @@ namespace ssvsc
 
 		for(const auto& c : cells)
 		{
-			c->addBase(&base, base.getType());
+			c->add(&base);
 			for(const auto& uid : base.getGroupUidsToCheck()) queries.push_back(&c->getBodies(uid));
 		}
 
 		invalid = false;
-
 		mustGather = true;
 	}
 
@@ -66,10 +65,10 @@ namespace ssvsc
 	void GridInfo::invalidate() { invalid = true; }
 	void GridInfo::preUpdate() { if(invalid) calcEdges(); }
 	void GridInfo::postUpdate() { }
+	void GridInfo::destroy() { grid.delSpatialInfo(*this); }
 	const vector<Body*>& GridInfo::getBodiesToCheck()
 	{
 		if(mustGather) { gather(); mustGather = false; }
 		return bodiesToCheck;
 	}
-	void GridInfo::destroy() { grid.delSpatialInfo(*this); }
 }

@@ -14,18 +14,25 @@ namespace ssvsc
 {
 	Cell::Cell(const AABB& mAABB) : aabb{mAABB} { }
 
-	void Cell::addBase(Base* mBase, Type mType)
+	void Cell::add(Base* mBase)
+	{
+		addBase(mBase);
+		if(mBase->getType() == Type::Body) addBody(static_cast<Body*>(mBase));
+	}
+	void Cell::del(Base* mBase)
+	{
+		delBase(mBase);
+		if(mBase->getType() == Type::Body) delBody(static_cast<Body*>(mBase));
+	}
+
+	void Cell::addBase(Base* mBase)
 	{
 		bases.push_back(mBase);
 		for(auto& e : bases) static_cast<GridInfo&>(e->getSpatialInfo()).mustGather = true;
-
-		if(mType == Type::Body) addBody(static_cast<Body*>(mBase)); // TODO: dispatching
 	}
-	void Cell::delBase(Base* mBase, Type mType)
+	void Cell::delBase(Base* mBase)
 	{
 		eraseRemove(bases, mBase);
-
-		if(mType == Type::Body) delBody(static_cast<Body*>(mBase)); // TODO: dispatching
 	}
 	void Cell::addBody(Body* mBody)
 	{

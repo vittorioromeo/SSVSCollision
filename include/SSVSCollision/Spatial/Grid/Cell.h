@@ -23,21 +23,23 @@ namespace ssvsc
 			std::vector<Body*> bodies;
 			std::unordered_map<int, std::vector<Body*>> groupedBodies;
 
+			void addBase(Base* mBase);
+			void delBase(Base* mBase);
 			void addBody(Body* mBody);
 			void delBody(Body* mBody);
 
 		public:
 			Cell(const AABB& mAABB);
 
-			void addBase(Base* mBase, Type mType);
-			void delBase(Base* mBase, Type mType);
+			void add(Base* mBase);
+			void del(Base* mBase);
 
 			inline const std::vector<Base*>& getBases()					{ return bases; }
 			inline const std::vector<Body*>& getBodies()				{ return bodies; }
 			inline const std::vector<Body*>& getBodies(int mGroupId)	{ return groupedBodies[mGroupId]; }
 
 			inline int getLeft() const		{ return aabb.getLeft(); }
-			inline int getRight() const 	{ return aabb.getRight(); }
+			inline int getRight() const		{ return aabb.getRight(); }
 			inline int getTop() const		{ return aabb.getTop(); }
 			inline int getBottom() const	{ return aabb.getBottom(); }
 	};

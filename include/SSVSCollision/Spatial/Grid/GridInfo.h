@@ -42,8 +42,8 @@ namespace ssvsc
 			void invalidate() override;
 			void preUpdate() override;
 			void postUpdate() override;
-			const std::vector<Body*>& getBodiesToCheck() override;
 			void destroy() override;
+			const std::vector<Body*>& getBodiesToCheck() override;
 	};
 }
 
