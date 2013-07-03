@@ -2,8 +2,7 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include "SSVSCollision/Body/Body.h"
-#include "SSVSCollision/Body/Sensor.h"
+#include "SSVSCollision/Body/Base.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
@@ -37,7 +36,7 @@ namespace ssvsc
 
 	void GridInfo::clear()
 	{
-		for(const auto& c : cells) c->del(&base, base.getType());
+		for(const auto& c : cells) c->delBase(&base, base.getType());
 		cells.clear(); queries.clear();
 	}
 	void GridInfo::calcCells()
@@ -49,7 +48,7 @@ namespace ssvsc
 
 		for(const auto& c : cells)
 		{
-			c->add(&base, base.getType());
+			c->addBase(&base, base.getType());
 			for(const auto& uid : base.getGroupUidsToCheck()) queries.push_back(&c->getBodies(uid));
 		}
 

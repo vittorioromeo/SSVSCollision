@@ -4,7 +4,6 @@
 
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Resolver/ResolverBase.h"
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/World/World.h"
 

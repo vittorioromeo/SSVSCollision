@@ -16,10 +16,9 @@ namespace ssvsc
 	{
 		protected:
 			SpatialBase& spatial;
-
-		public:
 			Base& base;
 
+		public:
 			SpatialInfoBase(SpatialBase& mSpatial, Base& mBase) : spatial(mSpatial), base(mBase) { }
 			virtual ~SpatialInfoBase() { }
 

@@ -12,4 +12,5 @@ namespace ssvsc
 {
 	Base::Base(World& mWorld) : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
 	Base::~Base() { spatialInfo.destroy(); }
+	void Base::destroy() { world.delBase(this); }
 }

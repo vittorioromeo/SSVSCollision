@@ -4,7 +4,6 @@
 
 #include "SSVSCollision/Body/Sensor.h"
 #include "SSVSCollision/Body/Body.h"
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/World/World.h"
 
@@ -36,5 +35,5 @@ namespace ssvsc
 		}
 		spatialInfo.postUpdate();
 	}
-	void Sensor::destroy() { world.delBase(this); }
+	void Sensor::destroy() { world.delSensor(this); }
 }

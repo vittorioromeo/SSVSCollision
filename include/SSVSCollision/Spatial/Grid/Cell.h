@@ -27,10 +27,10 @@ namespace ssvsc
 			void delBody(Body* mBody);
 
 		public:
-			Cell(int mLeft, int mRight, int mTop, int mBottom);
+			Cell(const AABB& mAABB);
 
-			void add(Base* mBase, Type mType);
-			void del(Base* mBase, Type mType);
+			void addBase(Base* mBase, Type mType);
+			void delBase(Base* mBase, Type mType);
 
 			inline const std::vector<Base*>& getBases()					{ return bases; }
 			inline const std::vector<Body*>& getBodies()				{ return bodies; }

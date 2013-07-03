@@ -12,20 +12,20 @@ using namespace ssvu;
 
 namespace ssvsc
 {
-	Cell::Cell(int mLeft, int mRight, int mTop, int mBottom) : aabb{mLeft, mRight, mTop, mBottom} { }
+	Cell::Cell(const AABB& mAABB) : aabb{mAABB} { }
 
-	void Cell::add(Base* mBase, Type mType)
+	void Cell::addBase(Base* mBase, Type mType)
 	{
 		bases.push_back(mBase);
 		for(auto& e : bases) static_cast<GridInfo&>(e->getSpatialInfo()).mustGather = true;
 
-		if(mType == Type::Body) addBody(static_cast<Body*>(mBase));
+		if(mType == Type::Body) addBody(static_cast<Body*>(mBase)); // TODO: dispatching
 	}
-	void Cell::del(Base* mBase, Type mType)
+	void Cell::delBase(Base* mBase, Type mType)
 	{
 		eraseRemove(bases, mBase);
 
-		if(mType == Type::Body) delBody(static_cast<Body*>(mBase));
+		if(mType == Type::Body) delBody(static_cast<Body*>(mBase)); // TODO: dispatching
 	}
 	void Cell::addBody(Body* mBody)
 	{

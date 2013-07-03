@@ -2,10 +2,10 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_WORLD_GROUPMANAGERD
+#ifndef SSVSC_WORLD_GROUPMANAGER
 #define SSVSC_WORLD_GROUPMANAGER
 
-#include <map>
+#include <unordered_map>
 #include <string>
 
 namespace ssvsc
@@ -14,7 +14,7 @@ namespace ssvsc
 	{
 		private:
 			int lastUid{0};
-			std::map<std::string, int> uids;
+			std::unordered_map<std::string, int> uids;
 
 		public:
 			GroupManager() = default;

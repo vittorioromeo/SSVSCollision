@@ -5,6 +5,7 @@
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
+#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 
 using namespace std;
 using namespace sf;
@@ -19,7 +20,7 @@ namespace ssvsc
 			for(int iY{0}; iY < rows; ++iY)
 			{
 				int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
-				cells[iX][iY] = new Cell{left, right, top, bottom};
+				cells[iX][iY] = new Cell{AABB{left, right, top, bottom}};
 			}
 		}
 	}

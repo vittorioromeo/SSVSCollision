@@ -6,8 +6,6 @@
 #define SSVSC_BODY
 
 #include <SFML/System.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"

@@ -6,20 +6,14 @@
 #define SSVSC_BASE
 
 #include <SFML/System.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SSVUtils/SSVUtils.h>
-#include "SSVSCollision/AABB/AABB.h"
-#include "SSVSCollision/Body/CallbackInfo.h"
-#include "SSVSCollision/Body/MassData.h"
-#include "SSVSCollision/Body/GroupData.h"
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Body/Enums.h"
 
 namespace ssvsc
 {
 	class World;
 	class Cell;
+	class SpatialInfoBase;
+	class AABB;
 	struct ResolverBase;
 
 	class Base
@@ -37,7 +31,7 @@ namespace ssvsc
 			virtual AABB& getShape() = 0;
 			virtual AABB& getOldShape() = 0;
 			virtual	void update(float mFrameTime) = 0;
-			virtual void destroy() = 0;
+			virtual void destroy();
 			virtual const std::vector<int>& getGroupUidsToCheck() = 0;
 			virtual Type getType() = 0;
 

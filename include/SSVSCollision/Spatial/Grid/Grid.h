@@ -7,14 +7,14 @@
 
 #include <vector>
 #include <SFML/System.hpp>
-#include <SSVStart/SSVStart.h>
+#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 
 namespace ssvsc
 {
 	class Cell;
+	class SpatialInfoBase;
 	template<typename T, typename... TArgs> class GridQuery;
 
 	class Grid : public SpatialBase

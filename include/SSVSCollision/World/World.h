@@ -6,30 +6,10 @@
 #define SSVSC_WORLD
 
 #include <vector>
-#include <SFML/Graphics.hpp>
-#include <SSVStart/SSVStart.h>
-#pragma GCC system_header
+#include <SFML/System.hpp>
 #include <google/dense_hash_set>
+#include "SSVSCollision/Utils/Traits.h"
 #include "SSVSCollision/World/GroupManager.h"
-
-namespace ssvu
-{
-	namespace Traits
-	{
-		#ifndef SSVU_TRAITS_DENSEHASHSET
-		#define SSVU_TRAITS_DENSEHASHSET
-		template<typename TItem> struct Container<google::dense_hash_set<TItem>, TItem>
-		{
-			typedef google::dense_hash_set<TItem> TContainer;
-
-			static void init(TContainer& mContainer) { mContainer.set_empty_key(nullptr); }
-			static void clear(TContainer& mContainer) { mContainer.clear(); }
-			static void add(TContainer& mContainer, const TItem& mItem) { mContainer.insert(mItem); }
-			static void del(TContainer&, const TItem&) { }
-		};
-		#endif
-	}
-}
 
 namespace ssvsc
 {
@@ -51,10 +31,12 @@ namespace ssvsc
 			ResolverBase& resolver; // owned
 			SpatialBase& spatial; // owned
 
-			std::vector<Body*> bodies;
+			std::vector<Body*> bodies; // TODO: remove?
+			std::vector<Sensor*> sensors; // TODO: remove?
 
 			void delBase(Base* mBase);
 			void delBody(Body* mBody);
+			void delSensor(Sensor* mSensor);
 
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
@@ -66,16 +48,17 @@ namespace ssvsc
 			void update(float mFrameTime);
 			void clear();
 
-			inline GroupManager& getGroupManager()	{ return groupManager; }
-			inline std::vector<Base*>& getBases()	{ return memoryManager.getItems(); }
-			inline std::vector<Body*>& getBodies()	{ return bodies; }
-			inline ResolverBase& getResolver()		{ return resolver; }
-			inline SpatialBase& getSpatial()		{ return spatial; }
+			inline GroupManager& getGroupManager()		{ return groupManager; }
+			inline std::vector<Base*>& getBases()		{ return memoryManager.getItems(); }
+			inline ResolverBase& getResolver()			{ return resolver; }
+			inline SpatialBase& getSpatial()			{ return spatial; }
+			inline std::vector<Body*>& getBodies()		{ return bodies; } // TODO: remove?
+			inline std::vector<Sensor*>& getSensors()	{ return sensors; } // TODO: remove?
+
+			template<typename T> T& getResolver()		{ return static_cast<T&>(getResolver()); }
+			template<typename T> T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
 
 			inline int getGroupUid(const std::string& mGroup) { return groupManager.getUid(mGroup); }
-
-			template<typename T> T& getResolver()	{ return static_cast<T&>(getResolver()); }
-			template<typename T> T& getSpatial()	{ return static_cast<T&>(getSpatial()); }
 	};
 }
 
