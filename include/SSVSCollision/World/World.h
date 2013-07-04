@@ -6,10 +6,10 @@
 #define SSVSC_WORLD
 
 #include <vector>
-#include <SFML/System.hpp>
 #include <google/dense_hash_set>
+#include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Utils/Traits.h"
-#include "SSVSCollision/World/GroupManager.h"
+#include "SSVSCollision/Utils/GroupManager.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 
@@ -44,8 +44,8 @@ namespace ssvsc
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
 			~World();
 
-			Body& create(sf::Vector2i mPosition, sf::Vector2i mSize, bool mIsStatic);
-			Sensor& createSensor(sf::Vector2i mPosition, sf::Vector2i mSize);
+			Body& create(Vec2i mPosition, Vec2i mSize, bool mIsStatic);
+			Sensor& createSensor(Vec2i mPosition, Vec2i mSize);
 
 			void update(float mFrameTime);
 			void clear();
@@ -60,7 +60,7 @@ namespace ssvsc
 			template<typename T> T& getResolver()		{ return static_cast<T&>(getResolver()); }
 			template<typename T> T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
 
-			inline int getGroupUid(const std::string& mGroup) { return groupManager.getUid(mGroup); }
+			inline int getGroup(const std::string& mLabel) { return groupManager.get(mLabel); }
 	};
 }
 

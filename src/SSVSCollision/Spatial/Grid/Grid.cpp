@@ -9,9 +9,9 @@
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/Resolver/ResolverBase.h"
+#include "SSVSCollision/Global/Typedefs.h"
 
 using namespace std;
-using namespace sf;
 
 namespace ssvsc
 {
@@ -40,7 +40,7 @@ namespace ssvsc
 		memoryManager.cleanUp();
 	}
 
-	void Grid::handleCollisions(float mFrameTime)
+	/*void Grid::handleCollisions(float mFrameTime)
 	{
 		for(int iX{0}; iX < columns; ++iX)
 			for(int iY{0}; iY < rows; ++iY)
@@ -54,7 +54,7 @@ namespace ssvsc
 						Body& a(*bodies[i]);
 						Body& b(*bodies[j]);
 
-						if(a.mustCheckAgainst(b) || b.mustCheckAgainst(a))
+						if(a.mustCheck(b) || b.mustCheck(a))
 						{
 							const auto& aShape(a.getShape());
 							const auto& bShape(b.getShape());
@@ -66,11 +66,11 @@ namespace ssvsc
 								a.onDetection({b, mFrameTime, b.getUserData(), intersection});
 								b.onDetection({a, mFrameTime, a.getUserData(), -intersection});
 
-								if(a.mustResolveAgainst(b)) a.addToResolveAgainst(b);
-								if(b.mustResolveAgainst(a)) b.addToResolveAgainst(a);
+								if(!a.mustIgnoreResolution(b)) a.addToResolveAgainst(b);
+								if(!b.mustIgnoreResolution(a)) b.addToResolveAgainst(a);
 							}
 						}
 					}
 			}
-	}
+	}*/
 }

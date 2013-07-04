@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <vector>
 #include "SSVSCollision/AABB/AABB.h"
-#include "SSVSCollision/Body/Enums.h"
+#include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {

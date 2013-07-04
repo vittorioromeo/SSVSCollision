@@ -2,14 +2,13 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include <SFML/System.hpp>
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Resolver/Retro/Retro.h"
 #include "SSVSCollision/Utils/Utils.h"
+#include "SSVSCollision/Global/Typedefs.h"
 
 using namespace std;
-using namespace sf;
 using namespace ssvsc::Utils;
 using namespace ssvu;
 
@@ -23,15 +22,13 @@ namespace ssvsc
 
 		for(const auto& b : mBodiesToResolve)
 		{
-			eraseRemove(b->bodiesToResolve, &mBody);
-
 			bool noResolvePosition{false}, noResolveVelocity{false};
 
 			const AABB& s(b->getShape());
 			const AABB& os(b->getOldShape());
 
 			auto intersection(getMinIntersection(shape, s));
-			Vector2i resolution{getMin1DIntersection(shape, s)};
+			Vec2i resolution{getMin1DIntersection(shape, s)};
 
 			mBody.onResolution({*b, b->getUserData(), intersection, resolution, noResolvePosition, noResolveVelocity});
 

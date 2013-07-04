@@ -36,6 +36,7 @@ namespace ssvsc
 			void preUpdate() override;
 			void postUpdate() override;
 			void destroy() override;
+			void handleCollisions(float mFrameTime) override;
 	};
 }
 

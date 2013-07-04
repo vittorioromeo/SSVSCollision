@@ -5,14 +5,14 @@
 #ifndef SSVSC_SENSOR
 #define SSVSC_SENSOR
 
-#include <bitset>
-#include <SFML/System.hpp>
-#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
 #include "SSVSCollision/Body/GroupData.h"
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Body/Base.h"
+#include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Global/Typedefs.h"
+#include "SSVSCollision/World/World.h"
 
 namespace ssvsc
 {
@@ -28,26 +28,28 @@ namespace ssvsc
 			ssvu::Delegate<void> onPreUpdate;
 			ssvu::Delegate<void, DetectionInfo> onDetection;
 
-			Sensor(World& mWorld, sf::Vector2i mPosition, sf::Vector2i mSize);
-			~Sensor();
+			Sensor(World& mWorld, Vec2i mPosition, Vec2i mSize) : Base(mWorld), shape{mPosition, mSize / 2} { }
+			~Sensor() { spatialInfo.destroy(); }
+
+			void update(float mFrameTime) override;
+			void handleCollision(float mFrameTime, Body* mBody) override;
+			inline AABB& getShape() override	{ return shape; }
+			inline AABB& getOldShape() override	{ return shape; }
+			inline Type getType() override		{ return Type::Sensor; }
+			void destroy() override				{ world.delSensor(this); Base::destroy(); }
 
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
 
-			inline Type getType() override { return Type::Sensor; }
-			void preUpdate(float mFrameTime) override { }
-			void postUpdate(float mFrameTime) override { }
-			void destroy() override;
 
-			inline void setPosition(sf::Vector2i mPosition)
+			inline void setPosition(Vec2i mPosition)
 			{
 				if(mPosition != shape.getPosition()) spatialInfo.invalidate();
 				shape.setPosition(mPosition);
 			}
 
-			inline AABB& getShape() override								{ return shape; }
-			inline AABB& getOldShape() override								{ return shape; }
 			inline GroupData& getGroupData()	{ return groupData; }
-			inline const std::bitset<64>& getGroupUidsToCheck() override { return groupData.getGroupsToCheck(); }
+
+			inline bool mustCheck(Body& mBody)	{ return (groupData.getGroupsToCheck() & mBody.getGroupData().getGroups()).any(); }
 	};
 }
 

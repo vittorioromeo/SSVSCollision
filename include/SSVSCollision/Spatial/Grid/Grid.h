@@ -6,10 +6,10 @@
 #define SSVSC_SPATIAL_GRID
 
 #include <vector>
-#include <SFML/System.hpp>
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
+#include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {
@@ -32,7 +32,7 @@ namespace ssvsc
 			SpatialInfoBase& createSpatialInfo(Base& mBase) override;
 			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
 
-			void handleCollisions(float mFrameTime);
+			//void handleCollisions(float mFrameTime);
 
 			inline int getIndexXMin() const	{ return 0 - offset; }
 			inline int getIndexYMin() const	{ return 0 - offset; }
@@ -43,17 +43,17 @@ namespace ssvsc
 			inline int getOffset() const	{ return offset; }
 			inline int getCellSize() const	{ return cellSize; }
 
-			inline int getIndex(int mValue) const { return mValue / cellSize; }
-			inline sf::Vector2i getIndex(sf::Vector2i mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
+			inline int getIndex(int mValue) const			{ return mValue / cellSize; }
+			inline Vec2i getIndex(Vec2i mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 
-			inline Cell& getCell(int mX, int mY)		{ return *cells[mX + offset][mY + offset]; }
-			inline Cell& getCell(sf::Vector2i mIndex)	{ return getCell(mIndex.x, mIndex.y); }
+			inline Cell& getCell(int mX, int mY)	{ return *cells[mX + offset][mY + offset]; }
+			inline Cell& getCell(Vec2i mIndex)		{ return getCell(mIndex.x, mIndex.y); }
 
 			inline const std::vector<std::vector<Cell*>>& getCells() { return cells; }
-			inline bool isIndexValid(sf::Vector2i mIndex) const { return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
-			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const { return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
+			inline bool isIndexValid(Vec2i mIndex) const									{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
+			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
 
-			template<typename T, typename... TArgs> GridQuery<T, TArgs...> getQuery(sf::Vector2i mPoint, TArgs... mArgs) { return {*this, mPoint, mArgs...}; }
+			template<typename T, typename... TArgs> GridQuery<T, TArgs...> getQuery(Vec2i mPoint, TArgs... mArgs) { return {*this, mPoint, mArgs...}; }
 	};
 }
 

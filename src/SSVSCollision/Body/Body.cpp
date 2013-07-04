@@ -8,27 +8,30 @@
 #include "SSVSCollision/World/World.h"
 
 using namespace std;
-using namespace sf;
 using namespace ssvu;
 using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : Base(mWorld), resolver(mWorld.getResolver()),
+	Body::Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()),
 		shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
-	void Body::preUpdate(float mFrameTime)
+	void Body::handleCollision(float mFrameTime, Body* mBody)
 	{
-		/*onPreUpdate();
+		if(mBody == this || !mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 
-		if(_static) { spatialInfo.preUpdate(); return; }
-		if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
+		auto intersection(getMinIntersection(shape, mBody->getShape()));
 
-		oldShape = shape;
-		integrate(mFrameTime);
-		spatialInfo.preUpdate();*/
+		onDetection({*mBody, mFrameTime, mBody->getUserData(), intersection});
+		mBody->onDetection({*this, mFrameTime, userData, -intersection});
 
+		if(!resolve || mustIgnoreResolution(*mBody)) return;
+		bodiesToResolve.push_back(mBody);
+	}
+
+	void Body::update(float mFrameTime)
+	{
 		onPreUpdate();
 
 		if(_static) { spatialInfo.preUpdate(); return; }
@@ -37,54 +40,26 @@ namespace ssvsc
 		oldShape = shape;
 		integrate(mFrameTime);
 		spatialInfo.preUpdate();
+
 		bodiesToResolve.clear();
-
-		Grid& grid = world.getSpatial<Grid>();
-		GridInfo& gridInfo = static_cast<GridInfo&>(spatialInfo);
-
-		for (auto& c : gridInfo.cells)
-		for(const auto& body : c->getBodies())
-		{
-			if(body == this || !shape.isOverlapping(body->getShape())) continue;
-
-			auto intersection(getMinIntersection(shape, body->getShape()));
-
-			onDetection({*body, mFrameTime, body->getUserData(), intersection});
-			body->onDetection({*this, mFrameTime, userData, -intersection});
-
-			//if(!resolve || containsAny(body->getGroupUids(), getGroupUidsNoResolve())) continue;
-			//bodiesToResolve.push_back(body);
-		}
+		spatialInfo.handleCollisions(mFrameTime);
 
 		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
 		if(oldShape != shape) spatialInfo.invalidate();
 
 		spatialInfo.postUpdate();
 		onPostUpdate();
-	}
-
-	void Body::postUpdate(float mFrameTime)
-	{
-		/*if(_static) return;
-
-		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
-		if(oldShape != shape) spatialInfo.invalidate();
-
-		spatialInfo.postUpdate();
-		onPostUpdate();
-
-		bodiesToResolve.clear();*/
 	}
 
 	void Body::integrate(float mFrameTime)
 	{
 		velocity += acceleration * mFrameTime;
-		shape.move(Vector2i(velocity * mFrameTime));
+		shape.move(Vec2i(velocity * mFrameTime));
 		acceleration = {0, 0};
 	}
 
-	void Body::applyForce(sf::Vector2f mForce) { if(!_static) acceleration += mForce; }
-	void Body::applyImpulse(sf::Vector2f mImpulse) { velocity += getInvMass() * mImpulse; }
+	void Body::applyForce(Vec2f mForce) { if(!_static) acceleration += mForce; }
+	void Body::applyImpulse(Vec2f mImpulse) { velocity += getInvMass() * mImpulse; }
 
 	void Body::destroy() { world.delBody(this); Base::destroy(); }
 }

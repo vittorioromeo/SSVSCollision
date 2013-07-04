@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <queue>
-#include <SFML/System.hpp>
+#include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {
@@ -25,8 +25,8 @@ namespace ssvsc
 
 		namespace Bodies
 		{
-			struct All { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, int mGroupUid); };
-			struct Grouped { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, sf::Vector2i& mIndex, int mGroupUid); };
+			struct All { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, int mGroupUid); };
+			struct Grouped { static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, int mGroupUid); };
 		}
 
 		namespace Orthogonal
@@ -73,13 +73,13 @@ namespace ssvsc
 			};
 		}
 
-		struct RayCast : public Base<RayCast, sf::Vector2f>
+		struct RayCast : public Base<RayCast, Vec2f>
 		{
 			int cellSize;
-			sf::Vector2i next{0, 0};
-			sf::Vector2f direction, deltaDist, increment, max;
+			Vec2i next{0, 0};
+			Vec2f direction, deltaDist, increment, max;
 
-			RayCast(GridQuery<RayCast, sf::Vector2f>& mQuery, sf::Vector2f mDirection);
+			RayCast(GridQuery<RayCast, Vec2f>& mQuery, Vec2f mDirection);
 
 			bool isValid();
 			void step();
@@ -91,7 +91,7 @@ namespace ssvsc
 		struct Distance : public Base<Distance, int>
 		{
 			int cellSize, distance, cellRadius;
-			std::queue<sf::Vector2i> offsets;
+			std::queue<Vec2i> offsets;
 
 			Distance(GridQuery<Distance, int>& mQuery, int mDistance);
 

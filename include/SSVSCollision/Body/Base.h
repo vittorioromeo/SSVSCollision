@@ -6,16 +6,14 @@
 #define SSVSC_BASE
 
 #include <bitset>
-#include <SFML/System.hpp>
-#include "SSVSCollision/Body/Enums.h"
+#include "SSVSCollision/Global/Typedefs.h"
+#include "SSVSCollision/World/World.h"
 
 namespace ssvsc
 {
-	class World;
-	class Cell;
-	class SpatialInfoBase;
 	class AABB;
-	struct ResolverBase;
+	class Body;
+	class SpatialInfoBase;
 
 	class Base
 	{
@@ -24,18 +22,17 @@ namespace ssvsc
 			SpatialInfoBase& spatialInfo;
 			bool outOfBounds{false};
 
-			Base(World& mWorld);
+			Base(World& mWorld) : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
 
 		public:
-			virtual ~Base();
+			virtual ~Base() { }
 
+			virtual	void update(float mFrameTime) = 0;
+			virtual void handleCollision(float mFrameTime, Body* mBody) = 0;
 			virtual AABB& getShape() = 0;
 			virtual AABB& getOldShape() = 0;
-			virtual	void preUpdate(float mFrameTime) = 0;
-			virtual	void postUpdate(float mFrameTime) = 0;
-			virtual void destroy();
-			virtual const std::bitset<64>& getGroupUidsToCheck() = 0;
 			virtual Type getType() = 0;
+			virtual void destroy() { world.delBase(this); }
 
 			inline SpatialInfoBase& getSpatialInfo()		{ return spatialInfo; }
 			inline void setOutOfBounds(bool mOutOfBounds)	{ outOfBounds = mOutOfBounds; }

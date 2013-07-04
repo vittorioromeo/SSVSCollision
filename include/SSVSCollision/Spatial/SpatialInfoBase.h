@@ -26,6 +26,7 @@ namespace ssvsc
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
 			virtual void destroy() = 0;
+			virtual void handleCollisions(float mFrameTime) = 0;
 	};
 }
 

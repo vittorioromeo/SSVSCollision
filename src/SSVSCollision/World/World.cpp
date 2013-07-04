@@ -13,7 +13,6 @@
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 
 using namespace std;
-using namespace sf;
 using namespace ssvu;
 
 namespace ssvsc
@@ -25,12 +24,12 @@ namespace ssvsc
 	World::World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver(mResolver), spatial(mSpatial) { }
 	World::~World() { delete &resolver; delete &spatial; }
 
-	Body& World::create(Vector2i mPosition, Vector2i mSize, bool mIsStatic)
+	Body& World::create(Vec2i mPosition, Vec2i mSize, bool mIsStatic)
 	{
 		auto& result(memoryManager.create<Body>(*this, mIsStatic, mPosition, mSize));
 		bodies.push_back(&result); return result;
 	}
-	Sensor& World::createSensor(Vector2i mPosition, Vector2i mSize)
+	Sensor& World::createSensor(Vec2i mPosition, Vec2i mSize)
 	{
 		auto& result(memoryManager.create<Sensor>(*this, mPosition, mSize));
 		sensors.push_back(&result); return result;
@@ -39,13 +38,7 @@ namespace ssvsc
 	void World::update(float mFrameTime)
 	{
 		memoryManager.cleanUp();
-
-		for(const auto& e : memoryManager) e->preUpdate(mFrameTime);
-
-		Grid& grid = static_cast<Grid&>(spatial);
-		//grid.handleCollisions(mFrameTime);
-
-		for(const auto& e : memoryManager) e->postUpdate(mFrameTime);
+		for(const auto& e : memoryManager) e->update(mFrameTime);
 	}
 	void World::clear()
 	{
@@ -53,24 +46,3 @@ namespace ssvsc
 		memoryManager.cleanUp();
 	}
 }
-
-// long bitsets
-// ((a.groupsToDetectAgainst & b.groups) && !(a.groupsToIgnoreResolveAgainst & b.groups))
-// Philip: in this case (a.groupsToDetectAgainst & b.groups), you can notify of a collision... the second part to your logic checks whether it should be handled.
-
-/*
-#include <iostream>
-
-using namespace std;
-
-int main()
-{
-	int numberOfEntities = 5;
-
-	for(int i = 0; i < numberOfEntities; i++)
-		for(int j = i+1; j < numberOfEntities; j++)
-			cout << i << " " << j << endl;
-
-	return 0;
-}
-*/

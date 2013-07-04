@@ -38,6 +38,8 @@ file(GLOB SRC_LIST
 	"${INC_DIR}/${PROJECT_NAME}/AABB/*.h"
 	"${INC_DIR}/${PROJECT_NAME}/Body/*.h"
 	"${SRC_DIR}/${PROJECT_NAME}/Body/*.cpp"
+	"${INC_DIR}/${PROJECT_NAME}/Global/*.h"
+	"${SRC_DIR}/${PROJECT_NAME}/Global/*.cpp"
 	"${INC_DIR}/${PROJECT_NAME}/Resolver/*.h"
 	"${SRC_DIR}/${PROJECT_NAME}/Resolver/*.cpp"
 	"${INC_DIR}/${PROJECT_NAME}/Resolver/Impulse/*.h"

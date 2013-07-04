@@ -5,7 +5,7 @@
 #ifndef SSVSC_AABB
 #define SSVSC_AABB
 
-#include <SFML/System.hpp>
+#include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Utils/Segment.h"
 
 namespace ssvsc
@@ -13,40 +13,40 @@ namespace ssvsc
 	class AABB
 	{
 		private:
-			sf::Vector2i position, halfSize;
+			Vec2i position, halfSize;
 
 		public:
-			inline AABB(sf::Vector2i mPosition, sf::Vector2i mHalfSize) : position{mPosition}, halfSize{mHalfSize} { }
+			inline AABB(Vec2i mPosition, Vec2i mHalfSize) : position{mPosition}, halfSize{mHalfSize} { }
 			inline AABB(int mLeft, int mRight, int mTop, int mBottom) : position{mLeft + (mRight - mLeft) / 2, mTop + (mBottom - mTop) / 2}, halfSize{(mRight - mLeft) / 2, (mBottom - mTop) / 2} { }
 
-			inline void move(sf::Vector2i mOffset) { position += mOffset; }
+			inline void move(Vec2i mOffset) { position += mOffset; }
 
-			inline void setPosition(sf::Vector2i mPosition) { position = mPosition; }
+			inline void setPosition(Vec2i mPosition) { position = mPosition; }
 			inline void setX(int mX)				 		{ position.x = mX; }
 			inline void setY(int mY)				 		{ position.y = mY; }
-			inline void setHalfSize(sf::Vector2i mHalfSize)	{ halfSize = mHalfSize; }
-			inline void setSize(sf::Vector2i mSize)			{ halfSize = mSize / 2; }
+			inline void setHalfSize(Vec2i mHalfSize)	{ halfSize = mHalfSize; }
+			inline void setSize(Vec2i mSize)			{ halfSize = mSize / 2; }
 			inline void setWidth(int mWidth)				{ halfSize.x = mWidth / 2; }
 			inline void setHeight(int mHeight)				{ halfSize.y = mHeight / 2; }
 
-			inline sf::Vector2i getPosition() const { return position; }
+			inline Vec2i getPosition() const { return position; }
 			inline int getX() const					{ return position.x; }
 			inline int getY() const					{ return position.y; }
 			inline int getLeft() const				{ return position.x - halfSize.x; }
 			inline int getRight() const				{ return position.x + halfSize.x; }
 			inline int getTop() const				{ return position.y - halfSize.y; }
 			inline int getBottom() const			{ return position.y + halfSize.y; }
-			inline sf::Vector2i getHalfSize() const { return halfSize; }
+			inline Vec2i getHalfSize() const { return halfSize; }
 			inline int getHalfWidth() const 		{ return halfSize.x; }
 			inline int getHalfHeight() const 		{ return halfSize.y; }
-			inline sf::Vector2i getSize() const 	{ return halfSize * 2; }
+			inline Vec2i getSize() const 	{ return halfSize * 2; }
 			inline int getWidth() const 			{ return halfSize.x * 2; }
 			inline int getHeight() const 			{ return halfSize.y * 2; }
 
-			template<typename T> inline sf::Vector2<T> getNWCorner() const	{ return sf::Vector2<T>(getLeft(), getTop()); }
-			template<typename T> inline sf::Vector2<T> getNECorner() const	{ return sf::Vector2<T>(getRight(), getTop()); }
-			template<typename T> inline sf::Vector2<T> getSWCorner() const	{ return sf::Vector2<T>(getLeft(), getBottom()); }
-			template<typename T> inline sf::Vector2<T> getSECorner() const	{ return sf::Vector2<T>(getRight(), getBottom()); }
+			template<typename T> inline Vec2<T> getNWCorner() const	{ return Vec2<T>(getLeft(), getTop()); }
+			template<typename T> inline Vec2<T> getNECorner() const	{ return Vec2<T>(getRight(), getTop()); }
+			template<typename T> inline Vec2<T> getSWCorner() const	{ return Vec2<T>(getLeft(), getBottom()); }
+			template<typename T> inline Vec2<T> getSECorner() const	{ return Vec2<T>(getRight(), getBottom()); }
 			template<typename T> inline Segment<T> getLeftSegment() const	{ return {getNWCorner<T>(), getSWCorner<T>()}; }
 			template<typename T> inline Segment<T> getRightSegment() const	{ return {getNECorner<T>(), getSECorner<T>()}; }
 			template<typename T> inline Segment<T> getTopSegment() const	{ return {getNWCorner<T>(), getNECorner<T>()}; }

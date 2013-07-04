@@ -6,7 +6,7 @@
 #define SSVSC_UTILS
 
 #include <vector>
-#include <SFML/System.hpp>
+#include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/AABB/AABB.h"
 
 namespace ssvsc
@@ -19,11 +19,11 @@ namespace ssvsc
 		template<typename T, typename... TArgs> static ResolverBase& createResolver(TArgs&&... mArgs)	{ return *(new T(std::forward<TArgs>(mArgs)...)); }
 		template<typename T, typename... TArgs> static SpatialBase& createSpatial(TArgs&&... mArgs)		{ return *(new T(std::forward<TArgs>(mArgs)...)); }
 
-		template<typename T> inline T getSigned2DTriangleArea(const sf::Vector2<T>& mA, const sf::Vector2<T>& mB, const sf::Vector2<T>& mC)
+		template<typename T> inline T getSigned2DTriangleArea(const Vec2<T>& mA, const Vec2<T>& mB, const Vec2<T>& mC)
 		{
 			return (mA.x - mC.x) * (mB.y - mC.y) - (mA.y - mC.y) * (mB.x - mC.x);
 		}
-		template<typename T> inline bool isSegmentInsersecting(const Segment<T>& mA, const Segment<T>& mB, sf::Vector2<T>& mIntersection)
+		template<typename T> inline bool isSegmentInsersecting(const Segment<T>& mA, const Segment<T>& mB, Vec2<T>& mIntersection)
 		{
 			float a1{getSigned2DTriangleArea(mA.start, mA.end, mB.end)}, a2{getSigned2DTriangleArea(mA.start, mA.end, mB.start)};
 			if(a1 * a2 > 0.f) return false;
@@ -45,12 +45,12 @@ namespace ssvsc
 			int top{mB.getTop() - mA.getBottom()}, bottom{mB.getBottom() - mA.getTop()};
 			return abs(top) < abs(bottom) ? top : bottom;
 		}
-		inline sf::Vector2i getMin1DIntersection(const AABB& mA, const AABB& mB)
+		inline Vec2i getMin1DIntersection(const AABB& mA, const AABB& mB)
 		{
 			int iX{getMinIntersectionX(mA, mB)}, iY{getMinIntersectionY(mA, mB)};
-			return abs(iX) < abs(iY) ? sf::Vector2i{iX, 0} : sf::Vector2i{0, iY};
+			return abs(iX) < abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY};
 		}
-		inline sf::Vector2i getMinIntersection(const AABB& mA, const AABB& mB)	{ return {getMinIntersectionX(mA, mB), getMinIntersectionY(mA, mB)}; }
+		inline Vec2i getMinIntersection(const AABB& mA, const AABB& mB)	{ return {getMinIntersectionX(mA, mB), getMinIntersectionY(mA, mB)}; }
 		inline int getOverlapX(const AABB& mA, const AABB& mB)					{ return mA.getLeft() < mB.getLeft() ? mA.getRight() - mB.getLeft() : mB.getRight() - mA.getLeft(); }
 		inline int getOverlapY(const AABB& mA, const AABB& mB)					{ return mA.getTop() < mB.getTop() ? mA.getBottom() - mB.getTop() : mB.getBottom() - mA.getTop(); }
 		inline int getOverlapArea(const AABB& mA, const AABB& mB)				{ return getOverlapX(mA, mB) * getOverlapY(mA, mB); }

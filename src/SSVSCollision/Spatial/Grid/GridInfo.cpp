@@ -51,9 +51,9 @@ namespace ssvsc
 		invalid = false;
 	}
 
-	void GridInfo::invalidate()	{ invalid = true; }
-	void GridInfo::preUpdate()	{ if(invalid) calcEdges(); }
-	void GridInfo::postUpdate()	{ }
-	void GridInfo::destroy()	{ grid.delSpatialInfo(*this); }
-
+	void GridInfo::invalidate()			{ invalid = true; }
+	void GridInfo::preUpdate()			{ if(invalid) calcEdges(); }
+	void GridInfo::postUpdate()			{ }
+	void GridInfo::destroy()			{ grid.delSpatialInfo(*this); }
+	void GridInfo::handleCollisions(float mFrameTime)	{ for(auto& c : cells) for(auto& b : c->getBodies()) base.handleCollision(mFrameTime, b); }
 }
