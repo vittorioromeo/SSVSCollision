@@ -3,6 +3,7 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include "SSVSCollision/Body/Base.h"
+#include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
@@ -57,8 +58,15 @@ namespace ssvsc
 	void GridInfo::destroy()	{ grid.delSpatialInfo(*this); }
 	void GridInfo::handleCollisions(float mFrameTime)
 	{
+		static int paint{-1};
+		++paint;
+
 		for(const auto& c : cells)
 			for(const auto& b : c->getBodies())
+			{
+				if(b->paint == paint) continue;
 				base.handleCollision(mFrameTime, b);
+				b->paint = paint;
+			}
 	}
 }

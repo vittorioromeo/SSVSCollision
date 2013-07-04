@@ -19,6 +19,8 @@ namespace ssvsc
 
 	class Body : public Base
 	{
+		friend class GridInfo;
+
 		private:
 			ResolverBase& resolver;
 			AABB shape, oldShape;
@@ -27,10 +29,12 @@ namespace ssvsc
 			MassData massData;
 			void* userData{nullptr};
 			std::vector<Body*> bodiesToResolve;
+			int paint{-1};
 
 			void integrate(float mFrameTime);
 
 		public:
+
 			void handleCollision(float mFrameTime, Body* mBody) override;
 
 			ssvu::Delegate<void> onPreUpdate;
