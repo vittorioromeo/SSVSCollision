@@ -22,7 +22,6 @@ namespace ssvsc
 	{
 		private:
 			AABB shape;
-			GroupData groupData;
 
 		public:
 			ssvu::Delegate<void> onPreUpdate;
@@ -49,7 +48,7 @@ namespace ssvsc
 
 			inline GroupData& getGroupData()	{ return groupData; }
 
-			inline bool mustCheck(Body& mBody)	{ return (groupData.getGroupsToCheck() & mBody.getGroupData().getGroups()).any(); }
+			inline bool mustCheck(Body& mBody)	{ return (groupData.getGroupsToCheck() & mBody.getGroups()).any(); }
 	};
 }
 

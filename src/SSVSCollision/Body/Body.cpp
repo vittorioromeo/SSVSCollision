@@ -13,8 +13,7 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	Body::Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()),
-		shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+	Body::Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
 	void Body::handleCollision(float mFrameTime, Body* mBody)
@@ -57,9 +56,6 @@ namespace ssvsc
 		shape.move(Vec2i(velocity * mFrameTime));
 		acceleration = {0, 0};
 	}
-
-	void Body::applyForce(Vec2f mForce) { if(!_static) acceleration += mForce; }
-	void Body::applyImpulse(Vec2f mImpulse) { velocity += getInvMass() * mImpulse; }
 
 	void Body::destroy() { world.delBody(this); Base::destroy(); }
 }

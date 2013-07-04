@@ -23,7 +23,7 @@ namespace ssvsc
 			for(int iY{0}; iY < rows; ++iY)
 			{
 				int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
-				cells[iX][iY] = new Cell{AABB{left, right, top, bottom}};
+				cells[iX][iY] = new Cell{{left, right, top, bottom}};
 			}
 		}
 	}

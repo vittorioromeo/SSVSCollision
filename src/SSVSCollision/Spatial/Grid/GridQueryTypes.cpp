@@ -19,8 +19,13 @@ namespace ssvsc
 	{
 		namespace Bodies
 		{
-			void All::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, int) { mBodies = mGrid.getCell(mIndex).getBodies(); }
-			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, int mGroupUid) { mBodies = mGrid.getCell(mIndex).getBodies(); }
+			void All::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, Group) { mBodies = mGrid.getCell(mIndex).getBodies(); }
+			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, Group mGroup)
+			{
+				vector<Body*> temp;
+				for(const auto& b : mGrid.getCell(mIndex).getBodies()) if(b->hasGroup(mGroup)) temp.push_back(b);
+				mBodies = temp;
+			}
 		}
 
 		namespace Orthogonal
