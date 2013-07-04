@@ -7,14 +7,14 @@
 
 namespace ssvsc
 {
-	class Body;
+	class Base;
 	class SpatialInfoBase;
 
 	struct SpatialBase
 	{
 		SpatialBase() { }
 		virtual ~SpatialBase() { }
-		virtual SpatialInfoBase& createSpatialInfo(Body& mBody) = 0;
+		virtual SpatialInfoBase& createSpatialInfo(Base& mBase) = 0;
 		virtual void delSpatialInfo(SpatialInfoBase& mSpatialInfo) = 0;
 	};
 }

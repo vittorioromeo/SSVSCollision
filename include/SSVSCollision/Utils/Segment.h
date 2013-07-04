@@ -5,12 +5,15 @@
 #ifndef SSVSC_UTILS_SEGMENT
 #define SSVSC_UTILS_SEGMENT
 
-#include <SFML/System.hpp>
+#include "SSVSCollision/Global/Typedefs.h"
 
-template<typename T> struct Segment
+namespace ssvsc
 {
-	sf::Vector2<T> start, end;
-	Segment(sf::Vector2<T> mStart, sf::Vector2<T> mEnd) : start{mStart}, end{mEnd} { }
-};
+	template<typename T> struct Segment
+	{
+		Vec2<T> start, end;
+		Segment(Vec2<T> mStart, Vec2<T> mEnd) : start{mStart}, end{mEnd} { }
+	};
+}
 
 #endif

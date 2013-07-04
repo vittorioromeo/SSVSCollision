@@ -6,12 +6,12 @@
 #define SSVSC_SPATIAL_GRIDQUERY
 
 #include <vector>
-#include <SFML/System.hpp>
 #include <SSVStart/SSVStart.h>
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Spatial/Grid/GridQueryTypes.h"
+#include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {
@@ -26,10 +26,10 @@ namespace ssvsc
 
 		private:
 			Grid& grid;
-			sf::Vector2f startPos, pos, lastPos;
-			sf::Vector2i startIndex, index;
+			Vec2f startPos, pos, lastPos;
+			Vec2i startIndex, index;
 			std::vector<Body*> bodies;
-			std::vector<sf::Vector2i> visitedIndexes;
+			std::vector<Vec2i> visitedIndexes;
 			T internal;
 
 			template<typename TCellTraits> Body* nextImpl(int mGroupUid = -1)
@@ -63,7 +63,7 @@ namespace ssvsc
 
 
 		public:
-			GridQuery(Grid& mGrid, sf::Vector2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{sf::Vector2f(mStartPos)}, pos{startPos},
+			GridQuery(Grid& mGrid, Vec2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{Vec2f(mStartPos)}, pos{startPos},
 				startIndex{grid.getIndex(mStartPos)}, index{startIndex}, internal(*this, mArgs...) { }
 
 			Body* next() { return nextImpl<GridQueryTypes::Bodies::All>(); }
@@ -91,8 +91,8 @@ namespace ssvsc
 			}
 
 			// Getters
-			const sf::Vector2f& getLastPos() { return lastPos; }
-			const std::vector<sf::Vector2i>& getVisitedIndexes() { return visitedIndexes; }
+			const Vec2f& getLastPos() { return lastPos; }
+			const std::vector<Vec2i>& getVisitedIndexes() { return visitedIndexes; }
 	};
 }
 

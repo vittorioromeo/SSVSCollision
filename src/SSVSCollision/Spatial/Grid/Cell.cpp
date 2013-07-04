@@ -5,23 +5,18 @@
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
+#include "SSVSCollision/Spatial/Grid/GridInfo.h"
 
 using namespace std;
 using namespace ssvu;
 
 namespace ssvsc
 {
-	Cell::Cell(int mLeft, int mRight, int mTop, int mBottom) : aabb{mLeft, mRight, mTop, mBottom} { }
+	Cell::Cell(const AABB& mAABB) : aabb{mAABB} { }
 
-	void Cell::add(Body* mBody)
-	{
-		bodies.push_back(mBody);
-		for(const auto& uid : mBody->getGroupUids()) groupedBodies[uid].push_back(mBody);
-	}
-	void Cell::del(Body* mBody)
-	{
-		eraseRemove(bodies, mBody);
-		for(const auto& uid : mBody->getGroupUids()) eraseRemove(groupedBodies[uid], mBody);
-	}
+	void Cell::add(Base* mBase)		{ if(mBase->getType() == Type::Body) addBody(static_cast<Body*>(mBase)); }
+	void Cell::del(Base* mBase)		{ if(mBase->getType() == Type::Body) delBody(static_cast<Body*>(mBase)); }
+	void Cell::addBody(Body* mBody)	{ bodies.push_back(mBody); }
+	void Cell::delBody(Body* mBody)	{ eraseRemove(bodies, mBody); }
 }
 

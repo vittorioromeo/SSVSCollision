@@ -9,24 +9,24 @@
 
 namespace ssvsc
 {
+	class Base;
 	class Body;
 
 	class SpatialInfoBase
 	{
 		protected:
 			SpatialBase& spatial;
+			Base& base;
 
 		public:
-			Body& body;
-
-			SpatialInfoBase(SpatialBase& mSpatial, Body& mBody) : spatial(mSpatial), body(mBody) { }
+			SpatialInfoBase(SpatialBase& mSpatial, Base& mBase) : spatial(mSpatial), base(mBase) { }
 			virtual ~SpatialInfoBase() { }
 
 			virtual void invalidate() = 0;
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
-			virtual const std::vector<Body*>& getBodiesToCheck() = 0;
 			virtual void destroy() = 0;
+			virtual void handleCollisions(float mFrameTime) = 0;
 	};
 }
 

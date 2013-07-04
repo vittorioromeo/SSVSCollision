@@ -10,6 +10,7 @@
 
 namespace ssvsc
 {
+	class Base;
 	class Body;
 	class Grid;
 	class Cell;
@@ -18,10 +19,6 @@ namespace ssvsc
 	{
 		private:
 			Grid& grid;
-
-			std::vector<Cell*> cells;
-			std::vector<const std::vector<Body*>*> queries; // Cell vector ptrs to query
-			std::vector<Body*> bodiesToCheck;
 			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
 			int oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1};
 			bool invalid{true};
@@ -31,14 +28,15 @@ namespace ssvsc
 			void clear();
 
 		public:
-			GridInfo(Grid& mGrid, Body& mBody);
+			std::vector<Cell*> cells;
+			GridInfo(Grid& mGrid, Base& mBase);
 			~GridInfo();
 
 			void invalidate() override;
 			void preUpdate() override;
 			void postUpdate() override;
-			const std::vector<Body*>& getBodiesToCheck() override;
 			void destroy() override;
+			void handleCollisions(float mFrameTime) override;
 	};
 }
 

@@ -2,13 +2,11 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
+#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
-#include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
-#include "SSVSCollision/Body/Body.h"
 
 using namespace std;
-using namespace sf;
 
 namespace ssvsc
 {
@@ -20,17 +18,17 @@ namespace ssvsc
 			for(int iY{0}; iY < rows; ++iY)
 			{
 				int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
-				cells[iX][iY] = new Cell{left, right, top, bottom};
+				cells[iX][iY] = new Cell{{left, right, top, bottom}};
 			}
 		}
 	}
 	Grid::~Grid()
 	{
 		memoryManager.clear();
-		for(const auto& vector : cells) for(const auto& cell : vector) delete cell;
+		for(int iX{0}; iX < columns; ++iX) for(int iY{0}; iY < rows; ++iY) delete cells[iX][iY];
 	}
 
-	SpatialInfoBase& Grid::createSpatialInfo(Body& mBody) { return memoryManager.create(*this, mBody); }
+	SpatialInfoBase& Grid::createSpatialInfo(Base& mBase) { return memoryManager.create(*this, mBase); }
 	void Grid::delSpatialInfo(SpatialInfoBase& mSpatialInfo)
 	{
 		memoryManager.del(&(static_cast<GridInfo&>(mSpatialInfo)));

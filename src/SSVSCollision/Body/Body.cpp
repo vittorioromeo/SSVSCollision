@@ -2,41 +2,31 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include <algorithm>
-#include <stack>
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Resolver/ResolverBase.h"
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/World/World.h"
 
 using namespace std;
-using namespace sf;
 using namespace ssvu;
 using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	Body::Body(World& mWorld, bool mIsStatic, Vector2i mPosition, Vector2i mSize) : world(mWorld), resolver(mWorld.getResolver()),
-		spatialInfo(world.getSpatial().createSpatialInfo(*this)), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+	Body::Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
-	void Body::addGroups(const std::vector<std::string>& mGroups)
+	void Body::handleCollision(float mFrameTime, Body* mBody)
 	{
-		for(const auto& g : mGroups) groupData.addUid(world.getGroupUid(g));
-		groupData.addGroups(mGroups);
-		spatialInfo.invalidate();
-	}
-	void Body::addGroupsToCheck(const std::vector<std::string>& mGroups)
-	{
-		for(const auto& g : mGroups) groupData.addUidToCheck(world.getGroupUid(g));
-		groupData.addGroupsToCheck(mGroups);
-		spatialInfo.invalidate();
-	}
-	void Body::addGroupsNoResolve(const std::vector<std::string>& mGroups)
-	{
-		for(const auto& g : mGroups) groupData.addUidNoResolve(world.getGroupUid(g));
-		groupData.addGroupsNoResolve(mGroups);
+		if(mBody == this || !mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
+
+		auto intersection(getMinIntersection(shape, mBody->getShape()));
+
+		onDetection({*mBody, mFrameTime, mBody->getUserData(), intersection});
+		mBody->onDetection({*this, mFrameTime, userData, -intersection});
+
+		if(!resolve || mustIgnoreResolution(*mBody)) return;
+		bodiesToResolve.push_back(mBody);
 	}
 
 	void Body::update(float mFrameTime)
@@ -49,20 +39,9 @@ namespace ssvsc
 		oldShape = shape;
 		integrate(mFrameTime);
 		spatialInfo.preUpdate();
+
 		bodiesToResolve.clear();
-
-		for(const auto& body : spatialInfo.getBodiesToCheck())
-		{
-			if(body == this || !isOverlapping(shape, body->getShape())) continue;
-
-			auto intersection(getMinIntersection(shape, body->getShape()));
-
-			onDetection({*body, mFrameTime, body->getUserData(), intersection});
-			body->onDetection({*this, mFrameTime, userData, -intersection});
-
-			if(!resolve || containsAny(body->getGroups(), getGroupsNoResolve())) continue;
-			bodiesToResolve.push_back(body);
-		}
+		spatialInfo.handleCollisions(mFrameTime);
 
 		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
 		if(oldShape != shape) spatialInfo.invalidate();
@@ -74,13 +53,10 @@ namespace ssvsc
 	void Body::integrate(float mFrameTime)
 	{
 		velocity += acceleration * mFrameTime;
-		shape.move(Vector2i(velocity * mFrameTime));
+		shape.move(Vec2i(velocity * mFrameTime));
 		acceleration = {0, 0};
 	}
 
-	void Body::applyForce(sf::Vector2f mForce) { if(!_static) acceleration += mForce; }
-	void Body::applyImpulse(sf::Vector2f mImpulse) { velocity += getInvMass() * mImpulse; }
-
-	void Body::destroy() { world.del(this); }
+	void Body::destroy() { world.delBody(this); Base::destroy(); }
 }
 
