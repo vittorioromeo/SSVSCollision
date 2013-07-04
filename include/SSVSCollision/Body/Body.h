@@ -68,7 +68,6 @@ namespace ssvsc
 			inline void setMass(float mMass)					{ massData.setMass(mMass); }
 
 			// Getters
-			inline World& getWorld()				{ return world; }
 			inline AABB& getShape() override		{ return shape; }
 			inline AABB& getOldShape() override		{ return oldShape; }
 			inline Vec2i getPosition() const		{ return shape.getPosition(); }
@@ -85,9 +84,6 @@ namespace ssvsc
 			inline bool hasMovedRight() const		{ return shape.getX() > oldShape.getX(); }
 			inline bool hasMovedUp() const			{ return shape.getY() < oldShape.getY(); }
 			inline bool hasMovedDown() const		{ return shape.getY() > oldShape.getY(); }
-
-			inline bool mustCheck(Body& mBody)				{ return (groupData.getGroupsToCheck() & mBody.getGroups()).any(); }
-			inline bool mustIgnoreResolution(Body& mBody) 	{ return (groupData.getGroupsNoResolve() & mBody.getGroups()).any(); }
 	};
 }
 

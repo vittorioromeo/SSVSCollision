@@ -37,18 +37,11 @@ namespace ssvsc
 			inline Type getType() override		{ return Type::Sensor; }
 			void destroy() override				{ world.delSensor(this); Base::destroy(); }
 
-			void addGroupsToCheck(const std::vector<std::string>& mGroups);
-
-
 			inline void setPosition(Vec2i mPosition)
 			{
 				if(mPosition != shape.getPosition()) spatialInfo.invalidate();
 				shape.setPosition(mPosition);
 			}
-
-			inline GroupData& getGroupData()	{ return groupData; }
-
-			inline bool mustCheck(Body& mBody)	{ return (groupData.getGroupsToCheck() & mBody.getGroups()).any(); }
 	};
 }
 

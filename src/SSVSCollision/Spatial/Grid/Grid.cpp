@@ -39,38 +39,4 @@ namespace ssvsc
 		memoryManager.del(&(static_cast<GridInfo&>(mSpatialInfo)));
 		memoryManager.cleanUp();
 	}
-
-	/*void Grid::handleCollisions(float mFrameTime)
-	{
-		for(int iX{0}; iX < columns; ++iX)
-			for(int iY{0}; iY < rows; ++iY)
-			{
-				const auto& bodies(cells[iX][iY]->getBodies());
-				const auto& size(bodies.size());
-
-				for(unsigned int i{0}; i < size; i++)
-					for(unsigned int j{i + 1}; j < size; j++)
-					{
-						Body& a(*bodies[i]);
-						Body& b(*bodies[j]);
-
-						if(a.mustCheck(b) || b.mustCheck(a))
-						{
-							const auto& aShape(a.getShape());
-							const auto& bShape(b.getShape());
-
-							if(aShape.isOverlapping(bShape))
-							{
-								auto intersection(Utils::getMinIntersection(aShape, bShape));
-
-								a.onDetection({b, mFrameTime, b.getUserData(), intersection});
-								b.onDetection({a, mFrameTime, a.getUserData(), -intersection});
-
-								if(!a.mustIgnoreResolution(b)) a.addToResolveAgainst(b);
-								if(!b.mustIgnoreResolution(a)) b.addToResolveAgainst(a);
-							}
-						}
-					}
-			}
-	}*/
 }

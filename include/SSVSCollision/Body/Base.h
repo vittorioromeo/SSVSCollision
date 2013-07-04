@@ -38,6 +38,9 @@ namespace ssvsc
 			inline SpatialInfoBase& getSpatialInfo()		{ return spatialInfo; }
 			inline void setOutOfBounds(bool mOutOfBounds)	{ outOfBounds = mOutOfBounds; }
 
+			// Getters
+			inline World& getWorld() { return world; }
+
 			// GroupData shortcuts
 			inline void addGroup(Group mGroup)					{ groupData.addGroup(mGroup); }
 			inline void addGroupToCheck(Group mGroup)			{ groupData.addGroupToCheck(mGroup); }
@@ -59,6 +62,10 @@ namespace ssvsc
 			void addGroups(const std::vector<std::string>& mLabels)				{ for(const auto& l : mLabels) addGroup(world.getGroup(l)); }
 			void addGroupsToCheck(const std::vector<std::string>& mLabels)		{ for(const auto& l : mLabels) addGroupToCheck(world.getGroup(l)); }
 			void addGroupsNoResolve(const std::vector<std::string>& mLabels)	{ for(const auto& l : mLabels) addGroupNoResolve(world.getGroup(l)); }
+
+			// Group tests
+			inline bool mustCheck(Base& mBase)				{ return (groupData.getGroupsToCheck() & mBase.getGroups()).any(); }
+			inline bool mustIgnoreResolution(Base& mBase) 	{ return (groupData.getGroupsNoResolve() & mBase.getGroups()).any(); }
 	};
 }
 
