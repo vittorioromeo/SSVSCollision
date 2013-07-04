@@ -9,10 +9,8 @@
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
 #include "SSVSCollision/Body/MassData.h"
-#include "SSVSCollision/Body/GroupData.h"
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Body/Base.h"
-#include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {

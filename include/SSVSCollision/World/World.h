@@ -10,8 +10,6 @@
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Utils/Traits.h"
 #include "SSVSCollision/Utils/GroupManager.h"
-#include "SSVSCollision/Spatial/Grid/Grid.h"
-#include "SSVSCollision/Spatial/Grid/Cell.h"
 
 namespace ssvsc
 {

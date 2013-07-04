@@ -9,9 +9,6 @@
 #include "SSVSCollision/Resolver/ResolverBase.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
 
-#include "SSVSCollision/Spatial/Grid/Grid.h"
-#include "SSVSCollision/Spatial/Grid/Cell.h"
-
 using namespace std;
 using namespace ssvu;
 

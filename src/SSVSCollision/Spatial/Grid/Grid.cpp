@@ -2,14 +2,9 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include "SSVSCollision/Spatial/Grid/Grid.h"
-#include "SSVSCollision/Spatial/Grid/GridInfo.h"
-#include "SSVSCollision/Spatial/Grid/Cell.h"
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
-#include "SSVSCollision/Body/Body.h"
-#include "SSVSCollision/Utils/Utils.h"
-#include "SSVSCollision/Resolver/ResolverBase.h"
-#include "SSVSCollision/Global/Typedefs.h"
+#include "SSVSCollision/Spatial/Grid/Grid.h"
+#include "SSVSCollision/Spatial/Grid/Cell.h"
 
 using namespace std;
 

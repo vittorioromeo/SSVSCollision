@@ -7,6 +7,7 @@
 
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/World/World.h"
+#include "SSVSCollision/Spatial/SpatialBase.h"
 #include "SSVSCollision/Body/GroupData.h"
 
 namespace ssvsc

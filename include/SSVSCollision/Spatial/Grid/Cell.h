@@ -5,7 +5,6 @@
 #ifndef SSVSC_SPATIAL_GRID_CELL
 #define SSVSC_SPATIAL_GRID_CELL
 
-#include <unordered_map>
 #include <vector>
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Global/Typedefs.h"
