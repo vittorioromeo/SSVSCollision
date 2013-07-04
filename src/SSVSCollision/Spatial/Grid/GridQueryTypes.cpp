@@ -21,7 +21,7 @@ namespace ssvsc
 		namespace Bodies
 		{
 			void All::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, int) { mBodies = mGrid.getCell(mIndex).getBodies(); }
-			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, int mGroupUid) { mBodies = mGrid.getCell(mIndex).getBodies(mGroupUid); }
+			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vector2i& mIndex, int mGroupUid) { mBodies = mGrid.getCell(mIndex).getBodies(); }
 		}
 
 		namespace Orthogonal

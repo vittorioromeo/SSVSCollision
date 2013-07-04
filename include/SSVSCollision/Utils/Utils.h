@@ -54,7 +54,7 @@ namespace ssvsc
 		inline int getOverlapX(const AABB& mA, const AABB& mB)					{ return mA.getLeft() < mB.getLeft() ? mA.getRight() - mB.getLeft() : mB.getRight() - mA.getLeft(); }
 		inline int getOverlapY(const AABB& mA, const AABB& mB)					{ return mA.getTop() < mB.getTop() ? mA.getBottom() - mB.getTop() : mB.getBottom() - mA.getTop(); }
 		inline int getOverlapArea(const AABB& mA, const AABB& mB)				{ return getOverlapX(mA, mB) * getOverlapY(mA, mB); }
-		inline bool isOverlapping(const AABB& mA, const AABB& mB)				{ return mA.getRight() > mB.getLeft() && mA.getLeft() < mB.getRight() && (mA.getBottom() > mB.getTop() && mA.getTop() < mB.getBottom()); }
+
 	}
 }
 

@@ -9,6 +9,9 @@
 #include "SSVSCollision/Resolver/ResolverBase.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
 
+#include "SSVSCollision/Spatial/Grid/Grid.h"
+#include "SSVSCollision/Spatial/Grid/Cell.h"
+
 using namespace std;
 using namespace sf;
 using namespace ssvu;
@@ -36,7 +39,13 @@ namespace ssvsc
 	void World::update(float mFrameTime)
 	{
 		memoryManager.cleanUp();
-		for(const auto& e : memoryManager) e->update(mFrameTime);
+
+		for(const auto& e : memoryManager) e->preUpdate(mFrameTime);
+
+		Grid& grid = static_cast<Grid&>(spatial);
+		//grid.handleCollisions(mFrameTime);
+
+		for(const auto& e : memoryManager) e->postUpdate(mFrameTime);
 	}
 	void World::clear()
 	{
@@ -47,5 +56,21 @@ namespace ssvsc
 
 // long bitsets
 // ((a.groupsToDetectAgainst & b.groups) && !(a.groupsToIgnoreResolveAgainst & b.groups))
-
 // Philip: in this case (a.groupsToDetectAgainst & b.groups), you can notify of a collision... the second part to your logic checks whether it should be handled.
+
+/*
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int numberOfEntities = 5;
+
+	for(int i = 0; i < numberOfEntities; i++)
+		for(int j = i+1; j < numberOfEntities; j++)
+			cout << i << " " << j << endl;
+
+	return 0;
+}
+*/

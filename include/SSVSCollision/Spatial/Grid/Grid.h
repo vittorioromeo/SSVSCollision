@@ -15,6 +15,7 @@ namespace ssvsc
 {
 	class Cell;
 	class SpatialInfoBase;
+	class ResolverBase;
 	template<typename T, typename... TArgs> class GridQuery;
 
 	class Grid : public SpatialBase
@@ -30,6 +31,8 @@ namespace ssvsc
 
 			SpatialInfoBase& createSpatialInfo(Base& mBase) override;
 			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
+
+			void handleCollisions(float mFrameTime);
 
 			inline int getIndexXMin() const	{ return 0 - offset; }
 			inline int getIndexYMin() const	{ return 0 - offset; }

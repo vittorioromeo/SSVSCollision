@@ -23,6 +23,8 @@ namespace ssvsc
 
 		for(const auto& b : mBodiesToResolve)
 		{
+			eraseRemove(b->bodiesToResolve, &mBody);
+
 			bool noResolvePosition{false}, noResolveVelocity{false};
 
 			const AABB& s(b->getShape());

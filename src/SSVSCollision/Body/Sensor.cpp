@@ -17,14 +17,7 @@ namespace ssvsc
 	Sensor::Sensor(World& mWorld, Vector2i mPosition, Vector2i mSize) : Base(mWorld), shape{mPosition, mSize / 2} { }
 	Sensor::~Sensor() { spatialInfo.destroy(); }
 
-	void Sensor::addGroupsToCheck(const vector<string>& mGroups)
-	{
-		for(const auto& g : mGroups) groupData.addUidToCheck(world.getGroupUid(g));
-		groupData.addGroupsToCheck(mGroups);
-		spatialInfo.invalidate();
-	}
-
-	void Sensor::update(float mFrameTime)
+	/*void Sensor::update(float mFrameTime)
 	{
 		onPreUpdate();
 		if(outOfBounds) { outOfBounds = false; return; };
@@ -35,6 +28,6 @@ namespace ssvsc
 			onDetection({*body, mFrameTime, body->getUserData(), getMinIntersection(shape, body->getShape())});
 		}
 		spatialInfo.postUpdate();
-	}
+	}*/
 	void Sensor::destroy() { world.delSensor(this); Base::destroy(); }
 }

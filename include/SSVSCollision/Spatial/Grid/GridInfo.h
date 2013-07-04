@@ -19,10 +19,6 @@ namespace ssvsc
 	{
 		private:
 			Grid& grid;
-
-			std::vector<Cell*> cells;
-			std::vector<const std::vector<Body*>*> queries; // Cell vector ptrs to query
-			std::vector<Body*> bodiesToCheck;
 			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
 			int oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1};
 			bool invalid{true};
@@ -31,19 +27,15 @@ namespace ssvsc
 			void calcCells();
 			void clear();
 
-			void gather();
-
 		public:
+			std::vector<Cell*> cells;
 			GridInfo(Grid& mGrid, Base& mBase);
 			~GridInfo();
-
-			bool mustGather{true};
 
 			void invalidate() override;
 			void preUpdate() override;
 			void postUpdate() override;
 			void destroy() override;
-			const std::vector<Body*>& getBodiesToCheck() override;
 	};
 }
 

@@ -59,6 +59,9 @@ namespace ssvsc
 
 			inline bool operator==(const AABB& mOther) const { return position == mOther.position && halfSize == mOther.halfSize; }
 			inline bool operator!=(const AABB& mOther) const { return position != mOther.position || halfSize != mOther.halfSize; }
+
+			inline bool isOverlapping(const AABB& mAABB) const	{ return getRight() > mAABB.getLeft() && getLeft() < mAABB.getRight() && (getBottom() > mAABB.getTop() && getTop() < mAABB.getBottom()); }
+			inline bool contains(const AABB& mAABB) const		{ return !(mAABB.getLeft() < getLeft() || mAABB.getRight() >= getRight() || mAABB.getTop() < getTop() || mAABB.getBottom() >= getBottom()); }
 	};
 }
 

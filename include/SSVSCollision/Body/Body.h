@@ -5,6 +5,7 @@
 #ifndef SSVSC_BODY
 #define SSVSC_BODY
 
+#include <bitset>
 #include <SFML/System.hpp>
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/AABB/AABB.h"
@@ -30,11 +31,12 @@ namespace ssvsc
 			MassData massData;
 			GroupData groupData;
 			void* userData{nullptr};
-			std::vector<Body*> bodiesToResolve;
 
 			void integrate(float mFrameTime);
 
 		public:
+			std::vector<Body*> bodiesToResolve;
+
 			ssvu::Delegate<void> onPreUpdate;
 			ssvu::Delegate<void> onPostUpdate;
 			ssvu::Delegate<void, DetectionInfo> onDetection;
@@ -44,12 +46,9 @@ namespace ssvsc
 			Body(World& mWorld, bool mIsStatic, sf::Vector2i mPosition, sf::Vector2i mSize);
 			~Body();
 
-			void addGroups(const std::vector<std::string>& mGroups);
-			void addGroupsToCheck(const std::vector<std::string>& mGroups);
-			void addGroupsNoResolve(const std::vector<std::string>& mGroups);
-
 			inline Type getType() override { return Type::Body; }
-			void update(float mFrameTime) override;
+			void preUpdate(float mFrameTime) override;
+			void postUpdate(float mFrameTime) override;
 			void destroy() override;
 
 			void applyForce(sf::Vector2f mForce);
@@ -89,12 +88,13 @@ namespace ssvsc
 			inline bool hasMovedRight() const								{ return shape.getX() > oldShape.getX(); }
 			inline bool hasMovedUp() const									{ return shape.getY() < oldShape.getY(); }
 			inline bool hasMovedDown() const								{ return shape.getY() > oldShape.getY(); }
-			inline const std::vector<int>& getGroupUids()					{ return groupData.getUids(); }
-			inline const std::vector<int>& getGroupUidsToCheck() override	{ return groupData.getUidsToCheck(); }
-			inline const std::vector<int>& getGroupUidsNoResolve()			{ return groupData.getUidsNoResolve(); }
-			inline const std::vector<std::string>& getGroups()				{ return groupData.getGroups(); }
-			inline const std::vector<std::string>& getGroupsToCheck()		{ return groupData.getGroupsToCheck(); }
-			inline const std::vector<std::string>& getGroupsNoResolve()		{ return groupData.getGroupsNoResolve(); }
+			inline GroupData& getGroupData() { return groupData; }
+			inline const std::bitset<64>& getGroupUidsToCheck() override { return groupData.getGroupsToCheck(); }
+
+			inline bool mustCheckAgainst(Body& mBody)		{ return (groupData.getGroupsToCheck() & mBody.getGroupData().getGroups()).any(); }
+			inline bool mustResolveAgainst(Body& mBody)		{ return !(groupData.getGroupsNoResolve() & mBody.getGroupData().getGroups()).any(); }
+
+			inline void addToResolveAgainst(Body& mBody)	{ bodiesToResolve.push_back(&mBody); }
 	};
 }
 

@@ -18,26 +18,17 @@ namespace ssvsc
 		shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 	Body::~Body() { spatialInfo.destroy(); }
 
-	void Body::addGroups(const vector<string>& mGroups)
+	void Body::preUpdate(float mFrameTime)
 	{
-		for(const auto& g : mGroups) groupData.addUid(world.getGroupUid(g));
-		groupData.addGroups(mGroups);
-		spatialInfo.invalidate();
-	}
-	void Body::addGroupsToCheck(const vector<string>& mGroups)
-	{
-		for(const auto& g : mGroups) groupData.addUidToCheck(world.getGroupUid(g));
-		groupData.addGroupsToCheck(mGroups);
-		spatialInfo.invalidate();
-	}
-	void Body::addGroupsNoResolve(const vector<string>& mGroups)
-	{
-		for(const auto& g : mGroups) groupData.addUidNoResolve(world.getGroupUid(g));
-		groupData.addGroupsNoResolve(mGroups);
-	}
+		/*onPreUpdate();
 
-	void Body::update(float mFrameTime)
-	{
+		if(_static) { spatialInfo.preUpdate(); return; }
+		if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
+
+		oldShape = shape;
+		integrate(mFrameTime);
+		spatialInfo.preUpdate();*/
+
 		onPreUpdate();
 
 		if(_static) { spatialInfo.preUpdate(); return; }
@@ -48,17 +39,21 @@ namespace ssvsc
 		spatialInfo.preUpdate();
 		bodiesToResolve.clear();
 
-		for(const auto& body : spatialInfo.getBodiesToCheck())
+		Grid& grid = world.getSpatial<Grid>();
+		GridInfo& gridInfo = static_cast<GridInfo&>(spatialInfo);
+
+		for (auto& c : gridInfo.cells)
+		for(const auto& body : c->getBodies())
 		{
-			if(body == this || !isOverlapping(shape, body->getShape())) continue;
+			if(body == this || !shape.isOverlapping(body->getShape())) continue;
 
 			auto intersection(getMinIntersection(shape, body->getShape()));
 
 			onDetection({*body, mFrameTime, body->getUserData(), intersection});
 			body->onDetection({*this, mFrameTime, userData, -intersection});
 
-			if(!resolve || containsAny(body->getGroupUids(), getGroupUidsNoResolve())) continue;
-			bodiesToResolve.push_back(body);
+			//if(!resolve || containsAny(body->getGroupUids(), getGroupUidsNoResolve())) continue;
+			//bodiesToResolve.push_back(body);
 		}
 
 		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
@@ -66,6 +61,19 @@ namespace ssvsc
 
 		spatialInfo.postUpdate();
 		onPostUpdate();
+	}
+
+	void Body::postUpdate(float mFrameTime)
+	{
+		/*if(_static) return;
+
+		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
+		if(oldShape != shape) spatialInfo.invalidate();
+
+		spatialInfo.postUpdate();
+		onPostUpdate();
+
+		bodiesToResolve.clear();*/
 	}
 
 	void Body::integrate(float mFrameTime)

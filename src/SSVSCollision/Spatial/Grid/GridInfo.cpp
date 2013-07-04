@@ -12,7 +12,7 @@ using namespace ssvu;
 
 namespace ssvsc
 {
-	GridInfo::GridInfo(Grid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { bodiesToCheck.reserve(100); }
+	GridInfo::GridInfo(Grid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { }
 	GridInfo::~GridInfo() { clear(); }
 
 	void GridInfo::calcEdges()
@@ -37,7 +37,7 @@ namespace ssvsc
 	void GridInfo::clear()
 	{
 		for(const auto& c : cells) c->del(&base);
-		cells.clear(); queries.clear();
+		cells.clear();
 	}
 	void GridInfo::calcCells()
 	{
@@ -46,29 +46,14 @@ namespace ssvsc
 		if(!grid.isIndexValid(startX, startY, endX, endY)) { base.setOutOfBounds(true); return; }
 		for(int iX{startX}; iX <= endX; ++iX) for(int iY{startY}; iY <= endY; ++iY) cells.push_back(&grid.getCell(iX, iY));
 
-		for(const auto& c : cells)
-		{
-			c->add(&base);
-			for(const auto& uid : base.getGroupUidsToCheck()) queries.push_back(&c->getBodies(uid));
-		}
+		for(const auto& c : cells) c->add(&base);
 
 		invalid = false;
-		mustGather = true;
 	}
 
-	void GridInfo::gather()
-	{
-		bodiesToCheck.clear();
-		for(const auto& q : queries) for(const auto& b : *q) if(!contains(bodiesToCheck, b)) bodiesToCheck.push_back(b);
-	}
+	void GridInfo::invalidate()	{ invalid = true; }
+	void GridInfo::preUpdate()	{ if(invalid) calcEdges(); }
+	void GridInfo::postUpdate()	{ }
+	void GridInfo::destroy()	{ grid.delSpatialInfo(*this); }
 
-	void GridInfo::invalidate() { invalid = true; }
-	void GridInfo::preUpdate() { if(invalid) calcEdges(); }
-	void GridInfo::postUpdate() { }
-	void GridInfo::destroy() { grid.delSpatialInfo(*this); }
-	const vector<Body*>& GridInfo::getBodiesToCheck()
-	{
-		if(mustGather) { gather(); mustGather = false; }
-		return bodiesToCheck;
-	}
 }

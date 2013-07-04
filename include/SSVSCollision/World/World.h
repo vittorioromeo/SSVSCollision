@@ -10,6 +10,8 @@
 #include <google/dense_hash_set>
 #include "SSVSCollision/Utils/Traits.h"
 #include "SSVSCollision/World/GroupManager.h"
+#include "SSVSCollision/Spatial/Grid/Grid.h"
+#include "SSVSCollision/Spatial/Grid/Cell.h"
 
 namespace ssvsc
 {

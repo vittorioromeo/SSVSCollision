@@ -5,6 +5,7 @@
 #ifndef SSVSC_SENSOR
 #define SSVSC_SENSOR
 
+#include <bitset>
 #include <SFML/System.hpp>
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/AABB/AABB.h"
@@ -33,7 +34,8 @@ namespace ssvsc
 			void addGroupsToCheck(const std::vector<std::string>& mGroups);
 
 			inline Type getType() override { return Type::Sensor; }
-			void update(float mFrameTime) override;
+			void preUpdate(float mFrameTime) override { }
+			void postUpdate(float mFrameTime) override { }
 			void destroy() override;
 
 			inline void setPosition(sf::Vector2i mPosition)
@@ -44,8 +46,10 @@ namespace ssvsc
 
 			inline AABB& getShape() override								{ return shape; }
 			inline AABB& getOldShape() override								{ return shape; }
-			inline const std::vector<int>& getGroupUidsToCheck() override	{ return groupData.getUidsToCheck(); }
+			inline GroupData& getGroupData()	{ return groupData; }
+			inline const std::bitset<64>& getGroupUidsToCheck() override { return groupData.getGroupsToCheck(); }
 	};
 }
 
 #endif
+

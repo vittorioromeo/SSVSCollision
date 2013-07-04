@@ -26,7 +26,6 @@ namespace ssvsc
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
 			virtual void destroy() = 0;
-			virtual const std::vector<Body*>& getBodiesToCheck() = 0;
 	};
 }
 

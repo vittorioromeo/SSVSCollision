@@ -5,6 +5,7 @@
 #ifndef SSVSC_BASE
 #define SSVSC_BASE
 
+#include <bitset>
 #include <SFML/System.hpp>
 #include "SSVSCollision/Body/Enums.h"
 
@@ -30,9 +31,10 @@ namespace ssvsc
 
 			virtual AABB& getShape() = 0;
 			virtual AABB& getOldShape() = 0;
-			virtual	void update(float mFrameTime) = 0;
+			virtual	void preUpdate(float mFrameTime) = 0;
+			virtual	void postUpdate(float mFrameTime) = 0;
 			virtual void destroy();
-			virtual const std::vector<int>& getGroupUidsToCheck() = 0;
+			virtual const std::bitset<64>& getGroupUidsToCheck() = 0;
 			virtual Type getType() = 0;
 
 			inline SpatialInfoBase& getSpatialInfo()		{ return spatialInfo; }
