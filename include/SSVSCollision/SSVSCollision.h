@@ -5,7 +5,9 @@
 #ifndef SSVSCOLLISION
 #define SSVSCOLLISION
 
+#include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Body/Sensor.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
 #include "SSVSCollision/World/World.h"
 #include "SSVSCollision/Utils/Segment.h"

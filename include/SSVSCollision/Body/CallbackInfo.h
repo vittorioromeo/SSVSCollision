@@ -5,7 +5,7 @@
 #ifndef SSVSC_BODY_CALLBACKINFO
 #define SSVSC_BODY_CALLBACKINFO
 
-#include <SFML/System.hpp>
+#include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {
@@ -16,14 +16,14 @@ namespace ssvsc
 		Body& body;
 		float frameTime;
 		void* userData;
-		sf::Vector2i intersection;
+		Vec2i intersection;
 	};
 
 	struct ResolutionInfo
 	{
 		Body& body;
 		void* userData;
-		sf::Vector2i intersection, resolution;
+		Vec2i intersection, resolution;
 		bool& noResolvePosition;
 		bool& noResolveVelocity;
 	};

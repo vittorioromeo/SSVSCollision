@@ -5,38 +5,36 @@
 #ifndef SSVSC_BODY_GROUPDATA
 #define SSVSC_BODY_GROUPDATA
 
-#include <vector>
-#include <string>
+#include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {
-	struct GroupData
+	class GroupData
 	{
-		std::vector<int> uids, uidsToCheck, uidsNoResolve;
-		std::vector<std::string> groups, groupsToCheck, groupsNoResolve;
+		private:
+			Bitset groups, groupsToCheck, groupsNoResolve;
 
-		inline void addUid(int mUid)												{ uids.push_back(mUid); }
-		inline void addUidToCheck(int mUid)											{ uidsToCheck.push_back(mUid); }
-		inline void addUidNoResolve(int mUid)										{ uidsNoResolve.push_back(mUid); }
-		inline void addGroupIds(const std::vector<int>& mGroupUids)					{ for(const auto& uid : mGroupUids) addUid(uid); }
-		inline void addGroupIdsToCheck(const std::vector<int>& mGroupUids)			{ for(const auto& uid : mGroupUids) addUidToCheck(uid); }
-		inline void addGroupIdsNoResolve(const std::vector<int>& mGroupUids)		{ for(const auto& uid : mGroupUids) addUidNoResolve(uid); }
+		public:
+			inline void addGroup(Group mGroup)				{ groups.set(mGroup); }
+			inline void addGroupToCheck(Group mGroup)		{ groupsToCheck.set(mGroup); }
+			inline void addGroupNoResolve(Group mGroup)		{ groupsNoResolve.set(mGroup); }
 
-		inline void addGroup(const std::string& mGroup)								{ groups.push_back(mGroup); }
-		inline void addGroupToCheck(const std::string& mGroup)						{ groupsToCheck.push_back(mGroup); }
-		inline void addGroupNoResolve(const std::string& mGroup)					{ groupsNoResolve.push_back(mGroup); }
-		inline void addGroups(const std::vector<std::string>& mGroups)				{ for(const auto& g : mGroups) addGroup(g); }
-		inline void addGroupsToCheck(const std::vector<std::string>& mGroups)		{ for(const auto& g : mGroups) addGroupToCheck(g); }
-		inline void addGroupsNoResolve(const std::vector<std::string>& mGroups)		{ for(const auto& g : mGroups) addGroupNoResolve(g); }
+			inline void delGroup(Group mGroup)				{ groups.set(mGroup, false); }
+			inline void delGroupToCheck(Group mGroup)		{ groupsToCheck.set(mGroup, false); }
+			inline void delGroupNoResolve(Group mGroup)		{ groupsNoResolve.set(mGroup, false); }
 
-		// Getters
-		inline const std::vector<int>& getUids()					{ return uids; }
-		inline const std::vector<int>& getUidsToCheck()				{ return uidsToCheck; }
-		inline const std::vector<int>& getUidsNoResolve()			{ return uidsNoResolve; }
+			inline void clearGroups()						{ groups.reset(); }
+			inline void clearGroupsToCheck()				{ groupsToCheck.reset(); }
+			inline void clearGroupsNoResolve()				{ groupsNoResolve.reset(); }
 
-		inline const std::vector<std::string>& getGroups()			{ return groups; }
-		inline const std::vector<std::string>& getGroupsToCheck()	{ return groupsToCheck; }
-		inline const std::vector<std::string>& getGroupsNoResolve()	{ return groupsNoResolve; }
+			inline bool hasGroup(Group mGroup) const			{ return groups.test(mGroup); }
+			inline bool hasGroupToCheck(Group mGroup) const		{ return groupsToCheck.test(mGroup); }
+			inline bool hasGroupNoResolve(Group mGroup) const	{ return groupsNoResolve.test(mGroup); }
+
+			inline const Bitset& getGroups() const				{ return groups; }
+			inline const Bitset& getGroupsToCheck()	const		{ return groupsToCheck; }
+			inline const Bitset& getGroupsNoResolve() const		{ return groupsNoResolve; }
+
 	};
 }
 

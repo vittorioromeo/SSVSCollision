@@ -2,7 +2,7 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Body/Base.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
@@ -12,13 +12,13 @@ using namespace ssvu;
 
 namespace ssvsc
 {
-	GridInfo::GridInfo(Grid& mGrid, Body& mBody) : SpatialInfoBase(mGrid, mBody), grid(mGrid) { bodiesToCheck.reserve(100); }
+	GridInfo::GridInfo(Grid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { }
 	GridInfo::~GridInfo() { clear(); }
 
 	void GridInfo::calcEdges()
 	{
-		const AABB& oldShape(body.getOldShape());
-		const AABB& shape(body.getShape());
+		const AABB& oldShape(base.getOldShape());
+		const AABB& shape(base.getShape());
 
 		oldStartX = startX;
 		oldStartY = startY;
@@ -36,33 +36,29 @@ namespace ssvsc
 
 	void GridInfo::clear()
 	{
-		for(const auto& c : cells) c->del(&body);
-		cells.clear(); queries.clear();
+		for(const auto& c : cells) c->del(&base);
+		cells.clear();
 	}
 	void GridInfo::calcCells()
 	{
 		clear();
 
-		if(!grid.isIndexValid(startX, startY, endX, endY)) { body.setOutOfBounds(true); return; }
+		if(!grid.isIndexValid(startX, startY, endX, endY)) { base.setOutOfBounds(true); return; }
 		for(int iX{startX}; iX <= endX; ++iX) for(int iY{startY}; iY <= endY; ++iY) cells.push_back(&grid.getCell(iX, iY));
 
-		for(const auto& c : cells)
-		{
-			c->add(&body);
-			for(const auto& uid : body.getGroupUidsToCheck()) queries.push_back(&c->getBodies(uid));
-		}
+		for(const auto& c : cells) c->add(&base);
 
 		invalid = false;
 	}
 
-	void GridInfo::invalidate() { invalid = true; }
-	void GridInfo::preUpdate() { if(invalid) calcEdges();  }
-	void GridInfo::postUpdate() { }
-	const vector<Body*>& GridInfo::getBodiesToCheck()
+	void GridInfo::invalidate()	{ invalid = true; }
+	void GridInfo::preUpdate()	{ if(invalid) calcEdges(); }
+	void GridInfo::postUpdate()	{ }
+	void GridInfo::destroy()	{ grid.delSpatialInfo(*this); }
+	void GridInfo::handleCollisions(float mFrameTime)
 	{
-		bodiesToCheck.clear();
-		for(const auto& q : queries) for(const auto& b : *q) if(!contains(bodiesToCheck, b)) bodiesToCheck.push_back(b);
-		return bodiesToCheck;
+		for(const auto& c : cells)
+			for(const auto& b : c->getBodies())
+				base.handleCollision(mFrameTime, b);
 	}
-	void GridInfo::destroy() { grid.delSpatialInfo(*this); }
 }

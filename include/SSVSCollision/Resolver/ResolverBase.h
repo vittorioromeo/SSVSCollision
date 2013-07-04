@@ -9,7 +9,7 @@
 
 namespace ssvsc
 {
-	class AABB;
+	class Body;
 
 	struct ResolverBase
 	{
