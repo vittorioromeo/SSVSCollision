@@ -20,7 +20,7 @@ namespace ssvsc
 		public:
 			GroupManager() = default;
 
-			inline unsigned int get(const std::string& mLabel)
+			inline Group get(const std::string& mLabel)
 			{
 				if(groups.find(mLabel) == end(groups))
 				{

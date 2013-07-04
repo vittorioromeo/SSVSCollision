@@ -60,7 +60,7 @@ namespace ssvsc
 			template<typename T> T& getResolver()		{ return static_cast<T&>(getResolver()); }
 			template<typename T> T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
 
-			inline int getGroup(const std::string& mLabel) { return groupManager.get(mLabel); }
+			inline Group getGroup(const std::string& mLabel) { return groupManager.get(mLabel); }
 	};
 }
 
