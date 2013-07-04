@@ -65,9 +65,9 @@ namespace ssvsc
 			void addGroupsNoResolve(const std::vector<std::string>& mLabels)	{ for(const auto& l : mLabels) addGroupNoResolve(world.getGroup(l)); }
 
 			// Group tests
-			inline bool hasAnyGroup(const Bitset& mGroups) const	{ return (groupData.getGroups() & mGroups).any(); }
-			inline bool mustCheck(Base& mBase) const				{ return mBase.hasAnyGroup(groupData.getGroupsToCheck()); }
-			inline bool mustIgnoreResolution(Base& mBase) const		{ return mBase.hasAnyGroup(groupData.getGroupsNoResolve()); }
+			inline bool hasAnyGroup(const Bitset& mGroups) const		{ return (groupData.getGroups() & mGroups).any(); }
+			inline bool mustCheck(const Base& mBase) const				{ return mBase.hasAnyGroup(groupData.getGroupsToCheck()); }
+			inline bool mustIgnoreResolution(const Base& mBase) const	{ return mBase.hasAnyGroup(groupData.getGroupsNoResolve()); }
 	};
 }
 
