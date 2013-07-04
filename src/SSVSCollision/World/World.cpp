@@ -44,3 +44,8 @@ namespace ssvsc
 		memoryManager.cleanUp();
 	}
 }
+
+// long bitsets
+// ((a.groupsToDetectAgainst & b.groups) && !(a.groupsToIgnoreResolveAgainst & b.groups))
+
+// Philip: in this case (a.groupsToDetectAgainst & b.groups), you can notify of a collision... the second part to your logic checks whether it should be handled.
