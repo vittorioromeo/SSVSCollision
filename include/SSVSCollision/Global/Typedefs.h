@@ -5,16 +5,16 @@
 #ifndef SSVSCOLLISION_GLOBAL_TYPEDEFS
 #define SSVSCOLLISION_GLOBAL_TYPEDEFS
 
-#include <SFML/System.hpp>
+#include <SSVStart/SSVStart.h>
 #include <bitset>
 
 namespace ssvsc
 {
 	using Group = unsigned int;
 	using Bitset = std::bitset<64>;
-	using Vec2i = sf::Vector2i;
-	using Vec2f = sf::Vector2f;
-	template<typename T> using Vec2 = sf::Vector2<T>;
+	using Vec2i = ssvs::Vec2i;
+	using Vec2f = ssvs::Vec2f;
+	template<typename T> using Vec2 = ssvs::Vec2<T>;
 
 	enum class Type{Body, Sensor};
 }
