@@ -29,7 +29,7 @@ namespace ssvsc
 			void add(Base* mBase);
 			void del(Base* mBase);
 
-			inline const std::vector<Body*>& getBodies() { return bodies; }
+			inline const std::vector<Body*>& getBodies() const { return bodies; }
 
 			inline int getLeft() const		{ return aabb.getLeft(); }
 			inline int getRight() const		{ return aabb.getRight(); }
