@@ -24,7 +24,7 @@ namespace ssvsc
 			ssvu::Delegate<void> onPreUpdate;
 			ssvu::Delegate<void, DetectionInfo> onDetection;
 
-			Sensor(World& mWorld, Vec2i mPosition, Vec2i mSize) : Base(mWorld), shape{mPosition, mSize / 2} { }
+			Sensor(World& mWorld, Vec2i mPosition, Vec2i mSize) : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
 			~Sensor() { spatialInfo.destroy(); }
 
 			void update(float mFrameTime) override;

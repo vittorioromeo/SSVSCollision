@@ -13,7 +13,7 @@ using namespace ssvsc::Utils;
 
 namespace ssvsc
 {
-	Body::Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+	Body::Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.preUpdate(); }
 	Body::~Body() { spatialInfo.destroy(); }
 
 	void Body::handleCollision(float mFrameTime, Body* mBody)
