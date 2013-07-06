@@ -15,7 +15,7 @@ namespace ssvsc
 {
 	class Cell;
 	class SpatialInfoBase;
-	class ResolverBase;
+	struct ResolverBase;
 	template<typename T, typename... TArgs> class GridQuery;
 
 	class Grid : public SpatialBase
