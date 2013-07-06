@@ -34,7 +34,6 @@ namespace ssvsc
 			void integrate(float mFrameTime);
 
 		public:
-
 			void handleCollision(float mFrameTime, Body* mBody) override;
 
 			ssvu::Delegate<void> onPreUpdate;
@@ -58,11 +57,12 @@ namespace ssvsc
 			inline void setX(int mX)							{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
 			inline void setY(int mY)							{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
 			inline void setSize(Vec2i mSize)					{ shape.setSize(mSize); spatialInfo.invalidate(); }
+			inline void setHalfSize(Vec2i mSize)				{ shape.setHalfSize(mSize); spatialInfo.invalidate(); }
 			inline void setWidth(int mWidth)					{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
 			inline void setHeight(int mHeight)					{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
 			inline void setVelocity(Vec2f mVelocity) 			{ velocity = mVelocity; }
 			inline void setAcceleration(Vec2f mAcceleration)	{ acceleration = mAcceleration; }
-			inline void setStatic(bool mStatic) 				{ _static = mStatic; }
+			inline void setStatic(bool mStatic) 				{ _static = mStatic; spatialInfo.invalidate(); }
 			inline void setUserData(void* mUserData)			{ userData = mUserData; }
 			inline void setVelocityX(float mX)					{ velocity.x = mX; }
 			inline void setVelocityY(float mY)					{ velocity.y = mY; }
