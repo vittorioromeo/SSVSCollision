@@ -40,8 +40,8 @@ namespace ssvsc
 			inline void setOutOfBounds(bool mOutOfBounds)	{ outOfBounds = mOutOfBounds; }
 
 			// Getters
-			inline World& getWorld() const { return world; }
-			inline bool isAlive() const { return alive; }
+			inline World& getWorld() const	{ return world; }
+			inline bool isAlive() const		{ return alive; }
 
 			// GroupData shortcuts
 			inline void addGroup(Group mGroup)					{ groupData.addGroup(mGroup); }

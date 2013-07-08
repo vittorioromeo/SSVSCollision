@@ -6,7 +6,6 @@
 #define SSVSC_WORLD
 
 #include <vector>
-#include <google/dense_hash_set>
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Utils/Traits.h"
 #include "SSVSCollision/Utils/GroupManager.h"
@@ -19,6 +18,11 @@ namespace ssvsc
 	struct ResolverBase;
 	struct SpatialBase;
 
+	struct BaseDeleter
+	{
+		inline bool operator()(const Uptr<Base>& mBase) const;
+	};
+
 	class World
 	{
 		friend class Base;
@@ -28,21 +32,20 @@ namespace ssvsc
 		private:
 			GroupManager groupManager;
 
-			std::vector<Uptr<Base>> bases;
+			ssvu::MemoryManager2<Base, BaseDeleter> memoryManager;
 
-			std::vector<Base*> toAddBases;
+
 			std::vector<Body*> toAddBodies;
 			std::vector<Sensor*> toAddSensors;
 
-			ResolverBase& resolver; // owned
-			SpatialBase& spatial; // owned
+			Uptr<ResolverBase> resolver; // owned
+			Uptr<SpatialBase> spatial; // owned
 
 			std::vector<Body*> bodies; // TODO: remove?
 			std::vector<Sensor*> sensors; // TODO: remove?
 
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
-			~World();
 
 			Body& create(Vec2i mPosition, Vec2i mSize, bool mIsStatic);
 			Sensor& createSensor(Vec2i mPosition, Vec2i mSize);
@@ -51,9 +54,9 @@ namespace ssvsc
 			void clear();
 
 			inline GroupManager& getGroupManager()		{ return groupManager; }
-			inline std::vector<Uptr<Base>>& getBases()	{ return bases; }
-			inline ResolverBase& getResolver()			{ return resolver; }
-			inline SpatialBase& getSpatial()			{ return spatial; }
+			inline std::vector<Uptr<Base>>& getBases()	{ return memoryManager.getItems(); }
+			inline ResolverBase& getResolver()			{ return *resolver; }
+			inline SpatialBase& getSpatial()			{ return *spatial; }
 			inline std::vector<Body*>& getBodies()		{ return bodies; } // TODO: remove?
 			inline std::vector<Sensor*>& getSensors()	{ return sensors; } // TODO: remove?
 
