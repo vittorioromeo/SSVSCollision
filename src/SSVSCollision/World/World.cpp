@@ -45,5 +45,5 @@ namespace ssvsc
 		toAddBodies.clear();
 		toAddSensors.clear();
 	}
-	void World::clear() { bodies.clear(); sensors.clear(); }
+	void World::clear() { memoryManager.clear(); bodies.clear(); sensors.clear(); }
 }
