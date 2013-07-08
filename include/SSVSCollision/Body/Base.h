@@ -22,7 +22,7 @@ namespace ssvsc
 			World& world;
 			SpatialInfoBase& spatialInfo;
 			GroupData groupData;
-			bool outOfBounds{false};
+			bool outOfBounds{false}, alive{true};
 
 			Base(World& mWorld) : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
 
@@ -34,13 +34,14 @@ namespace ssvsc
 			virtual AABB& getShape() = 0;
 			virtual AABB& getOldShape() = 0;
 			virtual Type getType() = 0;
-			virtual void destroy() { world.delBase(this); }
+			virtual void destroy() { alive = false; }
 
 			inline SpatialInfoBase& getSpatialInfo()		{ return spatialInfo; }
 			inline void setOutOfBounds(bool mOutOfBounds)	{ outOfBounds = mOutOfBounds; }
 
 			// Getters
-			inline World& getWorld() { return world; }
+			inline World& getWorld() const { return world; }
+			inline bool isAlive() const { return alive; }
 
 			// GroupData shortcuts
 			inline void addGroup(Group mGroup)					{ groupData.addGroup(mGroup); }

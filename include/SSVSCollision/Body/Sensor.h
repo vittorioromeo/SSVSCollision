@@ -32,7 +32,7 @@ namespace ssvsc
 			inline AABB& getShape() override	{ return shape; }
 			inline AABB& getOldShape() override	{ return shape; }
 			inline Type getType() override		{ return Type::Sensor; }
-			void destroy() override				{ world.delSensor(this); Base::destroy(); }
+			void destroy() override				{ Base::destroy(); }
 
 			inline void setPosition(Vec2i mPosition)
 			{

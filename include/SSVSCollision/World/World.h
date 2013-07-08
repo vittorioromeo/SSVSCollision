@@ -27,16 +27,18 @@ namespace ssvsc
 
 		private:
 			GroupManager groupManager;
-			ssvu::MemoryManager<Base, std::vector<Base*>, google::dense_hash_set<Base*>> memoryManager;
+
+			std::vector<Uptr<Base>> bases;
+
+			std::vector<Base*> toAddBases;
+			std::vector<Body*> toAddBodies;
+			std::vector<Sensor*> toAddSensors;
+
 			ResolverBase& resolver; // owned
 			SpatialBase& spatial; // owned
 
 			std::vector<Body*> bodies; // TODO: remove?
 			std::vector<Sensor*> sensors; // TODO: remove?
-
-			void delBase(Base* mBase);
-			void delBody(Body* mBody);
-			void delSensor(Sensor* mSensor);
 
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
@@ -49,7 +51,7 @@ namespace ssvsc
 			void clear();
 
 			inline GroupManager& getGroupManager()		{ return groupManager; }
-			inline std::vector<Base*>& getBases()		{ return memoryManager.getItems(); }
+			inline std::vector<Uptr<Base>>& getBases()	{ return bases; }
 			inline ResolverBase& getResolver()			{ return resolver; }
 			inline SpatialBase& getSpatial()			{ return spatial; }
 			inline std::vector<Body*>& getBodies()		{ return bodies; } // TODO: remove?

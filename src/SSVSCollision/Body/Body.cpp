@@ -57,6 +57,6 @@ namespace ssvsc
 		acceleration = {0, 0};
 	}
 
-	void Body::destroy() { world.delBody(this); Base::destroy(); }
+	void Body::destroy() { Base::destroy(); }
 }
 
