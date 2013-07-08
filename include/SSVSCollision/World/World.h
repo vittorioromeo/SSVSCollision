@@ -31,12 +31,7 @@ namespace ssvsc
 
 		private:
 			GroupManager groupManager;
-
 			ssvu::MemoryManager2<Base, BaseDeleter> memoryManager;
-
-
-			std::vector<Body*> toAddBodies;
-			std::vector<Sensor*> toAddSensors;
 
 			Uptr<ResolverBase> resolver; // owned
 			Uptr<SpatialBase> spatial; // owned
@@ -51,17 +46,17 @@ namespace ssvsc
 			Sensor& createSensor(Vec2i mPosition, Vec2i mSize);
 
 			void update(float mFrameTime);
-			void clear();
+			inline void clear() { memoryManager.clear(); bodies.clear(); sensors.clear(); }
 
-			inline GroupManager& getGroupManager()		{ return groupManager; }
-			inline std::vector<Uptr<Base>>& getBases()	{ return memoryManager.getItems(); }
-			inline ResolverBase& getResolver()			{ return *resolver; }
-			inline SpatialBase& getSpatial()			{ return *spatial; }
-			inline std::vector<Body*>& getBodies()		{ return bodies; } // TODO: remove?
-			inline std::vector<Sensor*>& getSensors()	{ return sensors; } // TODO: remove?
+			inline GroupManager& getGroupManager()			{ return groupManager; }
+			inline std::vector<Uptr<Base>>& getBases()		{ return memoryManager.getItems(); }
+			inline ResolverBase& getResolver()				{ return *resolver; }
+			inline SpatialBase& getSpatial()				{ return *spatial; }
+			inline std::vector<Body*>& getBodies()			{ return bodies; } // TODO: remove?
+			inline std::vector<Sensor*>& getSensors()		{ return sensors; } // TODO: remove?
 
-			template<typename T> T& getResolver()		{ return static_cast<T&>(getResolver()); }
-			template<typename T> T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
+			template<typename T> inline T& getResolver()	{ return static_cast<T&>(getResolver()); }
+			template<typename T> inline T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
 
 			inline Group getGroup(const std::string& mLabel) { return groupManager.get(mLabel); }
 	};

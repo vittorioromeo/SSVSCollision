@@ -22,12 +22,12 @@ namespace ssvsc
 	Body& World::create(Vec2i mPosition, Vec2i mSize, bool mIsStatic)
 	{
 		auto& result(memoryManager.create<Body>(*this, mIsStatic, mPosition, mSize));
-		toAddBodies.push_back(&result); return result;
+		bodies.push_back(&result); return result;
 	}
 	Sensor& World::createSensor(Vec2i mPosition, Vec2i mSize)
 	{
 		auto& result(memoryManager.create<Sensor>(*this, mPosition, mSize));
-		toAddSensors.push_back(&result); return result;
+		sensors.push_back(&result); return result;
 	}
 
 	void World::update(float mFrameTime)
@@ -38,12 +38,5 @@ namespace ssvsc
 		memoryManager.cleanUp();
 		for(const auto& b : memoryManager) b->update(mFrameTime);
 		memoryManager.populate();
-
-		for(const auto& b : toAddBodies) bodies.push_back(b);
-		for(const auto& b : toAddSensors) sensors.push_back(b);
-
-		toAddBodies.clear();
-		toAddSensors.clear();
 	}
-	void World::clear() { memoryManager.clear(); bodies.clear(); sensors.clear(); }
 }
