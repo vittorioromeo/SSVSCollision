@@ -7,7 +7,6 @@
 
 #include <vector>
 #include "SSVSCollision/Global/Typedefs.h"
-#include "SSVSCollision/Utils/Traits.h"
 #include "SSVSCollision/Utils/GroupManager.h"
 
 namespace ssvsc

@@ -10,6 +10,7 @@
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Body/Base.h"
 #include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Utils/Utils.h"
 
 namespace ssvsc
 {
@@ -27,12 +28,23 @@ namespace ssvsc
 			Sensor(World& mWorld, Vec2i mPosition, Vec2i mSize) : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
 			~Sensor() { spatialInfo.destroy(); }
 
-			void update(float mFrameTime) override;
-			void handleCollision(float mFrameTime, Body* mBody) override;
+			inline void update(float mFrameTime) override
+			{
+				onPreUpdate();
+				if(outOfBounds) { outOfBounds = false; return; };
+				spatialInfo.preUpdate();
+				spatialInfo.handleCollisions(mFrameTime);
+				spatialInfo.postUpdate();
+			}
+			inline void handleCollision(float mFrameTime, Body* mBody) override
+			{
+				if(!mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
+				onDetection({*mBody, mFrameTime, mBody->getUserData(), ssvsc::Utils::getMinIntersection(shape, mBody->getShape())});
+			}
 			inline AABB& getShape() override	{ return shape; }
 			inline AABB& getOldShape() override	{ return shape; }
 			inline Type getType() override		{ return Type::Sensor; }
-			void destroy() override				{ Base::destroy(); }
+			inline void destroy() override		{ Base::destroy(); }
 
 			inline void setPosition(Vec2i mPosition)
 			{

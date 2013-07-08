@@ -6,8 +6,10 @@
 #define SSVSC_SPATIAL_GRID_CELL
 
 #include <vector>
+#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Global/Typedefs.h"
+#include "SSVSCollision/Body/Body.h"
 
 namespace ssvsc
 {
@@ -20,14 +22,14 @@ namespace ssvsc
 			AABB aabb;
 			std::vector<Body*> bodies;
 
-			void addBody(Body* mBody);
-			void delBody(Body* mBody);
+			inline void addBody(Body* mBody) { bodies.push_back(mBody); }
+			inline void delBody(Body* mBody) { ssvu::eraseRemove(bodies, mBody); }
 
 		public:
-			Cell(const AABB& mAABB);
+			Cell(const AABB& mAABB) : aabb{mAABB} { }
 
-			void add(Base* mBase);
-			void del(Base* mBase);
+			inline void add(Base* mBase) { if(mBase->getType() == Type::Body) addBody(static_cast<Body*>(mBase)); }
+			inline void del(Base* mBase) { if(mBase->getType() == Type::Body) delBody(static_cast<Body*>(mBase)); }
 
 			inline const std::vector<Body*>& getBodies() const { return bodies; }
 

@@ -17,15 +17,18 @@ namespace ssvsc
 		protected:
 			SpatialBase& spatial;
 			Base& base;
+			bool alive{true};
 
 		public:
 			SpatialInfoBase(SpatialBase& mSpatial, Base& mBase) : spatial(mSpatial), base(mBase) { }
 			virtual ~SpatialInfoBase() { }
 
+			inline bool isAlive() const { return alive; }
+
 			virtual void invalidate() = 0;
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
-			virtual void destroy() = 0;
+			virtual void destroy() { alive = false; }
 			virtual void handleCollisions(float mFrameTime) = 0;
 	};
 }

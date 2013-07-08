@@ -14,7 +14,7 @@ using namespace ssvu;
 namespace ssvsc
 {
 	GridInfo::GridInfo(Grid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { }
-	GridInfo::~GridInfo() { clear(); }
+	GridInfo::~GridInfo() { }
 
 	void GridInfo::calcEdges()
 	{
@@ -55,7 +55,7 @@ namespace ssvsc
 	void GridInfo::invalidate()	{ invalid = true; }
 	void GridInfo::preUpdate()	{ if(invalid) calcEdges(); }
 	void GridInfo::postUpdate()	{ }
-	void GridInfo::destroy()	{ grid.delSpatialInfo(*this); }
+	void GridInfo::destroy()	{ clear(); SpatialInfoBase::destroy(); }
 	void GridInfo::handleCollisions(float mFrameTime)
 	{
 		static int paint{-1};

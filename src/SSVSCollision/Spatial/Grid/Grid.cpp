@@ -29,9 +29,4 @@ namespace ssvsc
 	}
 
 	SpatialInfoBase& Grid::createSpatialInfo(Base& mBase) { return memoryManager.create(*this, mBase); }
-	void Grid::delSpatialInfo(SpatialInfoBase& mSpatialInfo)
-	{
-		memoryManager.del(&(static_cast<GridInfo&>(mSpatialInfo)));
-		memoryManager.cleanUp();
-	}
 }

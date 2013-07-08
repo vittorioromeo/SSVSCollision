@@ -7,16 +7,15 @@
 
 namespace ssvsc
 {
-	struct MassData
+	class MassData
 	{
-		float mass{1}, invMass{1};
+		private:
+			float mass{1}, invMass{1};
 
-		// Setters
-		inline void setMass(float mMass) { mass = mMass; invMass = mMass == 0 ? 0 : 1.f / mMass; }
-
-		// Getters
-		inline float getMass() const	{ return mass; }
-		inline float getInvMass() const	{ return invMass; }
+		public:
+			inline void setMass(float mMass)	{ mass = mMass; invMass = mMass == 0 ? 0 : 1.f / mMass; }
+			inline float getMass() const		{ return mass; }
+			inline float getInvMass() const		{ return invMass; }
 	};
 }
 

@@ -47,10 +47,10 @@ namespace ssvsc
 
 			inline Type getType() override { return Type::Body; }
 			void update(float mFrameTime) override;
-			void destroy() override;
+			inline void destroy() override { Base::destroy(); }
 
-			inline void applyForce(Vec2f mForce)	{ if(!_static) acceleration += mForce; }
-			void applyImpulse(Vec2f mImpulse)		{ velocity += getInvMass() * mImpulse; }
+			inline void applyForce(Vec2f mForce)		{ if(!_static) acceleration += mForce; }
+			inline void applyImpulse(Vec2f mImpulse)	{ velocity += getInvMass() * mImpulse; }
 
 			// Setters
 			inline void setPosition(Vec2i mPosition)			{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }

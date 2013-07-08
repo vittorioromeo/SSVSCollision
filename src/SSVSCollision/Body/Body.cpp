@@ -56,7 +56,5 @@ namespace ssvsc
 		shape.move(Vec2i(velocity * mFrameTime));
 		acceleration = {0, 0};
 	}
-
-	void Body::destroy() { Base::destroy(); }
 }
 

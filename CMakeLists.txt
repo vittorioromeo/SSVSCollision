@@ -25,7 +25,6 @@ if(NOT SFML_FOUND)
 	message("\n-> SFML directory not found. Set include and libraries manually.")
 endif()
 
-find_package(Sparsehash REQUIRED)
 find_package(SSVUtils REQUIRED)
 find_package(SSVStart REQUIRED)
 
@@ -34,7 +33,6 @@ set(INC_DIR "include")
 file(GLOB_RECURSE SRC_LIST "${INC_DIR}/*" "${SRC_DIR}/*")
 
 include_directories(${INC_DIR})
-include_directories(${SPARSEHASH_INCLUDE_DIR})
 include_directories(${SFML_INCLUDE_DIR})
 include_directories(${SSVUTILS_INCLUDE_DIR})
 include_directories(${SSVSTART_INCLUDE_DIR})

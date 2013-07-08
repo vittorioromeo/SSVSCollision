@@ -18,10 +18,15 @@ namespace ssvsc
 	struct ResolverBase;
 	template<typename T, typename... TArgs> class GridQuery;
 
+	struct GridInfoDeleter
+	{
+		inline bool operator()(const Uptr<GridInfo>& mGridInfo) const { return !mGridInfo->isAlive(); }
+	};
+
 	class Grid : public SpatialBase
 	{
 		private:
-			ssvu::MemoryManager<GridInfo> memoryManager;
+			ssvu::MemoryManager2<GridInfo, GridInfoDeleter> memoryManager;
 			std::vector<std::vector<Cell*>> cells; // owned
 			int columns, rows, cellSize, offset;
 
@@ -30,7 +35,7 @@ namespace ssvsc
 			~Grid();
 
 			SpatialInfoBase& createSpatialInfo(Base& mBase) override;
-			void delSpatialInfo(SpatialInfoBase& mSpatialInfo) override;
+			void refresh() override { memoryManager.cleanUp(); memoryManager.populate(); }
 
 			inline int getIndexXMin() const	{ return 0 - offset; }
 			inline int getIndexYMin() const	{ return 0 - offset; }

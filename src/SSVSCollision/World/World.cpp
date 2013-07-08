@@ -38,5 +38,7 @@ namespace ssvsc
 		memoryManager.cleanUp();
 		for(const auto& b : memoryManager) b->update(mFrameTime);
 		memoryManager.populate();
+
+		spatial->refresh();
 	}
 }
