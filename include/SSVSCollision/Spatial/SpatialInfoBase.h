@@ -5,6 +5,7 @@
 #ifndef SSVSC_SPATIAL_INFOBASE
 #define SSVSC_SPATIAL_INFOBASE
 
+#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Spatial/SpatialBase.h"
 
 namespace ssvsc
@@ -12,23 +13,20 @@ namespace ssvsc
 	class Base;
 	class Body;
 
-	class SpatialInfoBase
+	class SpatialInfoBase : public ssvu::MemoryManageable
 	{
 		protected:
 			SpatialBase& spatial;
 			Base& base;
-			bool alive{true};
 
 		public:
 			SpatialInfoBase(SpatialBase& mSpatial, Base& mBase) : spatial(mSpatial), base(mBase) { }
 			virtual ~SpatialInfoBase() { }
 
-			inline bool isAlive() const { return alive; }
-
 			virtual void invalidate() = 0;
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
-			virtual void destroy() { alive = false; }
+			virtual void destroy() { spatial.del(*this); }
 			virtual void handleCollisions(float mFrameTime) = 0;
 	};
 }

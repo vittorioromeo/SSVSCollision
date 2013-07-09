@@ -17,11 +17,6 @@ namespace ssvsc
 	struct ResolverBase;
 	struct SpatialBase;
 
-	struct BaseDeleter
-	{
-		inline bool operator()(const Uptr<Base>& mBase) const;
-	};
-
 	class World
 	{
 		friend class Base;
@@ -30,13 +25,15 @@ namespace ssvsc
 
 		private:
 			GroupManager groupManager;
-			ssvu::MemoryManager2<Base, BaseDeleter> memoryManager;
+			ssvu::MemoryManager<Base> memoryManager;
 
 			Uptr<ResolverBase> resolver; // owned
 			Uptr<SpatialBase> spatial; // owned
 
 			std::vector<Body*> bodies; // TODO: remove?
 			std::vector<Sensor*> sensors; // TODO: remove?
+
+			void del(Base& mBase);
 
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
@@ -48,7 +45,7 @@ namespace ssvsc
 			inline void clear() { memoryManager.clear(); bodies.clear(); sensors.clear(); }
 
 			inline GroupManager& getGroupManager()			{ return groupManager; }
-			inline std::vector<Uptr<Base>>& getBases()		{ return memoryManager.getItems(); }
+			inline ssvu::MemoryManager<Base>::Container& getBases() { return memoryManager.getItems(); }
 			inline ResolverBase& getResolver()				{ return *resolver; }
 			inline SpatialBase& getSpatial()				{ return *spatial; }
 			inline std::vector<Body*>& getBodies()			{ return bodies; } // TODO: remove?

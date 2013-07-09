@@ -5,6 +5,7 @@
 #ifndef SSVSC_BASE
 #define SSVSC_BASE
 
+#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/World/World.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
@@ -16,13 +17,13 @@ namespace ssvsc
 	class Body;
 	class SpatialInfoBase;
 
-	class Base
+	class Base : public ssvu::MemoryManageable
 	{
 		protected:
 			World& world;
 			SpatialInfoBase& spatialInfo;
 			GroupData groupData;
-			bool outOfBounds{false}, alive{true};
+			bool outOfBounds{false};
 
 			Base(World& mWorld) : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
 
@@ -34,14 +35,13 @@ namespace ssvsc
 			virtual AABB& getShape() = 0;
 			virtual AABB& getOldShape() = 0;
 			virtual Type getType() = 0;
-			virtual void destroy() { alive = false; }
+			virtual void destroy() { world.del(*this); }
 
 			inline SpatialInfoBase& getSpatialInfo()		{ return spatialInfo; }
 			inline void setOutOfBounds(bool mOutOfBounds)	{ outOfBounds = mOutOfBounds; }
 
 			// Getters
 			inline World& getWorld() const	{ return world; }
-			inline bool isAlive() const		{ return alive; }
 
 			// GroupData shortcuts
 			inline void addGroup(Group mGroup)					{ groupData.addGroup(mGroup); }

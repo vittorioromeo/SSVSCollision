@@ -15,7 +15,7 @@ using namespace ssvu;
 
 namespace ssvsc
 {
-	bool BaseDeleter::operator()(const Uptr<Base>& mBase) const { return !mBase->isAlive(); }
+	void World::del(Base& mBase) { memoryManager.del(mBase); }
 
 	World::World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver(&mResolver), spatial(&mSpatial) { }
 
@@ -35,9 +35,8 @@ namespace ssvsc
 		bodies.erase(remove_if(begin(bodies), end(bodies), [](const Body* mBody){ return !mBody->isAlive(); }), end(bodies));
 		sensors.erase(remove_if(begin(sensors), end(sensors), [](const Sensor* mSensor){ return !mSensor->isAlive(); }), end(sensors));
 
-		memoryManager.cleanUp();
+		memoryManager.refresh();
 		for(const auto& b : memoryManager) b->update(mFrameTime);
-		memoryManager.populate();
 
 		spatial->refresh();
 	}

@@ -16,6 +16,7 @@ namespace ssvsc
 		virtual ~SpatialBase() { }
 		virtual SpatialInfoBase& createSpatialInfo(Base& mBase) = 0;
 		virtual void refresh() = 0;
+		virtual void del(SpatialInfoBase& mSpatialInfo) = 0;
 	};
 }
 
