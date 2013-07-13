@@ -27,7 +27,6 @@ namespace ssvsc
 
 		public:
 			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0);
-			~Grid();
 
 			SpatialInfoBase& createSpatialInfo(Base& mBase) override;
 			inline void refresh() override { memoryManager.refresh(); }

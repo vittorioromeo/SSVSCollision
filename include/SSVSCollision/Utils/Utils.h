@@ -51,9 +51,9 @@ namespace ssvsc
 			return abs(iX) < abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY};
 		}
 		inline Vec2i getMinIntersection(const AABB& mA, const AABB& mB)	{ return {getMinIntersectionX(mA, mB), getMinIntersectionY(mA, mB)}; }
-		inline int getOverlapX(const AABB& mA, const AABB& mB)					{ return mA.getLeft() < mB.getLeft() ? mA.getRight() - mB.getLeft() : mB.getRight() - mA.getLeft(); }
-		inline int getOverlapY(const AABB& mA, const AABB& mB)					{ return mA.getTop() < mB.getTop() ? mA.getBottom() - mB.getTop() : mB.getBottom() - mA.getTop(); }
-		inline int getOverlapArea(const AABB& mA, const AABB& mB)				{ return getOverlapX(mA, mB) * getOverlapY(mA, mB); }
+		inline int getOverlapX(const AABB& mA, const AABB& mB)			{ return mA.getLeft() < mB.getLeft() ? mA.getRight() - mB.getLeft() : mB.getRight() - mA.getLeft(); }
+		inline int getOverlapY(const AABB& mA, const AABB& mB)			{ return mA.getTop() < mB.getTop() ? mA.getBottom() - mB.getTop() : mB.getBottom() - mA.getTop(); }
+		inline int getOverlapArea(const AABB& mA, const AABB& mB)		{ return getOverlapX(mA, mB) * getOverlapY(mA, mB); }
 
 	}
 }

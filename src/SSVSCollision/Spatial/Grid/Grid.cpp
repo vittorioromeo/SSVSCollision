@@ -22,7 +22,5 @@ namespace ssvsc
 			}
 		}
 	}
-	Grid::~Grid() { memoryManager.clear(); }
-
 	SpatialInfoBase& Grid::createSpatialInfo(Base& mBase) { return memoryManager.create(*this, mBase); }
 }

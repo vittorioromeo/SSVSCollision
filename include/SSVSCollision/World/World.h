@@ -27,8 +27,8 @@ namespace ssvsc
 			GroupManager groupManager;
 			ssvu::MemoryManager<Base> memoryManager;
 
-			Uptr<ResolverBase> resolver; // owned
-			Uptr<SpatialBase> spatial; // owned
+			Uptr<ResolverBase> resolver;
+			Uptr<SpatialBase> spatial;
 
 			std::vector<Body*> bodies; // TODO: remove?
 			std::vector<Sensor*> sensors; // TODO: remove?
