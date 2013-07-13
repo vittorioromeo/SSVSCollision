@@ -27,8 +27,9 @@ namespace ssvsc
 			const AABB& s(b->getShape());
 			const AABB& os(b->getOldShape());
 
-			auto intersection(getMinIntersection(shape, s));
-			Vec2i resolution{getMin1DIntersection(shape, s)};
+			int iX{getMinIntersectionX(shape, s)}, iY{getMinIntersectionY(shape, s)};
+			Vec2i intersection({iX, iY});
+			Vec2i resolution{abs(iX) < abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY}};
 
 			mBody.onResolution({*b, b->getUserData(), intersection, resolution, noResolvePosition, noResolveVelocity});
 
