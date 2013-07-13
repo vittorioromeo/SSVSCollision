@@ -14,19 +14,15 @@ namespace ssvsc
 	{
 		for(int iX{0}; iX < columns; ++iX)
 		{
-			cells.push_back(vector<Cell*>(rows));
+			cells.push_back(vector<Uptr<Cell>>(rows));
 			for(int iY{0}; iY < rows; ++iY)
 			{
 				int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
-				cells[iX][iY] = new Cell{{left, right, top, bottom}};
+				cells[iX][iY] = Uptr<Cell>(new Cell{{left, right, top, bottom}});
 			}
 		}
 	}
-	Grid::~Grid()
-	{
-		memoryManager.clear();
-		for(int iX{0}; iX < columns; ++iX) for(int iY{0}; iY < rows; ++iY) delete cells[iX][iY];
-	}
+	Grid::~Grid() { memoryManager.clear(); }
 
 	SpatialInfoBase& Grid::createSpatialInfo(Base& mBase) { return memoryManager.create(*this, mBase); }
 }

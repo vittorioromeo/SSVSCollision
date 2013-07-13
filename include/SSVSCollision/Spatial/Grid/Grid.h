@@ -22,7 +22,7 @@ namespace ssvsc
 	{
 		private:
 			ssvu::MemoryManager<GridInfo> memoryManager;
-			std::vector<std::vector<Cell*>> cells; // owned
+			std::vector<std::vector<Uptr<Cell>>> cells; // owned
 			int columns, rows, cellSize, offset;
 
 		public:
@@ -48,7 +48,7 @@ namespace ssvsc
 			inline Cell& getCell(int mX, int mY)	{ return *cells[mX + offset][mY + offset]; }
 			inline Cell& getCell(Vec2i mIndex)		{ return getCell(mIndex.x, mIndex.y); }
 
-			inline const std::vector<std::vector<Cell*>>& getCells() { return cells; }
+			inline const std::vector<std::vector<Uptr<Cell>>>& getCells() { return cells; }
 			inline bool isIndexValid(Vec2i mIndex) const									{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
 			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
 
