@@ -38,8 +38,8 @@ namespace ssvsc
 
 			ssvu::Delegate<void> onPreUpdate;
 			ssvu::Delegate<void> onPostUpdate;
-			ssvu::Delegate<void, DetectionInfo> onDetection;
-			ssvu::Delegate<void, ResolutionInfo> onResolution;
+			ssvu::Delegate<void, const DetectionInfo&> onDetection;
+			ssvu::Delegate<void, const ResolutionInfo&> onResolution;
 			ssvu::Delegate<void> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize);
