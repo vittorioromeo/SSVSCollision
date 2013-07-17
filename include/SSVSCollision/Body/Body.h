@@ -31,7 +31,12 @@ namespace ssvsc
 			std::vector<Body*> bodiesToResolve;
 			int paint{-1};
 
-			void integrate(float mFrameTime);
+			inline void integrate(float mFrameTime)
+			{
+				velocity += acceleration * mFrameTime;
+				shape.move(Vec2i(velocity * mFrameTime));
+				acceleration = {0, 0};
+			}
 
 		public:
 			void handleCollision(float mFrameTime, Body* mBody) override;

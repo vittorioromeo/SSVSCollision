@@ -49,12 +49,5 @@ namespace ssvsc
 		spatialInfo.postUpdate();
 		onPostUpdate();
 	}
-
-	void Body::integrate(float mFrameTime)
-	{
-		velocity += acceleration * mFrameTime;
-		shape.move(Vec2i(velocity * mFrameTime));
-		acceleration = {0, 0};
-	}
 }
 
