@@ -58,15 +58,15 @@ namespace ssvsc
 	void GridInfo::destroy()	{ clear(); SpatialInfoBase::destroy(); }
 	void GridInfo::handleCollisions(float mFrameTime)
 	{
-		static int paint{-1};
-		++paint;
+		static int lastPaint{-1};
+		++lastPaint;
 
 		for(const auto& c : cells)
 			for(const auto& b : c->getBodies())
 			{
-				if(b->paint == paint) continue;
+				if(b->paint == lastPaint) continue;
 				base.handleCollision(mFrameTime, b);
-				b->paint = paint;
+				b->paint = lastPaint;
 			}
 	}
 }
