@@ -41,11 +41,11 @@ namespace ssvsc
 		public:
 			void handleCollision(float mFrameTime, Body* mBody) override;
 
-			ssvu::Delegate<void> onPreUpdate;
-			ssvu::Delegate<void> onPostUpdate;
-			ssvu::Delegate<void, const DetectionInfo&> onDetection;
-			ssvu::Delegate<void, const ResolutionInfo&> onResolution;
-			ssvu::Delegate<void> onOutOfBounds;
+			ssvu::Delegate<void()> onPreUpdate;
+			ssvu::Delegate<void()> onPostUpdate;
+			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
+			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
+			ssvu::Delegate<void()> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize);
 			~Body();
