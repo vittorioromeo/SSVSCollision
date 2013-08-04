@@ -15,8 +15,6 @@ using namespace ssvu;
 
 namespace ssvsc
 {
-	void World::del(Base& mBase) { memoryManager.del(mBase); }
-
 	World::World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver(&mResolver), spatial(&mSpatial) { }
 
 	Body& World::create(Vec2i mPosition, Vec2i mSize, bool mIsStatic)

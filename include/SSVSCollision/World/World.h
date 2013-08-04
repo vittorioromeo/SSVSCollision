@@ -33,7 +33,7 @@ namespace ssvsc
 			std::vector<Body*> bodies; // TODO: remove?
 			std::vector<Sensor*> sensors; // TODO: remove?
 
-			void del(Base& mBase);
+			inline void del(Base& mBase) { memoryManager.del(mBase); }
 
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
