@@ -58,39 +58,39 @@ namespace ssvsc
 			inline void applyImpulse(Vec2f mImpulse)	{ velocity += getInvMass() * mImpulse; }
 
 			// Setters
-			inline void setPosition(Vec2i mPosition)			{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
-			inline void setX(int mX)							{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
-			inline void setY(int mY)							{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
-			inline void setSize(Vec2i mSize)					{ shape.setSize(mSize); spatialInfo.invalidate(); }
-			inline void setHalfSize(Vec2i mSize)				{ shape.setHalfSize(mSize); spatialInfo.invalidate(); }
-			inline void setWidth(int mWidth)					{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
-			inline void setHeight(int mHeight)					{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
-			inline void setVelocity(Vec2f mVelocity) 			{ velocity = mVelocity; }
-			inline void setAcceleration(Vec2f mAcceleration)	{ acceleration = mAcceleration; }
-			inline void setStatic(bool mStatic) 				{ _static = mStatic; spatialInfo.invalidate(); }
-			inline void setUserData(void* mUserData)			{ userData = mUserData; }
-			inline void setVelocityX(float mX)					{ velocity.x = mX; }
-			inline void setVelocityY(float mY)					{ velocity.y = mY; }
-			inline void setResolve(bool mResolve)				{ resolve = mResolve; }
-			inline void setMass(float mMass)					{ massData.setMass(mMass); }
+			inline void setPosition(Vec2i mPosition)	{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
+			inline void setX(int mX)					{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
+			inline void setY(int mY)					{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
+			inline void setSize(Vec2i mSize)			{ shape.setSize(mSize); spatialInfo.invalidate(); }
+			inline void setHalfSize(Vec2i mSize)		{ shape.setHalfSize(mSize); spatialInfo.invalidate(); }
+			inline void setWidth(int mWidth)			{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
+			inline void setHeight(int mHeight)			{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
+			inline void setVelocity(Vec2f mVelocity) 	{ velocity = mVelocity; }
+			inline void setAcceleration(Vec2f mAccel)	{ acceleration = mAccel; }
+			inline void setStatic(bool mStatic) 		{ _static = mStatic; spatialInfo.invalidate(); }
+			inline void setUserData(void* mUserData)	{ userData = mUserData; }
+			inline void setVelocityX(float mX)			{ velocity.x = mX; }
+			inline void setVelocityY(float mY)			{ velocity.y = mY; }
+			inline void setResolve(bool mResolve)		{ resolve = mResolve; }
+			inline void setMass(float mMass)			{ massData.setMass(mMass); }
 
 			// Getters
-			inline AABB& getShape() override		{ return shape; }
-			inline AABB& getOldShape() override		{ return oldShape; }
-			inline Vec2i getPosition() const		{ return shape.getPosition(); }
-			inline Vec2f getVelocity() const		{ return velocity; }
-			inline Vec2f getAcceleration() const	{ return acceleration; }
-			inline Vec2i getSize() const			{ return shape.getSize(); }
-			inline float getMass() const			{ return _static ? 0 : massData.getMass(); }
-			inline float getInvMass() const			{ return _static ? 0 : massData.getInvMass(); }
-			inline int getWidth() const				{ return shape.getWidth(); }
-			inline int getHeight() const			{ return shape.getHeight(); }
-			inline bool isStatic() const			{ return _static; }
-			inline void* getUserData() const		{ return userData; }
-			inline bool hasMovedLeft() const		{ return shape.getX() < oldShape.getX(); }
-			inline bool hasMovedRight() const		{ return shape.getX() > oldShape.getX(); }
-			inline bool hasMovedUp() const			{ return shape.getY() < oldShape.getY(); }
-			inline bool hasMovedDown() const		{ return shape.getY() > oldShape.getY(); }
+			inline AABB& getShape() override			{ return shape; }
+			inline AABB& getOldShape() override			{ return oldShape; }
+			inline Vec2i getPosition() const			{ return shape.getPosition(); }
+			inline Vec2f getVelocity() const			{ return velocity; }
+			inline Vec2f getAcceleration() const		{ return acceleration; }
+			inline Vec2i getSize() const				{ return shape.getSize(); }
+			inline float getMass() const				{ return _static ? 0 : massData.getMass(); }
+			inline float getInvMass() const				{ return _static ? 0 : massData.getInvMass(); }
+			inline int getWidth() const					{ return shape.getWidth(); }
+			inline int getHeight() const				{ return shape.getHeight(); }
+			inline bool isStatic() const				{ return _static; }
+			inline void* getUserData() const			{ return userData; }
+			inline bool hasMovedLeft() const			{ return shape.getX() < oldShape.getX(); }
+			inline bool hasMovedRight() const			{ return shape.getX() > oldShape.getX(); }
+			inline bool hasMovedUp() const				{ return shape.getY() < oldShape.getY(); }
+			inline bool hasMovedDown() const			{ return shape.getY() > oldShape.getY(); }
 	};
 }
 

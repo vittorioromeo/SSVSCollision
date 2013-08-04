@@ -18,16 +18,9 @@ namespace ssvsc
 			std::unordered_map<std::string, Group> groups;
 
 		public:
-			GroupManager() = default;
-
 			inline Group get(const std::string& mLabel)
 			{
-				if(groups.find(mLabel) == end(groups))
-				{
-					groups[mLabel] = lastGroup;
-					++lastGroup;
-				}
-
+				if(groups.find(mLabel) == end(groups)) groups[mLabel] = lastGroup++;
 				return groups[mLabel];
 			}
 	};

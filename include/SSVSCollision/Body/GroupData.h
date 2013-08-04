@@ -15,17 +15,17 @@ namespace ssvsc
 			Bitset groups, groupsToCheck, groupsNoResolve;
 
 		public:
-			inline void addGroup(Group mGroup)				{ groups.set(mGroup); }
-			inline void addGroupToCheck(Group mGroup)		{ groupsToCheck.set(mGroup); }
-			inline void addGroupNoResolve(Group mGroup)		{ groupsNoResolve.set(mGroup); }
+			inline void addGroup(Group mGroup)					{ groups.set(mGroup); }
+			inline void addGroupToCheck(Group mGroup)			{ groupsToCheck.set(mGroup); }
+			inline void addGroupNoResolve(Group mGroup)			{ groupsNoResolve.set(mGroup); }
 
-			inline void delGroup(Group mGroup)				{ groups.set(mGroup, false); }
-			inline void delGroupToCheck(Group mGroup)		{ groupsToCheck.set(mGroup, false); }
-			inline void delGroupNoResolve(Group mGroup)		{ groupsNoResolve.set(mGroup, false); }
+			inline void delGroup(Group mGroup)					{ groups.set(mGroup, false); }
+			inline void delGroupToCheck(Group mGroup)			{ groupsToCheck.set(mGroup, false); }
+			inline void delGroupNoResolve(Group mGroup)			{ groupsNoResolve.set(mGroup, false); }
 
-			inline void clearGroups()						{ groups.reset(); }
-			inline void clearGroupsToCheck()				{ groupsToCheck.reset(); }
-			inline void clearGroupsNoResolve()				{ groupsNoResolve.reset(); }
+			inline void clearGroups()							{ groups.reset(); }
+			inline void clearGroupsToCheck()					{ groupsToCheck.reset(); }
+			inline void clearGroupsNoResolve()					{ groupsNoResolve.reset(); }
 
 			inline bool hasGroup(Group mGroup) const			{ return groups.test(mGroup); }
 			inline bool hasGroupToCheck(Group mGroup) const		{ return groupsToCheck.test(mGroup); }
