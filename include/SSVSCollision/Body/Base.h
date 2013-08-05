@@ -60,11 +60,6 @@ namespace ssvsc
 			inline const Bitset& getGroupsToCheck()	const		{ return groupData.getGroupsToCheck(); }
 			inline const Bitset& getGroupsNoResolve() const		{ return groupData.getGroupsNoResolve(); }
 
-			// GroupData + GroupManager shortcuts
-			inline void addGroups(const std::vector<std::string>& mLabels)				{ for(const auto& l : mLabels) addGroup(world.getGroup(l)); }
-			inline void addGroupsToCheck(const std::vector<std::string>& mLabels)		{ for(const auto& l : mLabels) addGroupToCheck(world.getGroup(l)); }
-			inline void addGroupsNoResolve(const std::vector<std::string>& mLabels)	{ for(const auto& l : mLabels) addGroupNoResolve(world.getGroup(l)); }
-
 			// Group tests
 			inline bool hasAnyGroup(const Bitset& mGroups) const		{ return (groupData.getGroups() & mGroups).any(); }
 			inline bool mustCheck(const Base& mBase) const				{ return mBase.hasAnyGroup(groupData.getGroupsToCheck()); }

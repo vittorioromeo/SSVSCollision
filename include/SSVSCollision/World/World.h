@@ -7,7 +7,6 @@
 
 #include <vector>
 #include "SSVSCollision/Global/Typedefs.h"
-#include "SSVSCollision/Utils/GroupManager.h"
 
 namespace ssvsc
 {
@@ -24,7 +23,6 @@ namespace ssvsc
 		friend class Sensor;
 
 		private:
-			GroupManager groupManager;
 			ssvu::MemoryManager<Base> memoryManager;
 
 			Uptr<ResolverBase> resolver;
@@ -44,7 +42,6 @@ namespace ssvsc
 			void update(float mFrameTime);
 			inline void clear() { memoryManager.clear(); bodies.clear(); sensors.clear(); }
 
-			inline GroupManager& getGroupManager()			{ return groupManager; }
 			inline ssvu::MemoryManager<Base>::Container& getBases() { return memoryManager.getItems(); }
 			inline ResolverBase& getResolver()				{ return *resolver; }
 			inline SpatialBase& getSpatial()				{ return *spatial; }
@@ -53,8 +50,6 @@ namespace ssvsc
 
 			template<typename T> inline T& getResolver()	{ return static_cast<T&>(getResolver()); }
 			template<typename T> inline T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
-
-			inline Group getGroup(const std::string& mLabel) { return groupManager.get(mLabel); }
 	};
 }
 
