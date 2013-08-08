@@ -30,8 +30,8 @@ namespace ssvsc
 
 	void World::update(float mFrameTime)
 	{
-		bodies.erase(remove_if(begin(bodies), end(bodies), [](const Body* mBody){ return !mBody->isAlive(); }), end(bodies));
-		sensors.erase(remove_if(begin(sensors), end(sensors), [](const Sensor* mSensor){ return !mSensor->isAlive(); }), end(sensors));
+		eraseRemoveIf(bodies, &memoryManager.isDead<Body*>);
+		eraseRemoveIf(sensors, &memoryManager.isDead<Sensor*>);
 
 		memoryManager.refresh();
 		for(const auto& b : memoryManager) b->update(mFrameTime);
