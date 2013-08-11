@@ -15,7 +15,7 @@ namespace ssvsc
 	using Bitset = std::bitset<64>;
 	using Vec2i = ssvs::Vec2i;
 	using Vec2f = ssvs::Vec2f;
-	template<typename T> using Uptr = ssvs::Uptr<T>;
+	template<typename T, typename TDeleter = std::default_delete<T>> using Uptr = std::unique_ptr<T, TDeleter>;
 	template<typename T> using Vec2 = ssvs::Vec2<T>;
 	enum class Type{Body, Sensor};
 }

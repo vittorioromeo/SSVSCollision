@@ -23,7 +23,7 @@ namespace ssvsc
 		friend class Sensor;
 
 		private:
-			ssvu::MemoryManager<Base> memoryManager;
+			ssvu::MemoryManager<Base> bases;
 
 			Uptr<ResolverBase> resolver;
 			Uptr<SpatialBase> spatial;
@@ -31,7 +31,7 @@ namespace ssvsc
 			std::vector<Body*> bodies; // TODO: remove?
 			std::vector<Sensor*> sensors; // TODO: remove?
 
-			inline void del(Base& mBase) { memoryManager.del(mBase); }
+			inline void del(Base& mBase) { bases.del(mBase); }
 
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial);
@@ -40,9 +40,9 @@ namespace ssvsc
 			Sensor& createSensor(Vec2i mPosition, Vec2i mSize);
 
 			void update(float mFrameTime);
-			inline void clear() { memoryManager.clear(); bodies.clear(); sensors.clear(); }
+			inline void clear() { bases.clear(); bodies.clear(); sensors.clear(); }
 
-			inline ssvu::MemoryManager<Base>::Container& getBases() { return memoryManager.getItems(); }
+			inline decltype(bases)::Container& getBases()	{ return bases.getItems(); }
 			inline ResolverBase& getResolver()				{ return *resolver; }
 			inline SpatialBase& getSpatial()				{ return *spatial; }
 			inline std::vector<Body*>& getBodies()			{ return bodies; } // TODO: remove?
