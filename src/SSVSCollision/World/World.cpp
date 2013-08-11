@@ -2,7 +2,6 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#include <algorithm>
 #include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/World/World.h"
 #include "SSVSCollision/Body/Body.h"
