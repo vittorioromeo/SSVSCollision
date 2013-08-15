@@ -7,13 +7,13 @@
 
 #include <vector>
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
+#include "SSVSCollision/Spatial/Grid/Cell.h"
 
 namespace ssvsc
 {
 	class Base;
 	class Body;
 	class Grid;
-	class Cell;
 
 	class GridInfo : public SpatialInfoBase
 	{
@@ -25,17 +25,20 @@ namespace ssvsc
 
 			void calcEdges();
 			void calcCells();
-			void clear();
+			inline void clear()
+			{
+				for(const auto& c : cells) c->del(&base);
+				cells.clear();
+			}
 
 		public:
 			std::vector<Cell*> cells;
 			GridInfo(Grid& mGrid, Base& mBase);
-			~GridInfo();
 
-			void invalidate() override;
-			void preUpdate() override;
-			void postUpdate() override;
-			void destroy() override;
+			inline void invalidate() override	{ invalid = true; }
+			inline void preUpdate() override	{ if(invalid) calcEdges(); }
+			inline void postUpdate() override	{ }
+			inline void destroy() override		{ clear(); SpatialInfoBase::destroy(); }
 			void handleCollisions(float mFrameTime) override;
 	};
 }

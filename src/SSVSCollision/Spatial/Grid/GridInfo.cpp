@@ -6,7 +6,6 @@
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
-#include "SSVSCollision/Spatial/Grid/Cell.h"
 
 using namespace std;
 using namespace ssvu;
@@ -14,7 +13,6 @@ using namespace ssvu;
 namespace ssvsc
 {
 	GridInfo::GridInfo(Grid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { }
-	GridInfo::~GridInfo() { }
 
 	void GridInfo::calcEdges()
 	{
@@ -34,12 +32,6 @@ namespace ssvsc
 		if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells();
 		else invalid = false;
 	}
-
-	void GridInfo::clear()
-	{
-		for(const auto& c : cells) c->del(&base);
-		cells.clear();
-	}
 	void GridInfo::calcCells()
 	{
 		clear();
@@ -51,11 +43,6 @@ namespace ssvsc
 
 		invalid = false;
 	}
-
-	void GridInfo::invalidate()	{ invalid = true; }
-	void GridInfo::preUpdate()	{ if(invalid) calcEdges(); }
-	void GridInfo::postUpdate()	{ }
-	void GridInfo::destroy()	{ clear(); SpatialInfoBase::destroy(); }
 	void GridInfo::handleCollisions(float mFrameTime)
 	{
 		static int lastPaint{-1};

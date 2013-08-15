@@ -10,7 +10,7 @@ namespace ssvsc
 	class MassData
 	{
 		private:
-			float mass{1}, invMass{1};
+			float mass{1.f}, invMass{1.f};
 
 		public:
 			inline void setMass(float mMass)	{ mass = mMass; invMass = mMass == 0 ? 0 : 1.f / mMass; }

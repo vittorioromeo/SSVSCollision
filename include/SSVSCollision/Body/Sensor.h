@@ -41,9 +41,6 @@ namespace ssvsc
 				if(!mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 				onDetection({*mBody, mFrameTime, mBody->getUserData(), ssvsc::Utils::getMinIntersection(shape, mBody->getShape())});
 			}
-			inline AABB& getShape() override	{ return shape; }
-			inline AABB& getOldShape() override	{ return shape; }
-			inline Type getType() override		{ return Type::Sensor; }
 			inline void destroy() override		{ Base::destroy(); }
 
 			inline void setPosition(Vec2i mPosition)
@@ -51,6 +48,10 @@ namespace ssvsc
 				if(mPosition != shape.getPosition()) spatialInfo.invalidate();
 				shape.setPosition(mPosition);
 			}
+
+			inline AABB& getShape() override	{ return shape; }
+			inline AABB& getOldShape() override	{ return shape; }
+			inline Type getType() override		{ return Type::Sensor; }
 	};
 }
 

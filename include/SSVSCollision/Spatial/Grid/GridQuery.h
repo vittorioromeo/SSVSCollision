@@ -60,15 +60,13 @@ namespace ssvsc
 				return nullptr;
 			}
 
-
-
 		public:
 			GridQuery(Grid& mGrid, Vec2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{Vec2f(mStartPos)}, pos{startPos},
-				startIndex{grid.getIndex(mStartPos)}, index{startIndex}, internal(*this, mArgs...) { }
+				startIndex{grid.getIndex(mStartPos)}, index{startIndex}, internal(*this, std::forward<TArgs>(mArgs)...) { }
 
-			Body* next() { return nextImpl<GridQueryTypes::Bodies::All>(); }
-			Body* next(int mGroupId) { return nextImpl<GridQueryTypes::Bodies::Grouped>(mGroupId); }
-			std::vector<Cell*> getAllCells()
+			inline Body* next()				{ return nextImpl<GridQueryTypes::Bodies::All>(); }
+			inline Body* next(Group mGroup)	{ return nextImpl<GridQueryTypes::Bodies::Grouped>(mGroup); }
+			inline std::vector<Cell*> getAllCells()
 			{
 				std::vector<Cell*> result;
 
@@ -81,7 +79,7 @@ namespace ssvsc
 				return result;
 			}
 
-			void reset()
+			inline void reset()
 			{
 				pos = startPos;
 				index = startIndex;
@@ -90,9 +88,8 @@ namespace ssvsc
 				// TODO: call internal.reset() ?
 			}
 
-			// Getters
-			const Vec2f& getLastPos() { return lastPos; }
-			const std::vector<Vec2i>& getVisitedIndexes() { return visitedIndexes; }
+			inline const Vec2f& getLastPos()						{ return lastPos; }
+			inline const std::vector<Vec2i>& getVisitedIndexes()	{ return visitedIndexes; }
 	};
 }
 

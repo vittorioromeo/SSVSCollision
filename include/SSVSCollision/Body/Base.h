@@ -32,18 +32,16 @@ namespace ssvsc
 
 			virtual	void update(float mFrameTime) = 0;
 			virtual void handleCollision(float mFrameTime, Body* mBody) = 0;
+			inline virtual void destroy() { world.del(*this); }
+
+			inline void setOutOfBounds(bool mOutOfBounds)	{ outOfBounds = mOutOfBounds; }
+
 			virtual AABB& getShape() = 0;
 			virtual AABB& getOldShape() = 0;
 			virtual Type getType() = 0;
-			virtual void destroy() { world.del(*this); }
+			inline SpatialInfoBase& getSpatialInfo()	{ return spatialInfo; }
+			inline World& getWorld() const				{ return world; }
 
-			inline SpatialInfoBase& getSpatialInfo()		{ return spatialInfo; }
-			inline void setOutOfBounds(bool mOutOfBounds)	{ outOfBounds = mOutOfBounds; }
-
-			// Getters
-			inline World& getWorld() const	{ return world; }
-
-			// GroupData shortcuts
 			inline void addGroup(Group mGroup)					{ groupData.addGroup(mGroup); }
 			inline void addGroupToCheck(Group mGroup)			{ groupData.addGroupToCheck(mGroup); }
 			inline void addGroupNoResolve(Group mGroup)			{ groupData.addGroupNoResolve(mGroup); }
@@ -60,7 +58,6 @@ namespace ssvsc
 			inline const Bitset& getGroupsToCheck()	const		{ return groupData.getGroupsToCheck(); }
 			inline const Bitset& getGroupsNoResolve() const		{ return groupData.getGroupsNoResolve(); }
 
-			// Group tests
 			inline bool hasAnyGroup(const Bitset& mGroups) const		{ return (groupData.getGroups() & mGroups).any(); }
 			inline bool mustCheck(const Base& mBase) const				{ return mBase.hasAnyGroup(groupData.getGroupsToCheck()); }
 			inline bool mustIgnoreResolution(const Base& mBase) const	{ return mBase.hasAnyGroup(groupData.getGroupsNoResolve()); }

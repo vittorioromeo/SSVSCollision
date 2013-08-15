@@ -14,7 +14,6 @@ using namespace ssvsc::Utils;
 namespace ssvsc
 {
 	Body::Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.preUpdate(); }
-	Body::~Body() { spatialInfo.destroy(); }
 
 	void Body::handleCollision(float mFrameTime, Body* mBody)
 	{
@@ -25,8 +24,7 @@ namespace ssvsc
 		onDetection({*mBody, mFrameTime, mBody->getUserData(), intersection});
 		mBody->onDetection({*this, mFrameTime, userData, -intersection});
 
-		if(!resolve || mustIgnoreResolution(*mBody)) return;
-		bodiesToResolve.push_back(mBody);
+		if(resolve && !mustIgnoreResolution(*mBody)) bodiesToResolve.push_back(mBody);
 	}
 
 	void Body::update(float mFrameTime)
@@ -46,8 +44,7 @@ namespace ssvsc
 		if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
 		if(oldShape != shape) spatialInfo.invalidate();
 
-		spatialInfo.postUpdate();
-		onPostUpdate();
+		spatialInfo.postUpdate(); onPostUpdate();
 	}
 }
 

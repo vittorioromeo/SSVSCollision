@@ -39,25 +39,20 @@ namespace ssvsc
 			}
 
 		public:
-			void handleCollision(float mFrameTime, Body* mBody) override;
-
-			ssvu::Delegate<void()> onPreUpdate;
-			ssvu::Delegate<void()> onPostUpdate;
+			ssvu::Delegate<void()> onPreUpdate, onPostUpdate, onOutOfBounds;
 			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
 			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
-			ssvu::Delegate<void()> onOutOfBounds;
 
 			Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize);
-			~Body();
+			~Body() { spatialInfo.destroy(); }
 
-			inline Type getType() override { return Type::Body; }
 			void update(float mFrameTime) override;
+			void handleCollision(float mFrameTime, Body* mBody) override;
 			inline void destroy() override { Base::destroy(); }
 
 			inline void applyForce(Vec2f mForce)		{ if(!_static) acceleration += mForce; }
 			inline void applyImpulse(Vec2f mImpulse)	{ velocity += getInvMass() * mImpulse; }
 
-			// Setters
 			inline void setPosition(Vec2i mPosition)	{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
 			inline void setX(int mX)					{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
 			inline void setY(int mY)					{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
@@ -74,7 +69,7 @@ namespace ssvsc
 			inline void setResolve(bool mResolve)		{ resolve = mResolve; }
 			inline void setMass(float mMass)			{ massData.setMass(mMass); }
 
-			// Getters
+			inline Type getType() override				{ return Type::Body; }
 			inline AABB& getShape() override			{ return shape; }
 			inline AABB& getOldShape() override			{ return oldShape; }
 			inline Vec2i getPosition() const			{ return shape.getPosition(); }

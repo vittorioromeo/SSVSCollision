@@ -16,7 +16,7 @@ using namespace ssvs::Utils;
 
 namespace ssvsc
 {
-	void Impulse::resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve)
+	void Impulse::resolve(Body& mBody, vector<Body*>& mBodiesToResolve)
 	{
 		AABB& shape(mBody.getShape());
 		sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return getOverlapArea(shape, mA->getShape()) > getOverlapArea(shape, mB->getShape()); });

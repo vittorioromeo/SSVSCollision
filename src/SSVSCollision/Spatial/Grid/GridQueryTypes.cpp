@@ -22,6 +22,7 @@ namespace ssvsc
 			void All::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, Group) { mBodies = mGrid.getCell(mIndex).getBodies(); }
 			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, Group mGroup)
 			{
+				// TODO: improve
 				vector<Body*> temp;
 				for(const auto& b : mGrid.getCell(mIndex).getBodies()) if(b->hasGroup(mGroup)) temp.push_back(b);
 				mBodies = temp;

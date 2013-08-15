@@ -21,16 +21,16 @@ namespace ssvsc
 	class Grid : public SpatialBase
 	{
 		private:
-			ssvu::MemoryManager<GridInfo> memoryManager;
+			ssvu::MemoryManager<GridInfo> gridInfos;
 			std::vector<Uptr<Cell>> cells;
 			int columns, rows, cellSize, offset;
 
 		public:
 			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0);
 
-			inline SpatialInfoBase& createSpatialInfo(Base& mBase) override { return memoryManager.create(*this, mBase); }
-			inline void refresh() override { memoryManager.refresh(); }
-			inline void del(SpatialInfoBase& mSpatialInfo) override { memoryManager.del(static_cast<GridInfo&>(mSpatialInfo)); }
+			inline SpatialInfoBase& createSpatialInfo(Base& mBase) override { return gridInfos.create(*this, mBase); }
+			inline void refresh() override { gridInfos.refresh(); }
+			inline void del(SpatialInfoBase& mSpatialInfo) override { gridInfos.del(static_cast<GridInfo&>(mSpatialInfo)); }
 
 			inline int getIndexXMin() const	{ return 0 - offset; }
 			inline int getIndexYMin() const	{ return 0 - offset; }
@@ -51,7 +51,7 @@ namespace ssvsc
 			inline bool isIndexValid(Vec2i mIndex) const									{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
 			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
 
-			template<typename T, typename... TArgs> GridQuery<T, TArgs...> getQuery(Vec2i mPoint, TArgs... mArgs) { return {*this, mPoint, mArgs...}; }
+			template<typename T, typename... TArgs> GridQuery<T, TArgs...> getQuery(Vec2i mPoint, TArgs... mArgs) { return {*this, mPoint, std::forward<TArgs>(mArgs)...}; }
 	};
 }
 

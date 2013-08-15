@@ -1,4 +1,4 @@
-// Copyright (c) 2013 Vittorio Romeo
+﻿// Copyright (c) 2013 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
@@ -14,7 +14,7 @@ using namespace ssvu;
 
 namespace ssvsc
 {
-	void Retro::resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve)
+	void Retro::resolve(Body& mBody, vector<Body*>& mBodiesToResolve)
 	{
 		AABB& shape(mBody.getShape());
 		const AABB& oldShape(mBody.getOldShape());
@@ -37,25 +37,15 @@ namespace ssvsc
 			if(noResolveVelocity) continue;
 
 			// Remember that shape has moved now
-			bool oldHOverlap{!(oldShape.isLeftOf(s) || oldShape.isRightOf(s))}, oldVOverlap{!(oldShape.isAbove(s) || oldShape.isBelow(s))};
+			bool oldShapeLeftOfS{oldShape.isLeftOf(s)}, oldShapeRightOfS{oldShape.isRightOf(s)};
+			bool oldShapeAboveS{oldShape.isAbove(s)}, oldShapeBelowS{oldShape.isBelow(s)};
+			bool oldHOverlap{!(oldShapeLeftOfS || oldShapeRightOfS)}, oldVOverlap{!(oldShapeAboveS || oldShapeBelowS)};
 
-			if(resolution.y < 0 && mBody.getVelocity().y > 0)
-			{
-				if(oldShape.isAbove(s) || (os.isBelow(shape) && oldHOverlap)) mBody.setVelocityY(0);
-			}
-			else if(resolution.y > 0 && mBody.getVelocity().y < 0)
-			{
-				if(oldShape.isBelow(s) || (os.isAbove(shape) && oldHOverlap)) mBody.setVelocityY(0);
-			}
+			if		(resolution.y < 0 && mBody.getVelocity().y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) mBody.setVelocityY(0);
+			else if	(resolution.y > 0 && mBody.getVelocity().y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))) mBody.setVelocityY(0);
 
-			if(resolution.x < 0 && mBody.getVelocity().x > 0)
-			{
-				if(oldShape.isLeftOf(s) || (os.isRightOf(shape) && oldVOverlap)) mBody.setVelocityX(0);
-			}
-			else if(resolution.x > 0 && mBody.getVelocity().x < 0)
-			{
-				if(oldShape.isRightOf(s) || (os.isLeftOf(shape) && oldVOverlap)) mBody.setVelocityX(0);
-			}
+			if		(resolution.x < 0 && mBody.getVelocity().x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) mBody.setVelocityX(0);
+			else if	(resolution.x > 0 && mBody.getVelocity().x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))) mBody.setVelocityX(0);
 		}
 	}
 }
