@@ -13,9 +13,6 @@
 
 namespace ssvsc
 {
-	class Base;
-	class Body;
-
 	class Cell
 	{
 		private:

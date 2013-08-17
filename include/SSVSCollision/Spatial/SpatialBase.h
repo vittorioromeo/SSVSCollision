@@ -12,7 +12,6 @@ namespace ssvsc
 
 	struct SpatialBase
 	{
-		SpatialBase() { }
 		virtual ~SpatialBase() { }
 		virtual SpatialInfoBase& createSpatialInfo(Base& mBase) = 0;
 		virtual void refresh() = 0;
