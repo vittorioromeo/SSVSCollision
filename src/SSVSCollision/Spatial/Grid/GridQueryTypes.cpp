@@ -51,8 +51,8 @@ namespace ssvsc
 		bool RayCast::misses(const AABB& mShape)
 		{
 			Segment<float> ray{query.startPos, query.pos};
-			Segment<float> test1{direction.x > 0 ? mShape.getLeftSegment<float>() : mShape.getRightSegment<float>()};
-			Segment<float> test2{direction.y > 0 ? mShape.getTopSegment<float>() : mShape.getBottomSegment<float>()};
+			Segment<float> test1{direction.x > 0 ? mShape.getSegmentLeft<float>() : mShape.getSegmentRight<float>()};
+			Segment<float> test2{direction.y > 0 ? mShape.getSegmentTop<float>() : mShape.getSegmentBottom<float>()};
 
 			Vec2f intersection;
 			if(isSegmentInsersecting(ray, test1, intersection) || isSegmentInsersecting(ray, test2, intersection))
