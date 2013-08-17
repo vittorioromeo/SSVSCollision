@@ -14,9 +14,9 @@ namespace ssvsc
 	struct DetectionInfo
 	{
 		Body& body;
-		float frameTime;
 		void* userData;
 		Vec2i intersection;
+		float frameTime;
 	};
 
 	struct ResolutionInfo

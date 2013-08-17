@@ -21,8 +21,8 @@ namespace ssvsc
 
 		auto intersection(getMinIntersection(shape, mBody->getShape()));
 
-		onDetection({*mBody, mFrameTime, mBody->getUserData(), intersection});
-		mBody->onDetection({*this, mFrameTime, userData, -intersection});
+		onDetection({*mBody, mBody->getUserData(), intersection, mFrameTime});
+		mBody->onDetection({*this, userData, -intersection, mFrameTime});
 
 		if(resolve && !mustIgnoreResolution(*mBody)) bodiesToResolve.push_back(mBody);
 	}
