@@ -62,6 +62,7 @@ namespace ssvsc
 
 			inline bool isOverlapping(const AABB& mAABB) const	{ return getRight() > mAABB.getLeft() && getLeft() < mAABB.getRight() && (getBottom() > mAABB.getTop() && getTop() < mAABB.getBottom()); }
 			inline bool contains(const AABB& mAABB) const		{ return !(mAABB.getLeft() < getLeft() || mAABB.getRight() >= getRight() || mAABB.getTop() < getTop() || mAABB.getBottom() >= getBottom()); }
+			inline bool contains(const Vec2i mPoint) const		{ return !(mPoint.x < getLeft() || mPoint.x >= getRight() || mPoint.y < getTop() || mPoint.y >= getBottom()); }
 	};
 }
 
