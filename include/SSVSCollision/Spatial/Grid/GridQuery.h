@@ -10,11 +10,29 @@
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 #include "SSVSCollision/Body/Body.h"
-#include "SSVSCollision/Spatial/Grid/GridQueryTypes.h"
 #include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {
+	namespace GridQueryTypes
+	{
+		namespace Bodies
+		{
+			struct All;
+			struct Grouped;
+		}
+		namespace Orthogonal
+		{
+			struct Left;
+			struct Right;
+			struct Up;
+			struct Down;
+		}
+		struct RayCast;
+		struct Distance;
+		struct Point;
+	}
+
 	template<typename T, typename... TArgs> class GridQuery
 	{
 		friend struct GridQueryTypes::Orthogonal::Left;
@@ -23,6 +41,7 @@ namespace ssvsc
 		friend struct GridQueryTypes::Orthogonal::Down;
 		friend struct GridQueryTypes::RayCast;
 		friend struct GridQueryTypes::Distance;
+		friend struct GridQueryTypes::Point;
 
 		private:
 			Grid& grid;

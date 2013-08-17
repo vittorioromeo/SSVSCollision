@@ -3,9 +3,7 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
 #include "SSVSCollision/Spatial/Grid/Grid.h"
-#include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Spatial/Grid/GridQueryTypes.h"
-#include "SSVSCollision/Spatial/Grid/GridQuery.h"
 #include "SSVSCollision/Utils/Utils.h"
 
 using namespace std;
@@ -17,50 +15,6 @@ namespace ssvsc
 {
 	namespace GridQueryTypes
 	{
-		namespace Bodies
-		{
-			void All::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, Group) { mBodies = mGrid.getCell(mIndex).getBodies(); }
-			void Grouped::getBodies(vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, Group mGroup)
-			{
-				// TODO: improve
-				vector<Body*> temp;
-				for(const auto& b : mGrid.getCell(mIndex).getBodies()) if(b->hasGroup(mGroup)) temp.push_back(b);
-				mBodies = temp;
-			}
-		}
-
-		namespace Orthogonal
-		{
-			Left::Left(GridQuery<Left>& mQuery) : Base{mQuery} { }
-			bool Left::isValid() { return query.index.x >= query.grid.getIndexXMin(); }
-			void Left::step() { --query.index.x; }
-			bool Left::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x < mB->getPosition().x; }
-			bool Left::misses(const AABB& mShape) { return mShape.getLeft() > query.pos.x || query.pos.y < mShape.getTop() || query.pos.y > mShape.getBottom(); }
-			void Left::setOut(const AABB& mShape) { query.lastPos = Vec2f(mShape.getRight(), query.pos.y); }
-
-			Right::Right(GridQuery<Right>& mQuery) : Base{mQuery} { }
-			bool Right::isValid() { return query.index.x < query.grid.getIndexXMax(); }
-			void Right::step() { ++query.index.x; }
-			bool Right::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().x > mB->getPosition().x; }
-			bool Right::misses(const AABB& mShape) { return mShape.getRight() < query.pos.x || query.pos.y < mShape.getTop() || query.pos.y > mShape.getBottom(); }
-			void Right::setOut(const AABB& mShape) { query.lastPos = Vec2f(mShape.getLeft(), query.pos.y); }
-
-			Up::Up(GridQuery<Up>& mQuery) : Base{mQuery} { }
-			bool Up::isValid() { return query.index.y >= query.grid.getIndexYMin(); }
-			void Up::step() { --query.index.y; }
-			bool Up::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().y < mB->getPosition().y; }
-			bool Up::misses(const AABB& mShape) { return mShape.getTop() > query.pos.y || query.pos.x < mShape.getLeft() || query.pos.x > mShape.getRight(); }
-			void Up::setOut(const AABB& mShape) { query.lastPos = Vec2f(query.pos.x, mShape.getBottom()); }
-
-			Down::Down(GridQuery<Down>& mQuery) : Base{mQuery} { }
-			bool Down::isValid() { return query.index.y < query.grid.getIndexYMax(); }
-			void Down::step() { ++query.index.y; }
-			bool Down::getSorting(const Body* mA, const Body* mB) { return mA->getPosition().y > mB->getPosition().y; }
-			bool Down::misses(const AABB& mShape) { return mShape.getBottom() < query.pos.y || query.pos.x < mShape.getLeft() || query.pos.x > mShape.getRight(); }
-			void Down::setOut(const AABB& mShape) { query.lastPos = Vec2f(query.pos.x, mShape.getTop()); }
-		}
-
-
 		RayCast::RayCast(GridQuery<RayCast, Vec2f>& mQuery, Vec2f mDirection) : Base{mQuery}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
 			deltaDist{cellSize / abs(direction.x), cellSize / abs(direction.y)}, increment{direction * static_cast<float>(cellSize)},
 			max{Vec2f(query.startIndex * cellSize) - query.startPos}
@@ -72,8 +26,6 @@ namespace ssvsc
 			max.x /= direction.x;
 			max.y /= direction.y;
 		}
-
-		bool RayCast::isValid() { return query.grid.isIndexValid(query.index); }
 		void RayCast::step()
 		{
 			query.lastPos = query.pos;
@@ -111,7 +63,6 @@ namespace ssvsc
 
 			return true;
 		}
-		void RayCast::setOut(const AABB&) { }
 
 
 		Distance::Distance(GridQuery<Distance, int>& mQuery, int mDistance) : Base{mQuery}, cellSize{query.grid.getCellSize()}, distance{mDistance},
@@ -132,8 +83,6 @@ namespace ssvsc
 				}
 			}
 		}
-
-		bool Distance::isValid() { return !offsets.empty() && query.grid.isIndexValid(query.index); }
 		void Distance::step()
 		{
 			query.lastPos = query.pos;
@@ -157,6 +106,5 @@ namespace ssvsc
 			query.lastPos = Vec2f(testX, testY);
 			return false;
 		}
-		void Distance::setOut(const AABB&) { }
 	}
 }
