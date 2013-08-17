@@ -31,7 +31,7 @@ namespace ssvsc
 			inline void add(Base* mBase) { if(mBase->getType() == Type::Body) addBody(static_cast<Body*>(mBase)); }
 			inline void del(Base* mBase) { if(mBase->getType() == Type::Body) delBody(static_cast<Body*>(mBase)); }
 
-			inline const std::vector<Body*>& getBodies() const { return bodies; }
+			inline const decltype(bodies)& getBodies() const { return bodies; }
 
 			inline int getLeft() const		{ return aabb.getLeft(); }
 			inline int getRight() const		{ return aabb.getRight(); }

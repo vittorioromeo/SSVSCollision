@@ -47,7 +47,7 @@ namespace ssvsc
 			inline Cell& getCell(int mX, int mY)	{ return *cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
 			inline Cell& getCell(Vec2i mIndex)		{ return getCell(mIndex.x, mIndex.y); }
 
-			inline const std::vector<Uptr<Cell>>& getCells() { return cells; }
+			inline const decltype(cells)& getCells() { return cells; }
 			inline bool isIndexValid(Vec2i mIndex) const									{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
 			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
 
