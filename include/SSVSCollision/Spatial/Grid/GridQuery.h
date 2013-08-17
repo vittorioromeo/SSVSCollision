@@ -16,21 +16,9 @@ namespace ssvsc
 {
 	namespace GridQueryTypes
 	{
-		namespace Bodies
-		{
-			struct All;
-			struct Grouped;
-		}
-		namespace Orthogonal
-		{
-			struct Left;
-			struct Right;
-			struct Up;
-			struct Down;
-		}
-		struct RayCast;
-		struct Distance;
-		struct Point;
+		namespace Bodies { struct All; struct Grouped; }
+		namespace Orthogonal { struct Left; struct Right; struct Up; struct Down; }
+		struct Point; struct RayCast; struct Distance;
 	}
 
 	template<typename T, typename... TArgs> class GridQuery
