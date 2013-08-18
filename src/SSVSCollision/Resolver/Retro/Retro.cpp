@@ -22,15 +22,13 @@ namespace ssvsc
 
 		for(const auto& b : mBodiesToResolve)
 		{
-			bool noResolvePosition{false}, noResolveVelocity{false};
-
 			const AABB& s(b->getShape());
 			const AABB& os(b->getOldShape());
 
 			int iX{getMinIntersectionX(shape, s)}, iY{getMinIntersectionY(shape, s)};
-			Vec2i intersection({iX, iY});
-			Vec2i resolution{abs(iX) < abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY}};
+			Vec2i intersection({iX, iY}), resolution{abs(iX) < abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY}};
 
+			bool noResolvePosition{false}, noResolveVelocity{false};
 			mBody.onResolution({*b, b->getUserData(), intersection, resolution, noResolvePosition, noResolveVelocity});
 
 			if(!noResolvePosition) shape.move(resolution);
@@ -41,11 +39,15 @@ namespace ssvsc
 			bool oldShapeAboveS{oldShape.isAbove(s)}, oldShapeBelowS{oldShape.isBelow(s)};
 			bool oldHOverlap{!(oldShapeLeftOfS || oldShapeRightOfS)}, oldVOverlap{!(oldShapeAboveS || oldShapeBelowS)};
 
-			if		(resolution.y < 0 && mBody.getVelocity().y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) mBody.setVelocityY(0);
-			else if	(resolution.y > 0 && mBody.getVelocity().y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))) mBody.setVelocityY(0);
+			constexpr float restitutionX{-0.f}; // TODO: make this customizable
+			constexpr float restitutionY{-0.f}; // TODO: make this customizable
+			const auto& velocity(mBody.getVelocity());
 
-			if		(resolution.x < 0 && mBody.getVelocity().x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) mBody.setVelocityX(0);
-			else if	(resolution.x > 0 && mBody.getVelocity().x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))) mBody.setVelocityX(0);
+			if		(resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) mBody.setVelocityY(velocity.y * restitutionY);
+			else if	(resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))) mBody.setVelocityY(velocity.y * restitutionY);
+
+			if		(resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) mBody.setVelocityX(velocity.x * restitutionX);
+			else if	(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))) mBody.setVelocityX(velocity.x * restitutionX);
 		}
 	}
 }
