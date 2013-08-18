@@ -24,7 +24,7 @@ namespace ssvsc
 			inline AABB& operator=(const AABB& mAABB)			= default;
 			inline AABB& operator=(AABB&& mAABB)				= default;
 			inline bool operator==(const AABB& mOther) const	{ return position == mOther.position && halfSize == mOther.halfSize; }
-			inline bool operator!=(const AABB& mOther) const	{ return position != mOther.position || halfSize != mOther.halfSize; }
+			inline bool operator!=(const AABB& mOther) const	{ return !(*this == mOther); }
 
 			inline void move(Vec2i mOffset) { position += mOffset; }
 
@@ -66,7 +66,7 @@ namespace ssvsc
 
 			inline bool isOverlapping(const AABB& mAABB) const	{ return getRight() > mAABB.getLeft() && getLeft() < mAABB.getRight() && (getBottom() > mAABB.getTop() && getTop() < mAABB.getBottom()); }
 			inline bool contains(const AABB& mAABB) const		{ return mAABB.getLeft() >= getLeft() && mAABB.getRight() < getRight() && mAABB.getTop() >= getTop() && mAABB.getBottom() < getBottom(); }
-			inline bool contains(const Vec2i mPoint) const		{ return mPoint.x >= getLeft() && mPoint.x < getRight() && mPoint.y >= getTop() && mPoint.y < getBottom(); }
+			inline bool contains(Vec2i mPoint) const			{ return mPoint.x >= getLeft() && mPoint.x < getRight() && mPoint.y >= getTop() && mPoint.y < getBottom(); }
 	};
 }
 
