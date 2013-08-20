@@ -21,6 +21,7 @@ namespace ssvsc
 		namespace Bodies { struct All; struct Grouped; }
 		namespace Orthogonal { struct Left; struct Right; struct Up; struct Down; }
 		struct Point; struct RayCast; struct Distance;
+		template<typename TDerived> struct Base;
 	}
 
 	template<typename T> class GridQuery
@@ -32,11 +33,10 @@ namespace ssvsc
 		friend struct GridQueryTypes::RayCast;
 		friend struct GridQueryTypes::Distance;
 		friend struct GridQueryTypes::Point;
+		template<typename TDerived> friend struct GridQueryTypes::Base;
 
 		private:
 			Grid& grid;
-			Vec2f startPos, pos, lastPos;
-			Vec2i startIndex, index;
 			std::vector<Body*> bodies;
 			std::vector<Vec2i> visitedIndexes;
 			T internal;
@@ -47,9 +47,9 @@ namespace ssvsc
 				{
 					if(bodies.empty())
 					{
-						TCellTraits::getBodies(bodies, grid, index, mGroupUid);
+						TCellTraits::getBodies(bodies, grid, internal.index, mGroupUid);
 						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
-						visitedIndexes.push_back(index);
+						visitedIndexes.push_back(internal.index);
 						internal.step();
 					}
 
@@ -59,7 +59,7 @@ namespace ssvsc
 						const auto& shape(body->getShape());
 						bodies.pop_back();
 
-						if(internal.misses(shape)) continue;
+						if(!internal.hits(shape)) continue;
 
 						internal.setOut(shape);
 						return body;
@@ -70,8 +70,7 @@ namespace ssvsc
 			}
 
 		public:
-			template<typename... TArgs>GridQuery(Grid& mGrid, Vec2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{Vec2f(mStartPos)}, pos{startPos},
-				startIndex{grid.getIndex(mStartPos)}, index{startIndex}, internal(*this, std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> GridQuery(Grid& mGrid, TArgs... mArgs) : grid(mGrid), internal(*this, std::forward<TArgs>(mArgs)...) { }
 
 			inline Body* next()				{ return nextImpl<GridQueryTypes::Bodies::All>(); }
 			inline Body* next(Group mGroup)	{ return nextImpl<GridQueryTypes::Bodies::Grouped>(mGroup); }
@@ -81,7 +80,7 @@ namespace ssvsc
 
 				while(internal.isValid())
 				{
-					result.push_back(&grid.getCell(index));
+					result.push_back(&grid.getCell(internal.index));
 					internal.step();
 				}
 
@@ -90,14 +89,12 @@ namespace ssvsc
 
 			inline void reset()
 			{
-				pos = startPos;
-				index = startIndex;
 				bodies.clear();
 				visitedIndexes.clear();
-				// TODO: call internal.reset() ?
+				internal.reset();
 			}
 
-			inline const Vec2f& getLastPos()						{ return lastPos; }
+			inline const Vec2f& getLastPos()						{ return internal.getLastPos(); }
 			inline const std::vector<Vec2i>& getVisitedIndexes()	{ return visitedIndexes; }
 	};
 }

@@ -15,9 +15,9 @@ namespace ssvsc
 {
 	namespace GridQueryTypes
 	{
-		RayCast::RayCast(GridQuery<RayCast>& mQuery, Vec2f mDirection) : Base{mQuery}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
+		RayCast::RayCast(GridQuery<RayCast>& mQuery, Vec2i mPos, Vec2f mDirection) : Base{mQuery, mPos}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
 			deltaDist{cellSize / abs(direction.x), cellSize / abs(direction.y)}, increment{direction * static_cast<float>(cellSize)},
-			max{Vec2f(query.startIndex * cellSize) - query.startPos}
+			max{Vec2f(startIndex * cellSize) - startPos}
 		{
 			next.x = direction.x < 0 ? -1 : 1;
 			next.y = direction.y < 0 ? -1 : 1;
@@ -28,44 +28,44 @@ namespace ssvsc
 		}
 		void RayCast::step()
 		{
-			query.lastPos = query.pos;
-			query.pos += increment;
+			lastPos = pos;
+			pos += increment;
 
 			if(max.x < max.y)
 			{
 				max.x += deltaDist.x;
-				query.index.x += next.x;
+				index.x += next.x;
 			}
 			else
 			{
 				max.y += deltaDist.y;
-				query.index.y += next.y;
+				index.y += next.y;
 			}
 		}
 		bool RayCast::getSorting(const Body* mA, const Body* mB)
 		{
 			const auto& aPos(mA->getPosition());
 			const auto& bPos(mB->getPosition());
-			return pow((aPos.x - query.startPos.x), 2) + pow((aPos.y - query.startPos.y), 2) > pow((bPos.x - query.startPos.x), 2) + pow((bPos.y - query.startPos.y), 2);
+			return pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2) > pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2);
 		}
-		bool RayCast::misses(const AABB& mShape)
+		bool RayCast::hits(const AABB& mShape)
 		{
-			Segment<float> ray{query.startPos, query.pos};
+			Segment<float> ray{startPos, pos};
 			Segment<float> test1{direction.x > 0 ? mShape.getSegmentLeft<float>() : mShape.getSegmentRight<float>()};
 			Segment<float> test2{direction.y > 0 ? mShape.getSegmentTop<float>() : mShape.getSegmentBottom<float>()};
 
 			Vec2f intersection;
 			if(isSegmentInsersecting(ray, test1, intersection) || isSegmentInsersecting(ray, test2, intersection))
 			{
-				query.lastPos = intersection;
-				return false;
+				lastPos = intersection;
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
 
-		Distance::Distance(GridQuery<Distance>& mQuery, int mDistance) : Base{mQuery}, cellSize{query.grid.getCellSize()}, distance{mDistance},
+		Distance::Distance(GridQuery<Distance>& mQuery, Vec2i mPos, int mDistance) : Base{mQuery, mPos}, cellSize{query.grid.getCellSize()}, distance{mDistance},
 			cellRadius{distance / cellSize}
 		{
 			for(int iRadius{0}; iRadius < cellRadius + 1; ++iRadius)
@@ -85,8 +85,8 @@ namespace ssvsc
 		}
 		void Distance::step()
 		{
-			query.lastPos = query.pos;
-			query.index = query.startIndex + offsets.front();
+			lastPos = pos;
+			index = startIndex + offsets.front();
 
 			if(!offsets.empty()) offsets.pop();
 		}
@@ -94,17 +94,17 @@ namespace ssvsc
 		{
 			const auto& aPos(mA->getPosition());
 			const auto& bPos(mB->getPosition());
-			return pow((aPos.x - query.startPos.x), 2) + pow((aPos.y - query.startPos.y), 2) > pow((bPos.x - query.startPos.x), 2) + pow((bPos.y - query.startPos.y), 2);
+			return pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2) > pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2);
 		}
-		bool Distance::misses(const AABB& mShape)
+		bool Distance::hits(const AABB& mShape)
 		{
-			int testX{query.startPos.x < mShape.getX() ? mShape.getLeft() : mShape.getRight()};
-			int testY{query.startPos.y < mShape.getY() ? mShape.getTop() : mShape.getBottom()};
+			int testX{startPos.x < mShape.getX() ? mShape.getLeft() : mShape.getRight()};
+			int testY{startPos.y < mShape.getY() ? mShape.getTop() : mShape.getBottom()};
 
-			if(pow((testX - query.startPos.x), 2) + pow((testY - query.startPos.y), 2) > pow(distance, 2)) return true;
+			if(pow((testX - startPos.x), 2) + pow((testY - startPos.y), 2) > pow(distance, 2)) return false;
 
-			query.lastPos = Vec2f(testX, testY);
-			return false;
+			lastPos = Vec2f(testX, testY);
+			return true;
 		}
 	}
 }
