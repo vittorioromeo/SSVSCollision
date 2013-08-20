@@ -15,7 +15,7 @@ namespace ssvsc
 {
 	namespace GridQueryTypes
 	{
-		RayCast::RayCast(GridQuery<RayCast, Vec2f>& mQuery, Vec2f mDirection) : Base{mQuery}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
+		RayCast::RayCast(GridQuery<RayCast>& mQuery, Vec2f mDirection) : Base{mQuery}, cellSize{query.grid.getCellSize()}, direction{getNormalized(mDirection)},
 			deltaDist{cellSize / abs(direction.x), cellSize / abs(direction.y)}, increment{direction * static_cast<float>(cellSize)},
 			max{Vec2f(query.startIndex * cellSize) - query.startPos}
 		{
@@ -65,7 +65,7 @@ namespace ssvsc
 		}
 
 
-		Distance::Distance(GridQuery<Distance, int>& mQuery, int mDistance) : Base{mQuery}, cellSize{query.grid.getCellSize()}, distance{mDistance},
+		Distance::Distance(GridQuery<Distance>& mQuery, int mDistance) : Base{mQuery}, cellSize{query.grid.getCellSize()}, distance{mDistance},
 			cellRadius{distance / cellSize}
 		{
 			for(int iRadius{0}; iRadius < cellRadius + 1; ++iRadius)

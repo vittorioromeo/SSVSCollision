@@ -15,7 +15,7 @@ namespace ssvsc
 {
 	class Cell;
 	class SpatialInfoBase;
-	template<typename T, typename... TArgs> class GridQuery;
+	template<typename T> class GridQuery;
 
 	class Grid : public SpatialBase
 	{
@@ -50,7 +50,7 @@ namespace ssvsc
 			inline bool isIndexValid(Vec2i mIndex) const									{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
 			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
 
-			template<typename T, typename... TArgs> GridQuery<T, TArgs...> getQuery(Vec2i mPoint, TArgs... mArgs) { return {*this, mPoint, std::forward<TArgs>(mArgs)...}; }
+			template<typename T, typename... TArgs> GridQuery<T> getQuery(Vec2i mPoint, TArgs... mArgs) { return {*this, mPoint, std::forward<TArgs>(mArgs)...}; }
 	};
 }
 

@@ -23,7 +23,7 @@ namespace ssvsc
 		struct Point; struct RayCast; struct Distance;
 	}
 
-	template<typename T, typename... TArgs> class GridQuery
+	template<typename T> class GridQuery
 	{
 		friend struct GridQueryTypes::Orthogonal::Left;
 		friend struct GridQueryTypes::Orthogonal::Right;
@@ -70,7 +70,7 @@ namespace ssvsc
 			}
 
 		public:
-			GridQuery(Grid& mGrid, Vec2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{Vec2f(mStartPos)}, pos{startPos},
+			template<typename... TArgs>GridQuery(Grid& mGrid, Vec2i mStartPos, TArgs... mArgs) : grid(mGrid), startPos{Vec2f(mStartPos)}, pos{startPos},
 				startIndex{grid.getIndex(mStartPos)}, index{startIndex}, internal(*this, std::forward<TArgs>(mArgs)...) { }
 
 			inline Body* next()				{ return nextImpl<GridQueryTypes::Bodies::All>(); }

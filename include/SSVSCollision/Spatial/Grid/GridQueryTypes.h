@@ -15,10 +15,10 @@ namespace ssvsc
 {
 	namespace GridQueryTypes
 	{
-		template<typename TDerived, typename... TArgs> struct Base
+		template<typename TDerived> struct Base
 		{
-			GridQuery<TDerived, TArgs...>& query;
-			Base(GridQuery<TDerived, TArgs...>& mQuery) : query(mQuery) { }
+			GridQuery<TDerived>& query;
+			Base(GridQuery<TDerived>& mQuery) : query(mQuery) { }
 		};
 
 		namespace Bodies
@@ -90,13 +90,13 @@ namespace ssvsc
 			inline void setOut(const AABB&)								{ }
 		};
 
-		struct RayCast : public Base<RayCast, Vec2f>
+		struct RayCast : public Base<RayCast>
 		{
 			int cellSize;
 			Vec2i next{0, 0};
 			Vec2f direction, deltaDist, increment, max;
 
-			RayCast(GridQuery<RayCast, Vec2f>& mQuery, Vec2f mDirection);
+			RayCast(GridQuery<RayCast>& mQuery, Vec2f mDirection);
 
 			inline bool isValid() { return query.grid.isIndexValid(query.index); }
 			void step();
@@ -105,12 +105,12 @@ namespace ssvsc
 			void setOut(const AABB&) { }
 		};
 
-		struct Distance : public Base<Distance, int>
+		struct Distance : public Base<Distance>
 		{
 			int cellSize, distance, cellRadius;
 			std::queue<Vec2i> offsets;
 
-			Distance(GridQuery<Distance, int>& mQuery, int mDistance);
+			Distance(GridQuery<Distance>& mQuery, int mDistance);
 
 			inline bool isValid() { return !offsets.empty() && query.grid.isIndexValid(query.index); }
 			void step();
