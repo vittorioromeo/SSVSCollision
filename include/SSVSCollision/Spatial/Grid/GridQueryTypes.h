@@ -15,13 +15,13 @@ namespace ssvsc
 {
 	namespace GridQueryTypes
 	{
-		template<typename TDerived> struct Base
+		struct Base
 		{
-			GridQuery<TDerived>& query;
+			Grid& grid;
 			Vec2f startPos, pos, lastPos;
 			Vec2i startIndex, index;
 
-			Base(GridQuery<TDerived>& mQuery, Vec2i mPos) : query(mQuery), startPos{mPos}, pos{mPos}, startIndex{query.grid.getIndex(Vec2i(mPos))}, index{startIndex} { }
+			Base(Grid& mGrid, Vec2i mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIndex(Vec2i(mPos))}, index{startIndex} { }
 
 			inline void reset()					{ pos = startPos; index = startIndex; }
 			inline const Vec2f& getLastPos()	{ return lastPos; }
@@ -47,37 +47,33 @@ namespace ssvsc
 
 		namespace Orthogonal
 		{
-			struct Left : public Base<Left>
+			struct Left : public Base
 			{
-				Left(GridQuery<Left>& mQuery, Vec2i mPos) : Base{mQuery, mPos} { }
-				inline bool isValid()									{ return index.x >= query.grid.getIndexXMin(); }
+				inline bool isValid()									{ return index.x >= grid.getIndexXMin(); }
 				inline void step()										{ --index.x; }
 				inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().x < mB->getPosition().x; }
 				inline bool hits(const AABB& mShape)					{ return mShape.getLeft() <= pos.x && pos.y >= mShape.getTop() && pos.y <= mShape.getBottom(); }
 				inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(mShape.getRight(), pos.y); }
 			};
-			struct Right : public Base<Right>
+			struct Right : public Base
 			{
-				Right(GridQuery<Right>& mQuery, Vec2i mPos) : Base{mQuery, mPos} { }
-				inline bool isValid()									{ return index.x < query.grid.getIndexXMax(); }
+				inline bool isValid()									{ return index.x < grid.getIndexXMax(); }
 				inline void step()										{ ++index.x; }
 				inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().x > mB->getPosition().x; }
 				inline bool hits(const AABB& mShape)					{ return mShape.getRight() >= pos.x && pos.y >= mShape.getTop() && pos.y <= mShape.getBottom(); }
 				inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(mShape.getLeft(), pos.y); }
 			};
-			struct Up : public Base<Up>
+			struct Up : public Base
 			{
-				Up(GridQuery<Up>& mQuery, Vec2i mPos) : Base{mQuery, mPos} { }
-				inline bool isValid()									{ return index.y >= query.grid.getIndexYMin(); }
+				inline bool isValid()									{ return index.y >= grid.getIndexYMin(); }
 				inline void step()										{ --index.y; }
 				inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().y < mB->getPosition().y; }
 				inline bool hits(const AABB& mShape)					{ return mShape.getTop() <= pos.y && pos.x >= mShape.getLeft() && pos.x <= mShape.getRight(); }
 				inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(pos.x, mShape.getBottom()); }
 			};
-			struct Down : public Base<Down>
+			struct Down : public Base
 			{
-				Down(GridQuery<Down>& mQuery, Vec2i mPos) : Base{mQuery, mPos} { }
-				inline bool isValid()									{ return index.y < query.grid.getIndexYMax(); }
+				inline bool isValid()									{ return index.y < grid.getIndexYMax(); }
 				inline void step()										{ ++index.y; }
 				inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().y > mB->getPosition().y; }
 				inline bool hits(const AABB& mShape)					{ return mShape.getBottom() >= pos.y && pos.x >= mShape.getLeft() && pos.x <= mShape.getRight(); }
@@ -85,40 +81,42 @@ namespace ssvsc
 			};
 		}
 
-		struct Point : public Base<Point>
+		struct Point : public Base
 		{
 			bool finished{false};
-			Point(GridQuery<Point>& mQuery, Vec2i mPos) : Base{mQuery, mPos} { }
-			inline bool isValid()										{ return !finished && query.grid.isIndexValid(index); }
+
+			template<typename... TArgs> Point(TArgs&&... mArgs) : Base(std::forward<TArgs>(mArgs)...) { }
+
+			inline bool isValid()										{ return !finished && grid.isIndexValid(index); }
 			inline void step()											{ finished = true; }
 			inline bool getSorting(const Body*, const Body*)			{ return true; }
 			inline bool hits(const AABB& mShape)						{ return mShape.contains(Vec2i(pos)); }
 			inline void setOut(const AABB&)								{ }
 		};
 
-		struct RayCast : public Base<RayCast>
+		struct RayCast : public Base
 		{
 			int cellSize;
 			Vec2i next{0, 0};
 			Vec2f direction, deltaDist, increment, max;
 
-			RayCast(GridQuery<RayCast>& mQuery, Vec2i mPos, Vec2f mDirection);
+			RayCast(Grid& mGrid, Vec2i mPos, Vec2f mDirection);
 
-			inline bool isValid() { return query.grid.isIndexValid(index); }
+			inline bool isValid() { return grid.isIndexValid(index); }
 			void step();
 			bool getSorting(const Body* mA, const Body* mB);
 			bool hits(const AABB& mShape);
 			void setOut(const AABB&) { }
 		};
 
-		struct Distance : public Base<Distance>
+		struct Distance : public Base
 		{
 			int cellSize, distance, cellRadius;
 			std::queue<Vec2i> offsets;
 
-			Distance(GridQuery<Distance>& mQuery, Vec2i mPos, int mDistance);
+			Distance(Grid& mGrid, Vec2i mPos, int mDistance);
 
-			inline bool isValid() { return !offsets.empty() && query.grid.isIndexValid(index); }
+			inline bool isValid() { return !offsets.empty() && grid.isIndexValid(index); }
 			void step();
 			bool getSorting(const Body* mA, const Body* mB);
 			bool hits(const AABB& mShape);

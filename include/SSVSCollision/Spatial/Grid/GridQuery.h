@@ -21,7 +21,7 @@ namespace ssvsc
 		namespace Bodies { struct All; struct Grouped; }
 		namespace Orthogonal { struct Left; struct Right; struct Up; struct Down; }
 		struct Point; struct RayCast; struct Distance;
-		template<typename TDerived> struct Base;
+		struct Base;
 	}
 
 	template<typename T> class GridQuery
@@ -33,10 +33,9 @@ namespace ssvsc
 		friend struct GridQueryTypes::RayCast;
 		friend struct GridQueryTypes::Distance;
 		friend struct GridQueryTypes::Point;
-		template<typename TDerived> friend struct GridQueryTypes::Base;
+		friend struct GridQueryTypes::Base;
 
 		private:
-			Grid& grid;
 			std::vector<Body*> bodies;
 			std::vector<Vec2i> visitedIndexes;
 			T internal;
@@ -47,7 +46,7 @@ namespace ssvsc
 				{
 					if(bodies.empty())
 					{
-						TCellTraits::getBodies(bodies, grid, internal.index, mGroupUid);
+						TCellTraits::getBodies(bodies, internal.grid, internal.index, mGroupUid);
 						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
 						visitedIndexes.push_back(internal.index);
 						internal.step();
@@ -70,7 +69,7 @@ namespace ssvsc
 			}
 
 		public:
-			template<typename... TArgs> GridQuery(Grid& mGrid, TArgs... mArgs) : grid(mGrid), internal(*this, std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> GridQuery(TArgs&&... mArgs) : internal(std::forward<TArgs>(mArgs)...) { }
 
 			inline Body* next()				{ return nextImpl<GridQueryTypes::Bodies::All>(); }
 			inline Body* next(Group mGroup)	{ return nextImpl<GridQueryTypes::Bodies::Grouped>(mGroup); }
@@ -80,7 +79,7 @@ namespace ssvsc
 
 				while(internal.isValid())
 				{
-					result.push_back(&grid.getCell(internal.index));
+					result.push_back(&internal.grid.getCell(internal.index));
 					internal.step();
 				}
 
