@@ -28,10 +28,10 @@ namespace ssvsc
 				const AABB& os(b->getOldShape());
 
 				int iX{Utils::getMinIntersectionX(shape, s)}, iY{Utils::getMinIntersectionY(shape, s)};
-				Vec2i intersection({iX, iY}), resolution{std::abs(iX) < std::abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY}};
+				Vec2i resolution{std::abs(iX) < std::abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY}};
 
 				bool noResolvePosition{false}, noResolveVelocity{false};
-				mBody.onResolution({*b, b->getUserData(), intersection, resolution, noResolvePosition, noResolveVelocity});
+				mBody.onResolution({*b, b->getUserData(), {iX, iY}, resolution, noResolvePosition, noResolveVelocity});
 
 				if(!noResolvePosition) shape.move(resolution);
 				if(noResolveVelocity) continue;

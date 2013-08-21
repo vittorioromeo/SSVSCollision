@@ -35,16 +35,10 @@ namespace ssvsc
 			return true;
 		}
 
-		inline int getMinIntersectionX(const AABB& mA, const AABB& mB)
-		{
-			int left{mB.getLeft() - mA.getRight()}, right{mB.getRight() - mA.getLeft()};
-			return abs(left) < abs(right) ? left : right;
-		}
-		inline int getMinIntersectionY(const AABB& mA, const AABB& mB)
-		{
-			int top{mB.getTop() - mA.getBottom()}, bottom{mB.getBottom() - mA.getTop()};
-			return abs(top) < abs(bottom) ? top : bottom;
-		}
+		template<typename T> inline T getMinAbs(const T& mA, const T& mB) { return abs(mA) < abs(mB) ? mA : mB; }
+
+		inline int getMinIntersectionX(const AABB& mA, const AABB& mB) { return getMinAbs(mB.getLeft() - mA.getRight(), mB.getRight() - mA.getLeft()); }
+		inline int getMinIntersectionY(const AABB& mA, const AABB& mB) { return getMinAbs(mB.getTop() - mA.getBottom(), mB.getBottom() - mA.getTop()); }
 		inline Vec2i getMin1DIntersection(const AABB& mA, const AABB& mB)
 		{
 			int iX{getMinIntersectionX(mA, mB)}, iY{getMinIntersectionY(mA, mB)};
