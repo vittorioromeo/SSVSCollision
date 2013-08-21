@@ -10,6 +10,7 @@
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Spatial/Grid/GridQuery.h"
+#include "SSVSCollision/Utils/Utils.h"
 
 namespace ssvsc
 {
@@ -45,41 +46,42 @@ namespace ssvsc
 			};
 		}
 
-		namespace Orthogonal
+		struct OrthoLeft : public Base
 		{
-			struct Left : public Base
-			{
-				inline bool isValid()									{ return index.x >= grid.getIndexXMin(); }
-				inline void step()										{ --index.x; }
-				inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().x < mB->getPosition().x; }
-				inline bool hits(const AABB& mShape)					{ return mShape.getLeft() <= pos.x && pos.y >= mShape.getTop() && pos.y <= mShape.getBottom(); }
-				inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(mShape.getRight(), pos.y); }
-			};
-			struct Right : public Base
-			{
-				inline bool isValid()									{ return index.x < grid.getIndexXMax(); }
-				inline void step()										{ ++index.x; }
-				inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().x > mB->getPosition().x; }
-				inline bool hits(const AABB& mShape)					{ return mShape.getRight() >= pos.x && pos.y >= mShape.getTop() && pos.y <= mShape.getBottom(); }
-				inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(mShape.getLeft(), pos.y); }
-			};
-			struct Up : public Base
-			{
-				inline bool isValid()									{ return index.y >= grid.getIndexYMin(); }
-				inline void step()										{ --index.y; }
-				inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().y < mB->getPosition().y; }
-				inline bool hits(const AABB& mShape)					{ return mShape.getTop() <= pos.y && pos.x >= mShape.getLeft() && pos.x <= mShape.getRight(); }
-				inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(pos.x, mShape.getBottom()); }
-			};
-			struct Down : public Base
-			{
-				inline bool isValid()									{ return index.y < grid.getIndexYMax(); }
-				inline void step()										{ ++index.y; }
-				inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().y > mB->getPosition().y; }
-				inline bool hits(const AABB& mShape)					{ return mShape.getBottom() >= pos.y && pos.x >= mShape.getLeft() && pos.x <= mShape.getRight(); }
-				inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(pos.x, mShape.getTop()); }
-			};
-		}
+			template<typename... TArgs> OrthoLeft(TArgs&&... mArgs) : Base(std::forward<TArgs>(mArgs)...) { }
+			inline bool isValid()									{ return index.x >= grid.getIndexXMin(); }
+			inline void step()										{ --index.x; }
+			inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().x < mB->getPosition().x; }
+			inline bool hits(const AABB& mShape)					{ return mShape.getLeft() <= pos.x && pos.y >= mShape.getTop() && pos.y <= mShape.getBottom(); }
+			inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(mShape.getRight(), pos.y); }
+		};
+		struct OrthoRight : public Base
+		{
+			template<typename... TArgs> OrthoRight(TArgs&&... mArgs) : Base(std::forward<TArgs>(mArgs)...) { }
+			inline bool isValid()									{ return index.x < grid.getIndexXMax(); }
+			inline void step()										{ ++index.x; }
+			inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().x > mB->getPosition().x; }
+			inline bool hits(const AABB& mShape)					{ return mShape.getRight() >= pos.x && pos.y >= mShape.getTop() && pos.y <= mShape.getBottom(); }
+			inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(mShape.getLeft(), pos.y); }
+		};
+		struct OrthoUp : public Base
+		{
+			template<typename... TArgs> OrthoUp(TArgs&&... mArgs) : Base(std::forward<TArgs>(mArgs)...) { }
+			inline bool isValid()									{ return index.y >= grid.getIndexYMin(); }
+			inline void step()										{ --index.y; }
+			inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().y < mB->getPosition().y; }
+			inline bool hits(const AABB& mShape)					{ return mShape.getTop() <= pos.y && pos.x >= mShape.getLeft() && pos.x <= mShape.getRight(); }
+			inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(pos.x, mShape.getBottom()); }
+		};
+		struct OrthoDown : public Base
+		{
+			template<typename... TArgs> OrthoDown(TArgs&&... mArgs) : Base(std::forward<TArgs>(mArgs)...) { }
+			inline bool isValid()									{ return index.y < grid.getIndexYMax(); }
+			inline void step()										{ ++index.y; }
+			inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().y > mB->getPosition().y; }
+			inline bool hits(const AABB& mShape)					{ return mShape.getBottom() >= pos.y && pos.x >= mShape.getLeft() && pos.x <= mShape.getRight(); }
+			inline void setOut(const AABB& mShape)					{ lastPos = Vec2f(pos.x, mShape.getTop()); }
+		};
 
 		struct Point : public Base
 		{
@@ -98,28 +100,99 @@ namespace ssvsc
 		{
 			int cellSize;
 			Vec2i next{0, 0};
-			Vec2f direction, deltaDist, increment, max;
+			Vec2f dir, deltaDist, increment, max;
 
-			RayCast(Grid& mGrid, Vec2i mPos, Vec2f mDirection);
+			RayCast(Grid& mGrid, Vec2i mPos, Vec2f mDir) : Base{mGrid, mPos}, cellSize{grid.getCellSize()}, dir{ssvs::Utils::getNormalized(mDir)},
+				deltaDist(cellSize / abs(dir.x), cellSize / abs(dir.y)), increment{dir * static_cast<float>(cellSize)}, max{Vec2f(startIndex * cellSize) - startPos}
+			{
+				next.x = dir.x < 0 ? -1 : 1;
+				next.y = dir.y < 0 ? -1 : 1;
+				if(dir.x >= 0) max.x += cellSize;
+				if(dir.y >= 0) max.y += cellSize;
+				max.x /= dir.x;
+				max.y /= dir.y;
+			}
 
 			inline bool isValid() { return grid.isIndexValid(index); }
-			void step();
-			bool getSorting(const Body* mA, const Body* mB);
-			bool hits(const AABB& mShape);
-			void setOut(const AABB&) { }
+			inline void step()
+			{
+				lastPos = pos;
+				pos += increment;
+
+				if(max.x < max.y)	{ max.x += deltaDist.x; index.x += next.x; }
+				else				{ max.y += deltaDist.y; index.y += next.y; }
+			}
+			inline bool getSorting(const Body* mA, const Body* mB)
+			{
+				const auto& aPos(mA->getPosition());
+				const auto& bPos(mB->getPosition());
+				return pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2) > pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2);
+			}
+			inline bool hits(const AABB& mShape)
+			{
+				Segment<float> ray{startPos, pos};
+				Segment<float> test1{dir.x > 0 ? mShape.getSegmentLeft<float>() : mShape.getSegmentRight<float>()};
+				Segment<float> test2{dir.y > 0 ? mShape.getSegmentTop<float>() : mShape.getSegmentBottom<float>()};
+
+				Vec2f intersection;
+				if(Utils::isSegmentInsersecting(ray, test1, intersection) || Utils::isSegmentInsersecting(ray, test2, intersection))
+				{
+					lastPos = intersection;
+					return true;
+				}
+
+				return false;
+			}
+			inline void setOut(const AABB&) { }
 		};
+
+
 
 		struct Distance : public Base
 		{
 			int cellSize, distance, cellRadius;
 			std::queue<Vec2i> offsets;
 
-			Distance(Grid& mGrid, Vec2i mPos, int mDistance);
+			Distance(Grid& mGrid, Vec2i mPos, int mDistance) : Base{mGrid, mPos}, cellSize{grid.getCellSize()}, distance{mDistance}, cellRadius{distance / cellSize}
+			{
+				for(int iRadius{0}; iRadius < cellRadius + 1; ++iRadius)
+				{
+					for(int iY{-iRadius}; iY <= iRadius; ++iY)
+					{
+						offsets.emplace(iRadius, iY);
+						if(-iRadius != iRadius) offsets.emplace(-iRadius, iY);
+					}
+					for(int iX{-iRadius + 1}; iX <= iRadius -1; ++iX)
+					{
+						offsets.emplace(iX, iRadius);
+						offsets.emplace(iX, -iRadius);
+					}
+				}
+			}
 
 			inline bool isValid() { return !offsets.empty() && grid.isIndexValid(index); }
-			void step();
-			bool getSorting(const Body* mA, const Body* mB);
-			bool hits(const AABB& mShape);
+			inline void step()
+			{
+				lastPos = pos;
+				index = startIndex + offsets.front();
+				if(!offsets.empty()) offsets.pop();
+			}
+			inline bool getSorting(const Body* mA, const Body* mB)
+			{
+				const auto& aPos(mA->getPosition());
+				const auto& bPos(mB->getPosition());
+				return pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2) > pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2);
+			}
+			inline bool hits(const AABB& mShape)
+			{
+				int testX{startPos.x < mShape.getX() ? mShape.getLeft() : mShape.getRight()};
+				int testY{startPos.y < mShape.getY() ? mShape.getTop() : mShape.getBottom()};
+
+				if(pow((testX - startPos.x), 2) + pow((testY - startPos.y), 2) > pow(distance, 2)) return false;
+
+				lastPos = Vec2f(testX, testY);
+				return true;
+			}
 			inline void setOut(const AABB&) { }
 		};
 	}

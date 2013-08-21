@@ -10,12 +10,12 @@
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
 #include "SSVSCollision/Global/Typedefs.h"
+#include "SSVSCollision/Query/Query.h"
 
 namespace ssvsc
 {
 	class Cell;
 	class SpatialInfoBase;
-	template<typename T> class GridQuery;
 
 	class Grid : public SpatialBase
 	{
@@ -25,7 +25,15 @@ namespace ssvsc
 			int columns, rows, cellSize, offset;
 
 		public:
-			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0);
+			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset}
+			{
+				for(int iX{0}; iX < columns; ++iX)
+					for(int iY{0}; iY < rows; ++iY)
+					{
+						int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
+						cells.emplace_back(new Cell{{left, right, top, bottom}});
+					}
+			}
 
 			inline SpatialInfoBase& createSpatialInfo(Base& mBase) override { return gridInfos.create(*this, mBase); }
 			inline void refresh() override { gridInfos.refresh(); }
@@ -49,9 +57,24 @@ namespace ssvsc
 			inline const decltype(cells)& getCells() { return cells; }
 			inline bool isIndexValid(Vec2i mIndex) const									{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
 			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
-
-			template<typename T, typename... TArgs> GridQuery<T> getQuery(Vec2i mPoint, TArgs... mArgs) { return {*this, mPoint, std::forward<TArgs>(mArgs)...}; }
 	};
+
+	namespace GridQueryTypes
+	{
+		struct Point; struct Distance; struct RayCast;
+		struct OrthoLeft; struct OrthoRight; struct OrthoUp; struct OrthoDown;
+		namespace Bodies { struct All; }
+	}
+
+	template<> struct QueryTypeDispatcher<Grid, QueryType::Point>		{ using Type = GridQueryTypes::Point; };
+	template<> struct QueryTypeDispatcher<Grid, QueryType::Distance>	{ using Type = GridQueryTypes::Distance; };
+	template<> struct QueryTypeDispatcher<Grid, QueryType::RayCast>		{ using Type = GridQueryTypes::RayCast; };
+	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoLeft>	{ using Type = GridQueryTypes::OrthoLeft; };
+	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoRight>	{ using Type = GridQueryTypes::OrthoRight; };
+	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoUp>		{ using Type = GridQueryTypes::OrthoUp; };
+	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoDown>	{ using Type = GridQueryTypes::OrthoDown; };
+
+	template<> struct QueryModeDispatcher<Grid, QueryMode::All>			{ using Type = GridQueryTypes::Bodies::All; };
 }
 
 #endif

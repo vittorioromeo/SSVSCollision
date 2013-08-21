@@ -7,6 +7,7 @@
 
 #include <vector>
 #include "SSVSCollision/Global/Typedefs.h"
+#include "SSVSCollision/Query/Query.h"
 
 namespace ssvsc
 {
@@ -50,6 +51,12 @@ namespace ssvsc
 
 			template<typename T> inline T& getResolver()	{ return static_cast<T&>(getResolver()); }
 			template<typename T> inline T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
+
+			template<typename TSpatial, QueryType TType, QueryMode TMode = QueryMode::All, typename... TArgs>
+			inline Query<TSpatial, typename QueryTypeDispatcher<TSpatial, TType>::Type, typename QueryModeDispatcher<TSpatial, TMode>::Type> getQuery(TArgs&&... mArgs)
+			{
+				return {getSpatial<TSpatial>(), std::forward<TArgs>(mArgs)...};
+			}
 	};
 }
 

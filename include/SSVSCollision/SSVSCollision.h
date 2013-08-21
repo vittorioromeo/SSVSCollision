@@ -15,7 +15,7 @@
 #include "SSVSCollision/Resolver/Impulse/Impulse.h"
 #include "SSVSCollision/Resolver/Retro/Retro.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
-#include "SSVSCollision/Spatial/Grid/GridQuery.h"
 #include "SSVSCollision/Spatial/Grid/GridQueryTypes.h"
+#include "SSVSCollision/Query/Query.h"
 
 #endif
