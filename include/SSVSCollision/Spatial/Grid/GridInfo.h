@@ -39,7 +39,19 @@ namespace ssvsc
 			inline void preUpdate() override	{ if(invalid) calcEdges(); }
 			inline void postUpdate() override	{ }
 			inline void destroy() override		{ clear(); SpatialInfoBase::destroy(); }
-			void handleCollisions(float mFrameTime) override;
+			void handleCollisions(float mFrameTime) override
+			{
+				static int lastPaint{-1};
+				++lastPaint;
+
+				for(const auto& c : cells)
+					for(const auto& b : c->getBodies())
+					{
+						if(b->paint == lastPaint) continue;
+						base.handleCollision(mFrameTime, b);
+						b->paint = lastPaint;
+					}
+			}
 	};
 }
 

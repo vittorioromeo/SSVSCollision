@@ -9,6 +9,7 @@
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Query/Query.h"
 
+
 namespace ssvsc
 {
 	class Base;
@@ -35,10 +36,18 @@ namespace ssvsc
 			inline void del(Base& mBase) { bases.del(mBase); }
 
 		public:
-			World(ResolverBase& mResolver, SpatialBase& mSpatial);
+			World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver(&mResolver), spatial(&mSpatial) { }
 
-			Body& create(Vec2i mPosition, Vec2i mSize, bool mIsStatic);
-			Sensor& createSensor(Vec2i mPosition, Vec2i mSize);
+			inline Body& create(Vec2i mPosition, Vec2i mSize, bool mIsStatic)
+			{
+				auto& result(bases.create<Body>(*this, mIsStatic, mPosition, mSize));
+				bodies.push_back(&result); return result;
+			}
+			inline Sensor& createSensor(Vec2i mPosition, Vec2i mSize)
+			{
+				auto& result(bases.create<Sensor>(*this, mPosition, mSize));
+				sensors.push_back(&result); return result;
+			}
 
 			void update(float mFrameTime);
 			inline void clear() { bases.clear(); bodies.clear(); sensors.clear(); }

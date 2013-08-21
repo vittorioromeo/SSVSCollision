@@ -25,8 +25,8 @@ namespace ssvsc
 		public:
 			Cell(const AABB& mAABB) : aabb{mAABB} { }
 
-			inline void add(Base* mBase) { if(mBase->getType() == Type::Body) addBody(static_cast<Body*>(mBase)); }
-			inline void del(Base* mBase) { if(mBase->getType() == Type::Body) delBody(static_cast<Body*>(mBase)); }
+			inline void add(Base* mBase) { if(mBase->getType() == BaseType::Body) addBody(static_cast<Body*>(mBase)); }
+			inline void del(Base* mBase) { if(mBase->getType() == BaseType::Body) delBody(static_cast<Body*>(mBase)); }
 
 			inline const decltype(bodies)& getBodies() const { return bodies; }
 

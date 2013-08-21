@@ -15,9 +15,6 @@ namespace ssvsc
 {
 	class Body;
 
-	enum class QueryType{Point, Distance, RayCast, OrthoLeft, OrthoRight, OrthoUp, OrthoDown};
-	enum class QueryMode{All};
-
 	template<typename TSpatial, QueryType TType> struct QueryTypeDispatcher;
 	template<typename TSpatial, QueryMode TMode> struct QueryModeDispatcher;
 
@@ -30,17 +27,19 @@ namespace ssvsc
 			std::vector<Body*> bodies;
 			TType internal;
 
-			template<typename TBody = Body> Body* nextImpl(int mGroupUid = -1)
+			template<typename TBody = Body, typename... TArgs> Body* nextImpl(TArgs&&... mArgs)
 			{
 				while(internal.isValid())
 				{
+					// If the body stack is empty, 'refill' it using TMode::getBodies, then sort
 					if(bodies.empty())
 					{
-						TMode::getBodies(bodies, internal.grid, internal.index, mGroupUid);
+						TMode::getBodies(bodies, internal, std::forward<TArgs>(mArgs)...);
 						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
 						internal.step();
 					}
 
+					// While the body stack is not empty, 'yield' bodies one by one
 					while(!bodies.empty())
 					{
 						TBody* body{bodies.back()};
@@ -60,7 +59,8 @@ namespace ssvsc
 		public:
 			template<typename... TArgs> Query(TArgs&&... mArgs) : internal(std::forward<TArgs>(mArgs)...) { }
 
-			inline Body* next()				{ return nextImpl(); }
+			template<typename... TArgs> inline Body* next(TArgs&&... mArgs) { return nextImpl(std::forward<TArgs>(mArgs)...); }
+
 
 			inline void reset() { bodies.clear(); internal.reset(); }
 			inline const Vec2f& getLastPos() { return internal.getLastPos(); }

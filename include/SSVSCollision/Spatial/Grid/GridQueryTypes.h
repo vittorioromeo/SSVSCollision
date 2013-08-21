@@ -32,16 +32,15 @@ namespace ssvsc
 		{
 			struct All
 			{
-				inline static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, Group) { mBodies = mGrid.getCell(mIndex).getBodies(); }
+				template<typename T> inline static void getBodies(std::vector<Body*>& mBodies, const T& mInternal) { mBodies = mInternal.grid.getCell(mInternal.index).getBodies(); }
 			};
-			struct Grouped
+			struct ByGroup
 			{
-				inline static void getBodies(std::vector<Body*>& mBodies, Grid& mGrid, Vec2i& mIndex, Group mGroup)
+				template<typename T> inline static void getBodies(std::vector<Body*>& mBodies, const T& mInternal, Group mGroup)
 				{
-					// TODO: improve
-					std::vector<Body*> temp;
-					for(const auto& b : mGrid.getCell(mIndex).getBodies()) if(b->hasGroup(mGroup)) temp.push_back(b);
-					mBodies = temp;
+					std::vector<Body*> result;
+					for(const auto& b : mInternal.grid.getCell(mInternal.index).getBodies()) if(b->hasGroup(mGroup)) result.push_back(b);
+					mBodies = result;
 				}
 			};
 		}
@@ -128,7 +127,7 @@ namespace ssvsc
 				const auto& bPos(mB->getPosition());
 				return pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2) > pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2);
 			}
-			inline bool hits(const AABB& mShape)
+			bool hits(const AABB& mShape)
 			{
 				Segment<float> ray{startPos, pos};
 				Segment<float> test1{dir.x > 0 ? mShape.getSegmentLeft<float>() : mShape.getSegmentRight<float>()};
@@ -183,7 +182,7 @@ namespace ssvsc
 				const auto& bPos(mB->getPosition());
 				return pow((aPos.x - startPos.x), 2) + pow((aPos.y - startPos.y), 2) > pow((bPos.x - startPos.x), 2) + pow((bPos.y - startPos.y), 2);
 			}
-			inline bool hits(const AABB& mShape)
+			bool hits(const AABB& mShape)
 			{
 				int testX{startPos.x < mShape.getX() ? mShape.getLeft() : mShape.getRight()};
 				int testY{startPos.y < mShape.getY() ? mShape.getTop() : mShape.getBottom()};

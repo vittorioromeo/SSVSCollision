@@ -51,7 +51,7 @@ namespace ssvsc
 
 			inline AABB& getShape() override	{ return shape; }
 			inline AABB& getOldShape() override	{ return shape; }
-			inline Type getType() override		{ return Type::Sensor; }
+			inline BaseType getType() override	{ return BaseType::Sensor; }
 	};
 }
 

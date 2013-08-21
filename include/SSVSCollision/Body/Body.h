@@ -11,11 +11,12 @@
 #include "SSVSCollision/Body/MassData.h"
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Body/Base.h"
+#include "SSVSCollision/Utils/Utils.h"
+#include "SSVSCollision/Resolver/ResolverBase.h"
 
 namespace ssvsc
 {
 	class World;
-	struct ResolverBase;
 
 	class Body : public Base
 	{
@@ -43,11 +44,39 @@ namespace ssvsc
 			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
 			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
 
-			Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize);
+			Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.preUpdate(); }
 			~Body() { spatialInfo.destroy(); }
 
-			void update(float mFrameTime) override;
-			void handleCollision(float mFrameTime, Body* mBody) override;
+			void update(float mFrameTime) override
+			{
+				onPreUpdate();
+
+				if(_static) { spatialInfo.preUpdate(); return; }
+				if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
+
+				oldShape = shape;
+				integrate(mFrameTime);
+				spatialInfo.preUpdate();
+
+				bodiesToResolve.clear();
+				spatialInfo.handleCollisions(mFrameTime);
+
+				if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
+				if(oldShape != shape) spatialInfo.invalidate();
+
+				spatialInfo.postUpdate(); onPostUpdate();
+			}
+			void handleCollision(float mFrameTime, Body* mBody) override
+			{
+				if(mBody == this || !mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
+
+				auto intersection(Utils::getMinIntersection(shape, mBody->getShape()));
+
+				onDetection({*mBody, mBody->getUserData(), intersection, mFrameTime});
+				mBody->onDetection({*this, userData, -intersection, mFrameTime});
+
+				if(resolve && !mustIgnoreResolution(*mBody)) bodiesToResolve.push_back(mBody);
+			}
 			inline void destroy() override { Base::destroy(); }
 
 			inline void applyForce(Vec2f mForce)		{ if(!_static) acceleration += mForce; }
@@ -69,7 +98,7 @@ namespace ssvsc
 			inline void setResolve(bool mResolve)		{ resolve = mResolve; }
 			inline void setMass(float mMass)			{ massData.setMass(mMass); }
 
-			inline Type getType() override				{ return Type::Body; }
+			inline BaseType getType() override			{ return BaseType::Body; }
 			inline AABB& getShape() override			{ return shape; }
 			inline AABB& getOldShape() override			{ return oldShape; }
 			inline Vec2i getPosition() const			{ return shape.getPosition(); }

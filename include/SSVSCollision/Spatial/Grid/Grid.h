@@ -63,7 +63,7 @@ namespace ssvsc
 	{
 		struct Point; struct Distance; struct RayCast;
 		struct OrthoLeft; struct OrthoRight; struct OrthoUp; struct OrthoDown;
-		namespace Bodies { struct All; }
+		namespace Bodies { struct All; struct ByGroup; }
 	}
 
 	template<> struct QueryTypeDispatcher<Grid, QueryType::Point>		{ using Type = GridQueryTypes::Point; };
@@ -75,6 +75,7 @@ namespace ssvsc
 	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoDown>	{ using Type = GridQueryTypes::OrthoDown; };
 
 	template<> struct QueryModeDispatcher<Grid, QueryMode::All>			{ using Type = GridQueryTypes::Bodies::All; };
+	template<> struct QueryModeDispatcher<Grid, QueryMode::ByGroup>		{ using Type = GridQueryTypes::Bodies::ByGroup; };
 }
 
 #endif

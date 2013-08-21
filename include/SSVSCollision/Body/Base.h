@@ -38,7 +38,7 @@ namespace ssvsc
 
 			virtual AABB& getShape() = 0;
 			virtual AABB& getOldShape() = 0;
-			virtual Type getType() = 0;
+			virtual BaseType getType() = 0;
 			inline SpatialInfoBase& getSpatialInfo()	{ return spatialInfo; }
 			inline World& getWorld() const				{ return world; }
 

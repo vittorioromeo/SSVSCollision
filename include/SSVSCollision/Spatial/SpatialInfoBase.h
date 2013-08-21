@@ -21,13 +21,13 @@ namespace ssvsc
 
 		public:
 			SpatialInfoBase(SpatialBase& mSpatial, Base& mBase) : spatial(mSpatial), base(mBase) { }
-			virtual ~SpatialInfoBase() { }
+			inline virtual ~SpatialInfoBase() { }
 
 			virtual void invalidate() = 0;
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
-			virtual void destroy() { spatial.del(*this); }
 			virtual void handleCollisions(float mFrameTime) = 0;
+			inline virtual void destroy() { spatial.del(*this); }
 	};
 }
 

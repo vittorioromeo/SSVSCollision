@@ -17,7 +17,10 @@ namespace ssvsc
 	using Vec2f = ssvs::Vec2f;
 	template<typename T, typename TDeleter = std::default_delete<T>> using Uptr = ssvs::Uptr<T, TDeleter>;
 	template<typename T> using Vec2 = ssvs::Vec2<T>;
-	enum class Type{Body, Sensor};
+
+	enum class QueryType{Point, Distance, RayCast, OrthoLeft, OrthoRight, OrthoUp, OrthoDown};
+	enum class QueryMode{All, ByGroup};
+	enum class BaseType{Body, Sensor};
 }
 
 #endif
