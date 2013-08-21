@@ -5,7 +5,6 @@
 #ifndef SSVSC_BASE
 #define SSVSC_BASE
 
-#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/World/World.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"

@@ -8,7 +8,6 @@
 #define SSVSC_QUERY
 
 #include <vector>
-#include <SSVStart/SSVStart.h>
 #include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc

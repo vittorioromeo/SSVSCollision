@@ -5,7 +5,6 @@
 #ifndef SSVSC_BODY
 #define SSVSC_BODY
 
-#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
 #include "SSVSCollision/Body/MassData.h"

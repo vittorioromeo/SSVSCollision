@@ -5,7 +5,6 @@
 #ifndef SSVSC_RESOLVER_RETRO
 #define SSVSC_RESOLVER_RETRO
 
-#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Resolver/ResolverBase.h"
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Utils/Utils.h"

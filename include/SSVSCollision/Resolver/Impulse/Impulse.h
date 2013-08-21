@@ -5,8 +5,6 @@
 #ifndef SSVSC_RESOLVER_IMPULSE
 #define SSVSC_RESOLVER_IMPULSE
 
-#include <SSVUtils/SSVUtils.h>
-#include <SSVStart/SSVStart.h>
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Global/Typedefs.h"

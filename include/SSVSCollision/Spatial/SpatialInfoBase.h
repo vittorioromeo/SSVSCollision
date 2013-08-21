@@ -5,7 +5,6 @@
 #ifndef SSVSC_SPATIAL_INFOBASE
 #define SSVSC_SPATIAL_INFOBASE
 
-#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Spatial/SpatialBase.h"
 
 namespace ssvsc

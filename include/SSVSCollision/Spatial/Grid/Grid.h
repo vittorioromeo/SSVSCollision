@@ -6,7 +6,6 @@
 #define SSVSC_SPATIAL_GRID
 
 #include <vector>
-#include <SSVUtils/SSVUtils.h>
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
 #include "SSVSCollision/Global/Typedefs.h"
