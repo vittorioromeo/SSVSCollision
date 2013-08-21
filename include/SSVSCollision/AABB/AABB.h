@@ -64,7 +64,7 @@ namespace ssvsc
 			inline bool isAbove(const AABB& mAABB) const	{ return getBottom() <= mAABB.getTop(); }
 			inline bool isBelow(const AABB& mAABB) const	{ return getTop() >= mAABB.getBottom(); }
 
-			inline bool isOverlapping(const AABB& mAABB) const	{ return getRight() > mAABB.getLeft() && getLeft() < mAABB.getRight() && (getBottom() > mAABB.getTop() && getTop() < mAABB.getBottom()); }
+			inline bool isOverlapping(const AABB& mAABB) const	{ return !isLeftOf(mAABB) && !isRightOf(mAABB) && !isAbove(mAABB) && !isBelow(mAABB); }
 			inline bool contains(const AABB& mAABB) const		{ return mAABB.getLeft() >= getLeft() && mAABB.getRight() < getRight() && mAABB.getTop() >= getTop() && mAABB.getBottom() < getBottom(); }
 			inline bool contains(Vec2i mPoint) const			{ return mPoint.x >= getLeft() && mPoint.x < getRight() && mPoint.y >= getTop() && mPoint.y < getBottom(); }
 	};
