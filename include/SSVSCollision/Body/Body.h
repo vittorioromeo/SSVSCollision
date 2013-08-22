@@ -35,7 +35,7 @@ namespace ssvsc
 			{
 				velocity += acceleration * mFrameTime;
 				shape.move(Vec2i(velocity * mFrameTime));
-				acceleration = {0, 0};
+				ssvs::Utils::nullify(acceleration);
 			}
 
 		public:
@@ -78,7 +78,7 @@ namespace ssvsc
 			}
 			inline void destroy() override { Base::destroy(); }
 
-			inline void applyForce(Vec2f mForce)		{ if(!_static) acceleration += mForce; }
+			inline void applyForce(Vec2f mForce)		{ acceleration += mForce; }
 			inline void applyImpulse(Vec2f mImpulse)	{ velocity += getInvMass() * mImpulse; }
 
 			inline void setPosition(Vec2i mPosition)	{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }

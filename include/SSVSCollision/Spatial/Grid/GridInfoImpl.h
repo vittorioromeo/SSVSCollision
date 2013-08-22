@@ -31,9 +31,13 @@ namespace ssvsc
 		clear();
 
 		if(!grid.isIndexValid(startX, startY, endX, endY)) { base.setOutOfBounds(true); return; }
-		for(int iX{startX}; iX <= endX; ++iX) for(int iY{startY}; iY <= endY; ++iY) cells.push_back(&grid.getCell(iX, iY));
-
-		for(const auto& c : cells) c->add(&base);
+		for(int iX{startX}; iX <= endX; ++iX)
+			for(int iY{startY}; iY <= endY; ++iY)
+			{
+				auto& c(grid.getCell(iX, iY));
+				cells.push_back(&c);
+				c.add(&base);
+			}
 
 		invalid = false;
 	}

@@ -39,7 +39,7 @@ namespace ssvsc
 			inline void handleCollision(float mFrameTime, Body* mBody) override
 			{
 				if(!mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
-				onDetection({*mBody, mBody->getUserData(), ssvsc::Utils::getMinIntersection(shape, mBody->getShape()), mFrameTime});
+				onDetection({*mBody, mBody->getUserData(), Utils::getMinIntersection(shape, mBody->getShape()), mFrameTime});
 			}
 			inline void destroy() override { Base::destroy(); }
 
