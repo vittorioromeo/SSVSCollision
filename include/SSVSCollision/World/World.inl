@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_WORLDIMPL
-#define SSVSC_WORLDIMPL
+#ifndef SSVSC_WORLD_INL
+#define SSVSC_WORLD_INL
 
 namespace ssvsc
 {

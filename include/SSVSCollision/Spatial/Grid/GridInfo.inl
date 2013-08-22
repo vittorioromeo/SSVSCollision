@@ -2,8 +2,8 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-#ifndef SSVSC_SPATIAL_GRIDINFOIMPL
-#define SSVSC_SPATIAL_GRIDINFOIMPL
+#ifndef SSVSC_SPATIAL_GRIDINFO_INL
+#define SSVSC_SPATIAL_GRIDINFO_INL
 
 namespace ssvsc
 {
