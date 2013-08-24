@@ -9,7 +9,6 @@
 #include <queue>
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Body/Body.h"
-#include "SSVSCollision/Spatial/Grid/GridQuery.h"
 #include "SSVSCollision/Utils/Utils.h"
 
 namespace ssvsc
