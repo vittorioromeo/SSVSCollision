@@ -22,6 +22,7 @@ namespace ssvsc
 			SpatialInfoBase(SpatialBase& mSpatial, Base& mBase) : spatial(mSpatial), base(mBase) { }
 			inline virtual ~SpatialInfoBase() { }
 
+			virtual void init() = 0;
 			virtual void invalidate() = 0;
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
