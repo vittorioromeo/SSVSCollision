@@ -36,7 +36,7 @@ namespace ssvsc
 			{
 				velocity += acceleration * mFrameTime;
 				shape.move(Vec2i(velocity * mFrameTime));
-				ssvs::Utils::nullify(acceleration);
+				ssvs::nullify(acceleration);
 			}
 
 		public:

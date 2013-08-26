@@ -30,13 +30,13 @@ namespace ssvsc
 				Vec2i resolution{Utils::getMin1DIntersection(shape, s)};
 				mBody.onResolution({*b, b->getUserData(), intersection, resolution, noResolvePosition, noResolveVelocity});
 
-				Vec2f normal(ssvs::Utils::getNormalized(-resolution));
+				Vec2f normal(ssvs::getNormalized(-resolution));
 				float invMassA{mBody.getInvMass()}, invMassB{b->getInvMass()};
 
 				if(noResolveVelocity) continue;
 
 				Vec2f rv{b->getVelocity() - mBody.getVelocity()};
-				float velAlongNormal{ssvs::Utils::getDotProduct(rv, normal)};
+				float velAlongNormal{ssvs::getDotProduct(rv, normal)};
 				if(velAlongNormal <= 0)
 				{
 					float restitutionA{0.8f}, restitutionB{0.8f};
@@ -54,7 +54,7 @@ namespace ssvsc
 				if(noResolvePosition) continue;
 
 				const float k_slop{0.05f}, percent{0.4f};
-				Vec2f correction{(std::max(ssvs::Utils::getMagnitude(Vec2f(resolution)) - k_slop, 0.0f) / (invMassA + invMassB) * percent) * normal};
+				Vec2f correction{(std::max(ssvs::getMagnitude(Vec2f(resolution)) - k_slop, 0.0f) / (invMassA + invMassB) * percent) * normal};
 				shape.move(-Vec2i(invMassA * correction));
 				s.move(Vec2i(invMassB * correction));
 			}
