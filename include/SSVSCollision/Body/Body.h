@@ -7,7 +7,7 @@
 
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
-#include "SSVSCollision/Body/MassData.h"
+#include "SSVSCollision/Body/BodyData.h"
 #include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Body/Base.h"
 #include "SSVSCollision/Utils/Utils.h"
@@ -27,6 +27,7 @@ namespace ssvsc
 			bool _static, resolve{true};
 			Vec2f velocity, acceleration;
 			MassData massData;
+			RestitutionData restitutionData;
 			void* userData{nullptr};
 			std::vector<Body*> bodiesToResolve;
 			int paint{-1};
@@ -43,7 +44,7 @@ namespace ssvsc
 			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
 			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
 
-			Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.preUpdate(); }
+			Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.init(); }
 			~Body() { spatialInfo.destroy(); }
 
 			void update(float mFrameTime) override
@@ -96,6 +97,8 @@ namespace ssvsc
 			inline void setVelocityY(float mY)			{ velocity.y = mY; }
 			inline void setResolve(bool mResolve)		{ resolve = mResolve; }
 			inline void setMass(float mMass)			{ massData.setMass(mMass); }
+			inline void setRestitutionX(float mRestX)	{ restitutionData.setRestitutionX(mRestX); }
+			inline void setRestitutionY(float mRestY)	{ restitutionData.setRestitutionY(mRestY); }
 
 			inline BaseType getType() override			{ return BaseType::Body; }
 			inline AABB& getShape() override			{ return shape; }
@@ -106,6 +109,8 @@ namespace ssvsc
 			inline Vec2i getSize() const				{ return shape.getSize(); }
 			inline float getMass() const				{ return _static ? 0 : massData.getMass(); }
 			inline float getInvMass() const				{ return _static ? 0 : massData.getInvMass(); }
+			inline float getRestitutionX() const		{ return restitutionData.getRestitutionX(); }
+			inline float getRestitutionY() const		{ return restitutionData.getRestitutionY(); }
 			inline int getWidth() const					{ return shape.getWidth(); }
 			inline int getHeight() const				{ return shape.getHeight(); }
 			inline bool isStatic() const				{ return _static; }

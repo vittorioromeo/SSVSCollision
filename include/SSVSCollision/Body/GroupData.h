@@ -34,7 +34,6 @@ namespace ssvsc
 			inline const Bitset& getGroups() const				{ return groups; }
 			inline const Bitset& getGroupsToCheck()	const		{ return groupsToCheck; }
 			inline const Bitset& getGroupsNoResolve() const		{ return groupsNoResolve; }
-
 	};
 }
 

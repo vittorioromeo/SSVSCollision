@@ -41,8 +41,8 @@ namespace ssvsc
 				bool oldShapeAboveS{oldShape.isAbove(s)}, oldShapeBelowS{oldShape.isBelow(s)};
 				bool oldHOverlap{!(oldShapeLeftOfS || oldShapeRightOfS)}, oldVOverlap{!(oldShapeAboveS || oldShapeBelowS)};
 
-				constexpr float restitutionX{-0.f}; // TODO: make this customizable
-				constexpr float restitutionY{-0.f}; // TODO: make this customizable
+				// TODO: consider when two different bodies with two different rest. collide
+				float restitutionX{mBody.getRestitutionX()}, restitutionY{mBody.getRestitutionY()};
 				const auto& velocity(mBody.getVelocity());
 
 				if		(resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) mBody.setVelocityY(velocity.y * restitutionY);
