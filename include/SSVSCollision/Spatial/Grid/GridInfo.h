@@ -35,6 +35,7 @@ namespace ssvsc
 			std::vector<Cell*> cells;
 			GridInfo(Grid& mGrid, Base& mBase);
 
+			inline void init() override			{ calcEdges(); calcCells(); }
 			inline void invalidate() override	{ invalid = true; }
 			inline void preUpdate() override	{ if(invalid) calcEdges(); }
 			inline void postUpdate() override	{ }
