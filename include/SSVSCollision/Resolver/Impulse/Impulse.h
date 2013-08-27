@@ -60,6 +60,10 @@ namespace ssvsc
 			}
 		}
 	};
+
+	// TODO: impulse resolver does not need iterative collision detection/response as retro resolver
+	// implement a generic way to ask the spatial for collision pairs
+	// then make impulse use it
 }
 
 #endif
