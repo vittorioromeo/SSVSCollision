@@ -15,24 +15,16 @@ namespace ssvsc
 	class Cell
 	{
 		private:
-			AABB aabb;
 			std::vector<Body*> bodies;
 
 			inline void addBody(Body* mBody) { bodies.push_back(mBody); }
 			inline void delBody(Body* mBody) { ssvu::eraseRemove(bodies, mBody); }
 
 		public:
-			Cell(const AABB& mAABB) : aabb{mAABB} { }
-
 			inline void add(Base* mBase) { if(mBase->getType() == BaseType::Body) addBody(static_cast<Body*>(mBase)); }
 			inline void del(Base* mBase) { if(mBase->getType() == BaseType::Body) delBody(static_cast<Body*>(mBase)); }
 
 			inline const decltype(bodies)& getBodies() const { return bodies; }
-
-			inline int getLeft() const		{ return aabb.getLeft(); }
-			inline int getRight() const		{ return aabb.getRight(); }
-			inline int getTop() const		{ return aabb.getTop(); }
-			inline int getBottom() const	{ return aabb.getBottom(); }
 	};
 }
 
