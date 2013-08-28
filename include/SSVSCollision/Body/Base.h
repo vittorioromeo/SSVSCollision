@@ -36,7 +36,7 @@ namespace ssvsc
 			virtual void handleCollision(float mFrameTime, Body* mBody) = 0;
 			inline virtual void destroy() { world.del(*this); }
 
-			inline void setOutOfBounds(bool mOutOfBounds)	{ outOfBounds = mOutOfBounds; }
+			inline void setOutOfBounds(bool mOutOfBounds) { outOfBounds = mOutOfBounds; }
 
 			virtual AABB& getShape() = 0;
 			virtual AABB& getOldShape() = 0;

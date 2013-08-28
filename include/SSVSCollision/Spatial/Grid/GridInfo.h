@@ -15,6 +15,7 @@ namespace ssvsc
 	{
 		private:
 			TGrid& grid;
+			std::vector<Cell*> cells;
 			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
 			int oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1};
 			bool invalid{true};
@@ -59,7 +60,6 @@ namespace ssvsc
 			}
 
 		public:
-			std::vector<Cell*> cells;
 			GridInfo(TGrid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { }
 
 			inline void init() override			{ calcEdges(); calcCells(); }
