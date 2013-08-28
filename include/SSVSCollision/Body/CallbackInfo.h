@@ -15,7 +15,7 @@ namespace ssvsc
 	{
 		Body& body;
 		void* userData;
-		Vec2i intersection;
+		const Vec2i& intersection;
 		float frameTime;
 	};
 
@@ -23,7 +23,8 @@ namespace ssvsc
 	{
 		Body& body;
 		void* userData;
-		Vec2i intersection, resolution;
+		const Vec2i& intersection;
+		const Vec2i& resolution;
 		bool& noResolvePosition;
 		bool& noResolveVelocity;
 	};
