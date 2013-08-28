@@ -14,12 +14,13 @@ namespace ssvsc
 	{
 		private:
 			Vec2i position, halfSize;
+			Vec2i size; // size depends on halfSize
 
 		public:
 			inline AABB(const AABB& mAABB) = default;
 			inline AABB(AABB&& mAABB) = default;
-			inline AABB(const Vec2i& mPosition, const Vec2i& mHalfSize) : position{mPosition}, halfSize{mHalfSize} { }
-			inline AABB(int mLeft, int mRight, int mTop, int mBottom) : position{mLeft + (mRight - mLeft) / 2, mTop + (mBottom - mTop) / 2}, halfSize{(mRight - mLeft) / 2, (mBottom - mTop) / 2} { }
+			inline AABB(const Vec2i& mPosition, const Vec2i& mHalfSize) : position{mPosition}, halfSize{mHalfSize}, size{halfSize * 2} { }
+			inline AABB(int mLeft, int mRight, int mTop, int mBottom) : position{mLeft + (mRight - mLeft) / 2, mTop + (mBottom - mTop) / 2}, halfSize{(mRight - mLeft) / 2, (mBottom - mTop) / 2}, size{halfSize * 2} { }
 
 			inline AABB& operator=(const AABB& mAABB)			= default;
 			inline AABB& operator=(AABB&& mAABB)				= default;
@@ -31,10 +32,10 @@ namespace ssvsc
 			inline void setPosition(const Vec2i& mPosition)	{ position = mPosition; }
 			inline void setX(int mX)						{ position.x = mX; }
 			inline void setY(int mY)						{ position.y = mY; }
-			inline void setHalfSize(const Vec2i& mHalfSize)	{ halfSize = mHalfSize; }
-			inline void setSize(const Vec2i& mSize)			{ halfSize = mSize / 2; }
-			inline void setWidth(int mWidth)				{ halfSize.x = mWidth / 2; }
-			inline void setHeight(int mHeight)				{ halfSize.y = mHeight / 2; }
+			inline void setHalfSize(const Vec2i& mHalfSize)	{ halfSize = mHalfSize;			size = halfSize * 2; }
+			inline void setSize(const Vec2i& mSize)			{ halfSize = mSize / 2;			size = mSize; }
+			inline void setWidth(int mWidth)				{ halfSize.x = mWidth / 2;		size.x = mWidth; }
+			inline void setHeight(int mHeight)				{ halfSize.y = mHeight / 2;		size.y = mHeight; }
 
 			inline const Vec2i& getPosition() const	{ return position; }
 			inline int getX() const					{ return position.x; }
@@ -46,9 +47,9 @@ namespace ssvsc
 			inline const Vec2i& getHalfSize() const	{ return halfSize; }
 			inline int getHalfWidth() const			{ return halfSize.x; }
 			inline int getHalfHeight() const		{ return halfSize.y; }
-			inline const Vec2i& getSize() const		{ return halfSize * 2; }
-			inline int getWidth() const				{ return halfSize.x * 2; }
-			inline int getHeight() const			{ return halfSize.y * 2; }
+			inline const Vec2i& getSize() const		{ return size; }
+			inline int getWidth() const				{ return size.x; }
+			inline int getHeight() const			{ return size.y; }
 
 			template<typename T> inline Vec2<T> getVertexNW() const			{ return Vec2<T>(getLeft(), getTop()); }
 			template<typename T> inline Vec2<T> getVertexNE() const			{ return Vec2<T>(getRight(), getTop()); }
