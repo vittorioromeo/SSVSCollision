@@ -16,67 +16,74 @@ namespace ssvsc
 	class Cell;
 	class SpatialInfoBase;
 
-	class Grid : public SpatialBase
+	namespace Internal
 	{
-		private:
-			ssvu::MemoryManager<GridInfo> gridInfos;
-			std::vector<Cell> cells;
-			int columns, rows, cellSize, offset;
+		template<typename TContainer, typename TDerived> class GridBase : public SpatialBase
+		{
+			protected:
+				ssvu::MemoryManager<GridInfo<TDerived>> gridInfos;
+				TContainer cells;
+				int columns, rows, cellSize, offset;
 
-		public:
-			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset}
-			{
-				cells.reserve(columns * rows);
+			public:
+				GridBase(int mColumns, int mRows, int mCellSize, int mOffset = 0) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset} { }
 
-				for(int iX{0}; iX < columns; ++iX)
-					for(int iY{0}; iY < rows; ++iY)
-					{
-						int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
-						cells.emplace_back(AABB{left, right, top, bottom});
-					}
-			}
+				inline SpatialInfoBase& createSpatialInfo(Base& mBase) override	{ return gridInfos.create(static_cast<TDerived&>(*this), mBase); }
+				inline void refresh() override									{ gridInfos.refresh(); }
+				inline void del(SpatialInfoBase& mSpatialInfo) override			{ gridInfos.del(static_cast<GridInfo<TDerived>&>(mSpatialInfo)); }
 
-			inline SpatialInfoBase& createSpatialInfo(Base& mBase) override	{ return gridInfos.create(*this, mBase); }
-			inline void refresh() override									{ gridInfos.refresh(); }
-			inline void del(SpatialInfoBase& mSpatialInfo) override			{ gridInfos.del(static_cast<GridInfo&>(mSpatialInfo)); }
+				inline int getIndexXMin() const	{ return 0 - offset; }
+				inline int getIndexYMin() const	{ return 0 - offset; }
+				inline int getIndexXMax() const	{ return columns - offset; }
+				inline int getIndexYMax() const	{ return rows - offset; }
+				inline int getRows() const		{ return rows; }
+				inline int getColumns() const	{ return columns; }
+				inline int getOffset() const	{ return offset; }
+				inline int getCellSize() const	{ return cellSize; }
 
-			inline int getIndexXMin() const	{ return 0 - offset; }
-			inline int getIndexYMin() const	{ return 0 - offset; }
-			inline int getIndexXMax() const	{ return columns - offset; }
-			inline int getIndexYMax() const	{ return rows - offset; }
-			inline int getRows() const		{ return rows; }
-			inline int getColumns() const	{ return columns; }
-			inline int getOffset() const	{ return offset; }
-			inline int getCellSize() const	{ return cellSize; }
+				inline int getIndex(int mValue) const				{ return mValue / cellSize; }
+				inline Vec2i getIndex(const Vec2i& mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 
-			inline int getIndex(int mValue) const				{ return mValue / cellSize; }
-			inline Vec2i getIndex(const Vec2i& mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
+				inline Cell& getCell(int mX, int mY)				{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
+				inline Cell& getCell(const Vec2i& mIndex)			{ return getCell(mIndex.x, mIndex.y); }
 
-			inline Cell& getCell(int mX, int mY)				{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
-			inline Cell& getCell(const Vec2i& mIndex)			{ return getCell(mIndex.x, mIndex.y); }
+				inline const decltype(cells)& getCells() { return cells; }
+				inline bool isIndexValid(const Vec2i& mIndex) const								{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
+				inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
+		};
+	}
 
-			inline const decltype(cells)& getCells() { return cells; }
-			inline bool isIndexValid(const Vec2i& mIndex) const								{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
-			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
+	struct Grid : public Internal::GridBase<std::vector<Cell>, Grid>
+	{
+		Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<std::vector<Cell>, Grid>{mColumns, mRows, mCellSize, mOffset} { cells.reserve(columns * rows); }
+	};
+	struct HashGrid : public Internal::GridBase<std::unordered_map<int, Cell>, HashGrid>
+	{
+		HashGrid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<std::unordered_map<int, Cell>, HashGrid>{mColumns, mRows, mCellSize, mOffset} { }
 	};
 
 	namespace GridQueryTypes
 	{
-		struct Point; struct Distance; struct RayCast;
-		struct OrthoLeft; struct OrthoRight; struct OrthoUp; struct OrthoDown;
+		template<typename TGrid> struct Point;
+		template<typename TGrid> struct Distance;
+		template<typename TGrid> struct RayCast;
+		template<typename TGrid> struct OrthoLeft;
+		template<typename TGrid> struct OrthoRight;
+		template<typename TGrid> struct OrthoUp;
+		template<typename TGrid> struct OrthoDown;
 		namespace Bodies { struct All; struct ByGroup; }
 	}
 
-	template<> struct QueryTypeDispatcher<Grid, QueryType::Point>		{ using Type = GridQueryTypes::Point; };
-	template<> struct QueryTypeDispatcher<Grid, QueryType::Distance>	{ using Type = GridQueryTypes::Distance; };
-	template<> struct QueryTypeDispatcher<Grid, QueryType::RayCast>		{ using Type = GridQueryTypes::RayCast; };
-	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoLeft>	{ using Type = GridQueryTypes::OrthoLeft; };
-	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoRight>	{ using Type = GridQueryTypes::OrthoRight; };
-	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoUp>		{ using Type = GridQueryTypes::OrthoUp; };
-	template<> struct QueryTypeDispatcher<Grid, QueryType::OrthoDown>	{ using Type = GridQueryTypes::OrthoDown; };
+	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::Point>		{ using Type = GridQueryTypes::Point<TGrid>; };
+	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::Distance>		{ using Type = GridQueryTypes::Distance<TGrid>; };
+	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::RayCast>		{ using Type = GridQueryTypes::RayCast<TGrid>; };
+	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::OrthoLeft>	{ using Type = GridQueryTypes::OrthoLeft<TGrid>; };
+	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::OrthoRight>	{ using Type = GridQueryTypes::OrthoRight<TGrid>; };
+	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::OrthoUp>		{ using Type = GridQueryTypes::OrthoUp<TGrid>; };
+	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::OrthoDown>	{ using Type = GridQueryTypes::OrthoDown<TGrid>; };
 
-	template<> struct QueryModeDispatcher<Grid, QueryMode::All>			{ using Type = GridQueryTypes::Bodies::All; };
-	template<> struct QueryModeDispatcher<Grid, QueryMode::ByGroup>		{ using Type = GridQueryTypes::Bodies::ByGroup; };
+	template<typename TGrid> struct QueryModeDispatcher<TGrid, QueryMode::All>			{ using Type = GridQueryTypes::Bodies::All; };
+	template<typename TGrid> struct QueryModeDispatcher<TGrid, QueryMode::ByGroup>		{ using Type = GridQueryTypes::Bodies::ByGroup; };
 }
 
 #endif
