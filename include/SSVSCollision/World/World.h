@@ -38,12 +38,12 @@ namespace ssvsc
 		public:
 			World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver(&mResolver), spatial(&mSpatial) { }
 
-			inline Body& create(Vec2i mPosition, Vec2i mSize, bool mIsStatic)
+			inline Body& create(const Vec2i& mPosition, const Vec2i& mSize, bool mIsStatic)
 			{
 				auto& result(bases.create<Body>(*this, mIsStatic, mPosition, mSize));
 				bodies.push_back(&result); return result;
 			}
-			inline Sensor& createSensor(Vec2i mPosition, Vec2i mSize)
+			inline Sensor& createSensor(const Vec2i& mPosition, const Vec2i& mSize)
 			{
 				auto& result(bases.create<Sensor>(*this, mPosition, mSize));
 				sensors.push_back(&result); return result;

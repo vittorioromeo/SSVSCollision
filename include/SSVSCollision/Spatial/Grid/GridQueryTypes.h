@@ -21,7 +21,7 @@ namespace ssvsc
 			Vec2f startPos, pos, lastPos;
 			Vec2i startIndex, index;
 
-			Base(Grid& mGrid, Vec2i mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIndex(Vec2i(mPos))}, index{startIndex} { }
+			Base(Grid& mGrid, const Vec2i& mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIndex(Vec2i(mPos))}, index{startIndex} { }
 
 			inline void reset()					{ pos = startPos; index = startIndex; }
 			inline const Vec2f& getLastPos()	{ return lastPos; }
@@ -97,10 +97,10 @@ namespace ssvsc
 		struct RayCast : public Base
 		{
 			int cellSize;
-			Vec2i next{0, 0};
+			Vec2i next;
 			Vec2f dir, deltaDist, increment, max;
 
-			RayCast(Grid& mGrid, Vec2i mPos, Vec2f mDir) : Base{mGrid, mPos}, cellSize{grid.getCellSize()}, dir{ssvs::getNormalized(mDir)},
+			RayCast(Grid& mGrid, const Vec2i& mPos, const Vec2f& mDir) : Base{mGrid, mPos}, cellSize{grid.getCellSize()}, dir{ssvs::getNormalized(mDir)},
 				deltaDist(cellSize / abs(dir.x), cellSize / abs(dir.y)), increment{dir * static_cast<float>(cellSize)}, max{Vec2f(startIndex * cellSize) - startPos}
 			{
 				next.x = dir.x < 0 ? -1 : 1;
@@ -151,7 +151,7 @@ namespace ssvsc
 			int cellSize, distance, cellRadius;
 			std::queue<Vec2i> offsets;
 
-			Distance(Grid& mGrid, Vec2i mPos, int mDistance) : Base{mGrid, mPos}, cellSize{grid.getCellSize()}, distance{mDistance}, cellRadius{distance / cellSize}
+			Distance(Grid& mGrid, const Vec2i& mPos, int mDistance) : Base{mGrid, mPos}, cellSize{grid.getCellSize()}, distance{mDistance}, cellRadius{distance / cellSize}
 			{
 				for(int iRadius{0}; iRadius < cellRadius + 1; ++iRadius)
 				{
