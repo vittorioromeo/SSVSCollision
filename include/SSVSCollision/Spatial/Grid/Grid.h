@@ -34,9 +34,9 @@ namespace ssvsc
 					}
 			}
 
-			inline SpatialInfoBase& createSpatialInfo(Base& mBase) override { return gridInfos.create(*this, mBase); }
-			inline void refresh() override { gridInfos.refresh(); }
-			inline void del(SpatialInfoBase& mSpatialInfo) override { gridInfos.del(static_cast<GridInfo&>(mSpatialInfo)); }
+			inline SpatialInfoBase& createSpatialInfo(Base& mBase) override	{ return gridInfos.create(*this, mBase); }
+			inline void refresh() override									{ gridInfos.refresh(); }
+			inline void del(SpatialInfoBase& mSpatialInfo) override			{ gridInfos.del(static_cast<GridInfo&>(mSpatialInfo)); }
 
 			inline int getIndexXMin() const	{ return 0 - offset; }
 			inline int getIndexYMin() const	{ return 0 - offset; }
@@ -47,14 +47,14 @@ namespace ssvsc
 			inline int getOffset() const	{ return offset; }
 			inline int getCellSize() const	{ return cellSize; }
 
-			inline int getIndex(int mValue) const			{ return mValue / cellSize; }
-			inline Vec2i getIndex(Vec2i mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
+			inline int getIndex(int mValue) const				{ return mValue / cellSize; }
+			inline Vec2i getIndex(const Vec2i& mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 
-			inline Cell& getCell(int mX, int mY)	{ return *cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
-			inline Cell& getCell(Vec2i mIndex)		{ return getCell(mIndex.x, mIndex.y); }
+			inline Cell& getCell(int mX, int mY)				{ return *cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
+			inline Cell& getCell(const Vec2i& mIndex)			{ return getCell(mIndex.x, mIndex.y); }
 
 			inline const decltype(cells)& getCells() { return cells; }
-			inline bool isIndexValid(Vec2i mIndex) const									{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
+			inline bool isIndexValid(const Vec2i& mIndex) const								{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
 			inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
 	};
 
