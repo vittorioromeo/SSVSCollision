@@ -67,6 +67,8 @@ namespace ssvsc
 				return {getSpatial<TSpatial>(), std::forward<TArgs>(mArgs)...};
 			}
 	};
+
+	// TODO: test collision pair generation with bodyA->priority bodyB->priority for retro resolver
 }
 
 #endif
