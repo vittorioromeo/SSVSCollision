@@ -11,20 +11,47 @@
 
 namespace ssvsc
 {
-	class Base;
-	class Body;
-	class Grid;
-
-	class GridInfo : public SpatialInfoBase
+	template<typename TGrid> class GridInfo : public SpatialInfoBase
 	{
 		private:
-			Grid& grid;
+			TGrid& grid;
 			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
 			int oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1};
 			bool invalid{true};
 
-			void calcEdges();
-			void calcCells();
+			inline void calcEdges()
+			{
+				const AABB& oldShape(base.getOldShape());
+				const AABB& shape(base.getShape());
+
+				oldStartX = startX;
+				oldStartY = startY;
+				oldEndX = endX;
+				oldEndY = endY;
+
+				startX = grid.getIndex(std::min(oldShape.getLeft(), shape.getLeft()));
+				startY = grid.getIndex(std::min(oldShape.getTop(), shape.getTop()));
+				endX = grid.getIndex(std::max(oldShape.getRight(), shape.getRight()));
+				endY = grid.getIndex(std::max(oldShape.getBottom(), shape.getBottom()));
+
+				if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells();
+				else invalid = false;
+			}
+			inline void calcCells()
+			{
+				clear();
+
+				if(!grid.isIndexValid(startX, startY, endX, endY)) { base.setOutOfBounds(true); return; }
+				for(int iX{startX}; iX <= endX; ++iX)
+					for(int iY{startY}; iY <= endY; ++iY)
+					{
+						auto& c(grid.getCell(iX, iY));
+						cells.push_back(&c);
+						c.add(&base);
+					}
+
+				invalid = false;
+			}
 			inline void clear()
 			{
 				for(const auto& c : cells) c->del(&base);
@@ -33,14 +60,14 @@ namespace ssvsc
 
 		public:
 			std::vector<Cell*> cells;
-			GridInfo(Grid& mGrid, Base& mBase);
+			GridInfo(TGrid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { }
 
 			inline void init() override			{ calcEdges(); calcCells(); }
 			inline void invalidate() override	{ invalid = true; }
 			inline void preUpdate() override	{ if(invalid) calcEdges(); }
 			inline void postUpdate() override	{ }
 			inline void destroy() override		{ clear(); SpatialInfoBase::destroy(); }
-			void handleCollisions(float mFrameTime) override
+			inline void handleCollisions(float mFrameTime) override
 			{
 				static int lastPaint{-1};
 				++lastPaint;
@@ -48,9 +75,9 @@ namespace ssvsc
 				for(const auto& c : cells)
 					for(const auto& b : c->getBodies())
 					{
-						if(b->paint == lastPaint) continue;
+						if(b->getSpatialPaint() == lastPaint) continue;
 						base.handleCollision(mFrameTime, b);
-						b->paint = lastPaint;
+						b->setSpatialPaint(lastPaint);
 					}
 			}
 	};
