@@ -19,8 +19,6 @@ namespace ssvsc
 
 	class Body : public Base
 	{
-		friend class GridInfo;
-
 		private:
 			ResolverBase& resolver;
 			AABB shape, oldShape;
@@ -30,7 +28,7 @@ namespace ssvsc
 			RestitutionData restitutionData;
 			void* userData{nullptr};
 			std::vector<Body*> bodiesToResolve;
-			int paint{-1};
+			int spatialPaint{-1};
 
 			inline void integrate(float mFrameTime)
 			{
@@ -52,7 +50,6 @@ namespace ssvsc
 
 				if(_static) { spatialInfo.preUpdate(); return; }
 				if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
-
 				oldShape = shape;
 				integrate(mFrameTime);
 				spatialInfo.preUpdate();
@@ -98,6 +95,7 @@ namespace ssvsc
 			inline void setMass(float mMass)					{ massData.setMass(mMass); }
 			inline void setRestitutionX(float mRestX)			{ restitutionData.setRestitutionX(mRestX); }
 			inline void setRestitutionY(float mRestY)			{ restitutionData.setRestitutionY(mRestY); }
+			inline void setSpatialPaint(int mSpatialPaint)		{ spatialPaint = mSpatialPaint; }
 
 			inline BaseType getType() override			{ return BaseType::Body; }
 			inline AABB& getShape() override			{ return shape; }
@@ -118,6 +116,7 @@ namespace ssvsc
 			inline bool hasMovedRight() const			{ return shape.getX() > oldShape.getX(); }
 			inline bool hasMovedUp() const				{ return shape.getY() < oldShape.getY(); }
 			inline bool hasMovedDown() const			{ return shape.getY() > oldShape.getY(); }
+			inline int getSpatialPaint() const			{ return spatialPaint; }
 	};
 }
 
