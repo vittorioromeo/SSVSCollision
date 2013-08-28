@@ -20,17 +20,19 @@ namespace ssvsc
 	{
 		private:
 			ssvu::MemoryManager<GridInfo> gridInfos;
-			std::vector<Uptr<Cell>> cells;
+			std::vector<Cell> cells;
 			int columns, rows, cellSize, offset;
 
 		public:
 			Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset}
 			{
+				cells.reserve(columns * rows);
+
 				for(int iX{0}; iX < columns; ++iX)
 					for(int iY{0}; iY < rows; ++iY)
 					{
 						int left{iX * cellSize}, right{cellSize + left}, top{iY * cellSize}, bottom{cellSize + top};
-						cells.emplace_back(new Cell{{left, right, top, bottom}});
+						cells.emplace_back(AABB{left, right, top, bottom});
 					}
 			}
 
@@ -50,7 +52,7 @@ namespace ssvsc
 			inline int getIndex(int mValue) const				{ return mValue / cellSize; }
 			inline Vec2i getIndex(const Vec2i& mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 
-			inline Cell& getCell(int mX, int mY)				{ return *cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
+			inline Cell& getCell(int mX, int mY)				{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
 			inline Cell& getCell(const Vec2i& mIndex)			{ return getCell(mIndex.x, mIndex.y); }
 
 			inline const decltype(cells)& getCells() { return cells; }
