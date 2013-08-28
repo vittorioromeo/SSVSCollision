@@ -27,6 +27,9 @@ namespace ssvsc
 			Base(World& mWorld) : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
 
 		public:
+			ssvu::Delegate<void()> onPreUpdate;
+			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
+
 			virtual ~Base() { }
 
 			virtual	void update(float mFrameTime) = 0;

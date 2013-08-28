@@ -40,11 +40,10 @@ namespace ssvsc
 			}
 
 		public:
-			ssvu::Delegate<void()> onPreUpdate, onPostUpdate, onOutOfBounds;
-			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
+			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
 			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
 
-			Body(World& mWorld, bool mIsStatic, Vec2i mPosition, Vec2i mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.init(); }
+			Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.init(); }
 			~Body() { spatialInfo.destroy(); }
 
 			void update(float mFrameTime) override
@@ -61,7 +60,7 @@ namespace ssvsc
 				bodiesToResolve.clear();
 				spatialInfo.handleCollisions(mFrameTime);
 
-				if(!bodiesToResolve.empty()) resolver.resolve(*this, bodiesToResolve);
+				resolver.resolve(*this, bodiesToResolve);
 				if(oldShape != shape) spatialInfo.invalidate();
 
 				spatialInfo.postUpdate(); onPostUpdate();
@@ -79,34 +78,34 @@ namespace ssvsc
 			}
 			inline void destroy() override { Base::destroy(); }
 
-			inline void applyForce(Vec2f mForce)		{ acceleration += mForce; }
-			inline void applyImpulse(Vec2f mImpulse)	{ velocity += getInvMass() * mImpulse; }
+			inline void applyForce(const Vec2f& mForce)			{ acceleration += mForce; }
+			inline void applyImpulse(const Vec2f& mImpulse)		{ velocity += getInvMass() * mImpulse; }
 
-			inline void setPosition(Vec2i mPosition)	{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
-			inline void setX(int mX)					{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
-			inline void setY(int mY)					{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
-			inline void setSize(Vec2i mSize)			{ shape.setSize(mSize); spatialInfo.invalidate(); }
-			inline void setHalfSize(Vec2i mSize)		{ shape.setHalfSize(mSize); spatialInfo.invalidate(); }
-			inline void setWidth(int mWidth)			{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
-			inline void setHeight(int mHeight)			{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
-			inline void setVelocity(Vec2f mVelocity) 	{ velocity = mVelocity; }
-			inline void setAcceleration(Vec2f mAccel)	{ acceleration = mAccel; }
-			inline void setStatic(bool mStatic) 		{ _static = mStatic; spatialInfo.invalidate(); }
-			inline void setUserData(void* mUserData)	{ userData = mUserData; }
-			inline void setVelocityX(float mX)			{ velocity.x = mX; }
-			inline void setVelocityY(float mY)			{ velocity.y = mY; }
-			inline void setResolve(bool mResolve)		{ resolve = mResolve; }
-			inline void setMass(float mMass)			{ massData.setMass(mMass); }
-			inline void setRestitutionX(float mRestX)	{ restitutionData.setRestitutionX(mRestX); }
-			inline void setRestitutionY(float mRestY)	{ restitutionData.setRestitutionY(mRestY); }
+			inline void setPosition(const Vec2i& mPosition)		{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
+			inline void setX(int mX)							{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
+			inline void setY(int mY)							{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
+			inline void setSize(const Vec2i& mSize)				{ shape.setSize(mSize); spatialInfo.invalidate(); }
+			inline void setHalfSize(const Vec2i& mSize)			{ shape.setHalfSize(mSize); spatialInfo.invalidate(); }
+			inline void setWidth(int mWidth)					{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
+			inline void setHeight(int mHeight)					{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
+			inline void setVelocity(const Vec2f& mVelocity) 	{ velocity = mVelocity; }
+			inline void setAcceleration(const Vec2f& mAccel)	{ acceleration = mAccel; }
+			inline void setStatic(bool mStatic)					{ _static = mStatic; spatialInfo.invalidate(); }
+			inline void setUserData(void* mUserData)			{ userData = mUserData; }
+			inline void setVelocityX(float mX)					{ velocity.x = mX; }
+			inline void setVelocityY(float mY)					{ velocity.y = mY; }
+			inline void setResolve(bool mResolve)				{ resolve = mResolve; }
+			inline void setMass(float mMass)					{ massData.setMass(mMass); }
+			inline void setRestitutionX(float mRestX)			{ restitutionData.setRestitutionX(mRestX); }
+			inline void setRestitutionY(float mRestY)			{ restitutionData.setRestitutionY(mRestY); }
 
 			inline BaseType getType() override			{ return BaseType::Body; }
 			inline AABB& getShape() override			{ return shape; }
 			inline AABB& getOldShape() override			{ return oldShape; }
-			inline Vec2i getPosition() const			{ return shape.getPosition(); }
-			inline Vec2f getVelocity() const			{ return velocity; }
-			inline Vec2f getAcceleration() const		{ return acceleration; }
-			inline Vec2i getSize() const				{ return shape.getSize(); }
+			inline const Vec2i& getPosition() const		{ return shape.getPosition(); }
+			inline const Vec2f& getVelocity() const		{ return velocity; }
+			inline const Vec2f& getAcceleration() const	{ return acceleration; }
+			inline const Vec2i& getSize() const			{ return shape.getSize(); }
 			inline float getMass() const				{ return _static ? 0 : massData.getMass(); }
 			inline float getInvMass() const				{ return _static ? 0 : massData.getInvMass(); }
 			inline float getRestitutionX() const		{ return restitutionData.getRestitutionX(); }

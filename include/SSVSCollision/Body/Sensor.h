@@ -22,10 +22,7 @@ namespace ssvsc
 			AABB shape;
 
 		public:
-			ssvu::Delegate<void()> onPreUpdate;
-			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
-
-			Sensor(World& mWorld, Vec2i mPosition, Vec2i mSize) : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
+			Sensor(World& mWorld, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
 			~Sensor() { spatialInfo.destroy(); }
 
 			inline void update(float mFrameTime) override
@@ -43,7 +40,7 @@ namespace ssvsc
 			}
 			inline void destroy() override { Base::destroy(); }
 
-			inline void setPosition(Vec2i mPosition)
+			inline void setPosition(const Vec2i& mPosition)
 			{
 				if(mPosition != shape.getPosition()) spatialInfo.invalidate();
 				shape.setPosition(mPosition);
