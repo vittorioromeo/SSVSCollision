@@ -27,8 +27,8 @@ namespace ssvsc
 				const AABB& s(b->getShape());
 
 				int iX{Utils::getMinIntersectionX(shape, s)}, iY{Utils::getMinIntersectionY(shape, s)};
-				bool minAbs{std::abs(iX) < std::abs(iY)};
-				bool noResolvePosition{false}, noResolveVelocity{false};
+				int absIX{std::abs(iX)}, absIY{std::abs(iY)};
+				bool noResolvePosition{false}, noResolveVelocity{false}, minAbs{absIX < absIY};
 				Vec2i resolution{minAbs ? Vec2i{iX, 0} : Vec2i{0, iY}};
 				mBody.onResolution({*b, b->getUserData(), {iX, iY}, resolution, noResolvePosition, noResolveVelocity});
 
@@ -43,19 +43,21 @@ namespace ssvsc
 				const AABB& os(b->getOldShape());
 				float desiredX{velocity.x}, desiredY{velocity.y};
 
-				if		(resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) desiredY *= mBody.getRestitutionY();
-				else if	(resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))) desiredY *= mBody.getRestitutionY();
+				if	((resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) ||
+					 (resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))))
+						desiredY *= mBody.getRestitutionY();
 
-				if		(resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) desiredX *= mBody.getRestitutionX();
-				else if	(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))) desiredX *= mBody.getRestitutionX();
+				if	((resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) ||
+					(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))))
+						desiredX *= mBody.getRestitutionX();
 
 				Vec2f velDiff{b->getVelocity() - mBody.getVelocity()};
 				Vec2f normal(ssvs::getNormalized(-resolution));
 
-				float minDist{-(minAbs ? std::abs(iX) : std::abs(iY))};
-				float remove{ssvs::getDotProduct(velDiff, normal) + 0.4f * (minDist + 1) / mFrameTime};
+				float minDist{-(minAbs ? absIX : absIY)};
+				float remove{ssvs::getDotProduct(velDiff, normal) + (minDist) / mFrameTime};
 
-				if(remove < 0 && minDist < 0)
+				if(remove < 0)
 				{
 					Vec2f impulse{normal * remove / (mBody.getInvMass() + b->getInvMass())};
 
@@ -63,8 +65,8 @@ namespace ssvsc
 					b->applyImpulse(-impulse * b->getInvMass());
 				 }
 
-				if(std::abs(mBody.getVelocity().x) < std::abs(desiredX)) mBody.setVelocityX(desiredX * ssvu::getSign(mBody.getVelocity().x));
-				if(std::abs(mBody.getVelocity().y) < std::abs(desiredY)) mBody.setVelocityY(desiredY * ssvu::getSign(mBody.getVelocity().y));
+				mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
+				mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
 			}
 		}
 	};

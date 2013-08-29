@@ -43,11 +43,13 @@ namespace ssvsc
 				const auto& velocity(mBody.getVelocity());
 				const AABB& os(b->getOldShape());
 
-				if		(resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) mBody.setVelocityY(velocity.y * -mBody.getRestitutionY());
-				else if	(resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))) mBody.setVelocityY(velocity.y * -mBody.getRestitutionY());
+				if	((resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) ||
+					(resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))))
+						mBody.setVelocityY(velocity.y * -mBody.getRestitutionY());
 
-				if		(resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) mBody.setVelocityX(velocity.x * -mBody.getRestitutionX());
-				else if	(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))) mBody.setVelocityX(velocity.x * -mBody.getRestitutionX());
+				if	((resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) ||
+					(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))))
+						mBody.setVelocityX(velocity.x * -mBody.getRestitutionX());
 			}
 		}
 	};
