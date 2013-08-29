@@ -16,7 +16,7 @@ namespace ssvsc
 
 	struct Retro : public ResolverBase
 	{
-		void resolve(Body& mBody, std::vector<Body*>& mBodiesToResolve) override
+		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
 		{
 			AABB& shape(mBody.getShape());
 			const AABB& oldShape(mBody.getOldShape());
