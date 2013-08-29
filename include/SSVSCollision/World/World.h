@@ -69,7 +69,6 @@ namespace ssvsc
 	};
 
 	// TODO: test collision pair generation with bodyA->priority bodyB->priority for retro resolver
-	// TODO: create hashgrid and test with 10corp
 }
 
 #endif
