@@ -40,7 +40,6 @@ namespace ssvsc
 				Vec2f normal(ssvs::getNormalized(-resolution));
 				float invMassA{mBody.getInvMass()}, invMassB{b->getInvMass()};
 
-
 				bool oldShapeLeftOfS{oldShape.isLeftOf(s)}, oldShapeRightOfS{oldShape.isRightOf(s)};
 				bool oldShapeAboveS{oldShape.isAbove(s)}, oldShapeBelowS{oldShape.isBelow(s)};
 				bool oldHOverlap{!(oldShapeLeftOfS || oldShapeRightOfS)}, oldVOverlap{!(oldShapeAboveS || oldShapeBelowS)};

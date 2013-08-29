@@ -108,7 +108,6 @@ namespace ssvsc
 			inline float getInvMass() const				{ return _static ? 0 : massData.getInvMass(); }
 			inline float getRestitutionX() const		{ return restitutionData.getRestitutionX(); }
 			inline float getRestitutionY() const		{ return restitutionData.getRestitutionY(); }
-			inline float getRestitutionAvg() const		{ return restitutionData.getRestitutionAvg(); }
 			inline int getWidth() const					{ return shape.getWidth(); }
 			inline int getHeight() const				{ return shape.getHeight(); }
 			inline bool isStatic() const				{ return _static; }
