@@ -13,7 +13,7 @@ namespace ssvsc
 			float mass{1.f}, invMass{1.f};
 
 		public:
-			inline void setMass(float mMass)	{ mass = mMass; invMass = mMass == 0 ? 0 : 1.f / mMass; }
+			inline void setMass(float mMass)	{ mass = mMass; invMass = (mMass == 0 ? 0 : (1.f / mMass)); }
 			inline float getMass() const		{ return mass; }
 			inline float getInvMass() const		{ return invMass; }
 	};
