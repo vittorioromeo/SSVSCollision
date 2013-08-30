@@ -30,6 +30,7 @@ namespace ssvsc
 				int absIX{std::abs(iX)}, absIY{std::abs(iY)};
 				bool noResolvePosition{false}, noResolveVelocity{false}, minAbs{absIX < absIY};
 				Vec2i resolution{minAbs ? Vec2i{iX, 0} : Vec2i{0, iY}};
+
 				mBody.onResolution({*b, b->getUserData(), {iX, iY}, resolution, noResolvePosition, noResolveVelocity});
 
 				if(!noResolvePosition) shape.move(resolution);
@@ -48,7 +49,7 @@ namespace ssvsc
 						desiredY *= mBody.getRestitutionY();
 
 				if	((resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) ||
-					(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))))
+					 (resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))))
 						desiredX *= mBody.getRestitutionX();
 
 				Vec2f velDiff{b->getVelocity() - mBody.getVelocity()};
@@ -61,12 +62,16 @@ namespace ssvsc
 				{
 					Vec2f impulse{normal * remove / (mBody.getInvMass() + b->getInvMass())};
 
-					mBody.applyImpulse(impulse * mBody.getInvMass());
-					b->applyImpulse(-impulse * b->getInvMass());
+					// This next line does basically nothing - it is necessary to set the correct velocity signs
+					mBody.applyImpulse(impulse);
+
+					b->applyImpulse(-impulse * (b->getInvMass() / mBody.getInvMass()));
+
+					// Now, we apply the desired velocity with restitution (with the correct sign) to the object
+					mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
+					mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
 				 }
 
-				mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
-				mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
 			}
 		}
 	};
