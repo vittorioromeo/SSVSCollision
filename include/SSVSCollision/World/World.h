@@ -68,7 +68,7 @@ namespace ssvsc
 			}
 	};
 
-	// TODO: test collision pair generation with bodyA->priority bodyB->priority for retro resolver
+	// TODO: templatize?
 }
 
 #endif

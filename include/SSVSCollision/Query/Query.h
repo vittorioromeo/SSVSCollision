@@ -34,7 +34,7 @@ namespace ssvsc
 					if(bodies.empty())
 					{
 						TMode::getBodies(bodies, internal, std::forward<TArgs>(mArgs)...);
-						ssvu::sort(bodies, [&](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
+						ssvu::sort(bodies, [this](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
 						internal.step();
 					}
 
