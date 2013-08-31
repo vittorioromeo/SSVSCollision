@@ -23,7 +23,6 @@ namespace ssvsc
 
 		public:
 			Sensor(World& mWorld, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
-			~Sensor() { spatialInfo.destroy(); }
 
 			inline void update(float mFrameTime) override
 			{
@@ -38,7 +37,7 @@ namespace ssvsc
 				if(!mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 				onDetection({*mBody, mBody->getUserData(), Utils::getMinIntersection(shape, mBody->getShape()), mFrameTime});
 			}
-			inline void destroy() override { Base::destroy(); }
+			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
 
 			inline void setPosition(const Vec2i& mPosition)
 			{

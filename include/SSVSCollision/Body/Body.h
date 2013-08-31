@@ -42,7 +42,6 @@ namespace ssvsc
 			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
 
 			Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.init(); }
-			~Body() { spatialInfo.destroy(); }
 
 			void update(float mFrameTime) override
 			{
@@ -73,7 +72,7 @@ namespace ssvsc
 
 				if(resolve && !mustIgnoreResolution(*mBody)) bodiesToResolve.push_back(mBody);
 			}
-			inline void destroy() override { Base::destroy(); }
+			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
 
 			inline void applyForce(const Vec2f& mForce)			{ acceleration += mForce; }
 			inline void applyImpulse(const Vec2f& mImpulse)		{ velocity += getInvMass() * mImpulse; }
