@@ -19,6 +19,5 @@
 #include "SSVSCollision/Query/Query.h"
 
 #include "SSVSCollision/World/World.inl"
-#include "SSVSCollision/Spatial/Grid/GridInfo.inl"
 
 #endif
