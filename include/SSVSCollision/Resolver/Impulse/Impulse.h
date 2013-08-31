@@ -55,23 +55,34 @@ namespace ssvsc
 				Vec2f velDiff{b->getVelocity() - mBody.getVelocity()};
 				Vec2f normal(ssvs::getNormalized(-resolution));
 
-				float minDist{-(minAbs ? absIX : absIY)};
-				float remove{ssvs::getDotProduct(velDiff, normal) + (minDist) / mFrameTime};
+				/*float minDist{-(minAbs ? absIX : absIY)};
+				float remove{ssvs::getDotProduct(velDiff, normal) + minDist / mFrameTime};
 
 				if(remove < 0)
 				{
-					Vec2f impulse{normal * remove / (mBody.getInvMass() + b->getInvMass())};
+					//Vec2f impulse{normal * remove / (mBody.getInvMass() + b->getInvMass())};
+					Vec2f impulse{remove / (mBody.getInvMass() + b->getInvMass()) * normal};
 
 					// This next line does basically nothing - it is necessary to set the correct velocity signs
 					mBody.applyImpulse(impulse);
 
-					b->applyImpulse(-impulse * (b->getInvMass() / mBody.getInvMass()));
+					b->applyImpulse(-impulse);
 
 					// Now, we apply the desired velocity with restitution (with the correct sign) to the object
 					mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
 					mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
-				 }
+				 }*/
 
+				float velAlongNormal =ssvs::getDotProduct(velDiff, normal);
+				if(velAlongNormal > 0) return;
+				float e = mBody.getRestitutionX();
+				float j = (1.f + e) * velAlongNormal / (mBody.getInvMass() + b->getInvMass());
+
+				mBody.applyImpulse(j * normal);
+				b->applyImpulse(-j * normal);
+
+							 mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
+							 mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
 			}
 		}
 	};
