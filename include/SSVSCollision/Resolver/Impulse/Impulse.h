@@ -19,17 +19,33 @@ namespace ssvsc
 		void resolve(float mFrameTime, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
 		{
 			AABB& shape(mBody.getShape());
+			int resXNeg{0}, resXPos{0}, resYNeg{0}, resYPos{0};
+
+			for(const auto& b : mBodiesToResolve)
+			{
+				int iX{Utils::getMinIntersectionX(shape, b->getShape())}, iY{Utils::getMinIntersectionY(shape, b->getShape())};
+
+				if(std::abs(iX) < std::abs(iY))
+				{
+					if(iX < 0) resXNeg = std::min(resXNeg, iX);
+					else if(iX > 0) resXPos = std::max(resXPos, iX);
+				}
+				else
+				{
+					if(iY < 0) resYNeg = std::min(resYNeg, iY);
+					else if(iY > 0) resYPos = std::max(resYPos, iY);
+				}
+			}
+
 			const AABB& oldShape(mBody.getOldShape());
 			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
-
 			for(const auto& b : mBodiesToResolve)
 			{
 				const AABB& s(b->getShape());
 
 				int iX{Utils::getMinIntersectionX(shape, s)}, iY{Utils::getMinIntersectionY(shape, s)};
-				int absIX{std::abs(iX)}, absIY{std::abs(iY)};
-				bool noResolvePosition{false}, noResolveVelocity{false}, minAbs{absIX < absIY};
-				Vec2i resolution{minAbs ? Vec2i{iX, 0} : Vec2i{0, iY}};
+				bool noResolvePosition{false}, noResolveVelocity{false};
+				Vec2i resolution{std::abs(iX) < std::abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY}};
 
 				mBody.onResolution({*b, b->getUserData(), {iX, iY}, resolution, noResolvePosition, noResolveVelocity});
 
@@ -44,45 +60,40 @@ namespace ssvsc
 				const AABB& os(b->getOldShape());
 				float desiredX{velocity.x}, desiredY{velocity.y};
 
-				if	((resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) ||
-					 (resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))))
-						desiredY *= mBody.getRestitutionY();
+				Vec2f normal;
+				if (resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap)))
+				{
+					if(iY == resYNeg) normal.y = 1.f;
+					desiredY *= mBody.getRestitutionY();
+				}
+				else if (resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap)))
+				{
+					if(iY == resYPos) normal.y = -1.f;
+					desiredY *= mBody.getRestitutionY();
+				}
 
-				if	((resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) ||
-					 (resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))))
-						desiredX *= mBody.getRestitutionX();
+				if (resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap)))
+				{
+					if(iX == resXNeg) normal.x = 1.f;
+					desiredX *= mBody.getRestitutionX();
+				}
+				else if (resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap)))
+				{
+					if(iX == resXPos) normal.x = -1.f;
+					desiredX *= mBody.getRestitutionX();
+				}
 
 				Vec2f velDiff{b->getVelocity() - mBody.getVelocity()};
-				Vec2f normal(ssvs::getNormalized(-resolution));
+				float velAlongNormal = ssvs::getDotProduct(velDiff, normal);
+				if(velAlongNormal > 0) continue;
+				float computedVel{velAlongNormal / (mBody.getInvMass() + b->getInvMass())};
+				Vec2f impulse{-(1.f + mBody.getRestitutionX()) * computedVel * normal.x , -(1.f + mBody.getRestitutionY()) * computedVel * normal.y};
 
-				/*float minDist{-(minAbs ? absIX : absIY)};
-				float remove{ssvs::getDotProduct(velDiff, normal) + minDist / mFrameTime};
+				mBody.applyImpulse(-impulse);
+				b->applyImpulse(impulse);
 
-				if(remove < 0)
-				{
-					//Vec2f impulse{normal * remove / (mBody.getInvMass() + b->getInvMass())};
-					Vec2f impulse{remove / (mBody.getInvMass() + b->getInvMass()) * normal};
-
-					// This next line does basically nothing - it is necessary to set the correct velocity signs
-					mBody.applyImpulse(impulse);
-
-					b->applyImpulse(-impulse);
-
-					// Now, we apply the desired velocity with restitution (with the correct sign) to the object
-					mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
-					mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
-				 }*/
-
-				float velAlongNormal =ssvs::getDotProduct(velDiff, normal);
-				if(velAlongNormal > 0) return;
-				float e = mBody.getRestitutionX();
-				float j = (1.f + e) * velAlongNormal / (mBody.getInvMass() + b->getInvMass());
-
-				mBody.applyImpulse(j * normal);
-				b->applyImpulse(-j * normal);
-
-							 mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
-							 mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
+				mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
+				mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
 			}
 		}
 	};
