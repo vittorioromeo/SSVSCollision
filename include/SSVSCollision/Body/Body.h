@@ -29,6 +29,7 @@ namespace ssvsc
 			void* userData{nullptr};
 			std::vector<Body*> bodiesToResolve;
 			int spatialPaint{-1};
+			Vec2i lastResolution;
 
 			inline void integrate(float mFrameTime)
 			{
@@ -45,6 +46,8 @@ namespace ssvsc
 
 			void update(float mFrameTime) override
 			{
+				ssvs::nullify(lastResolution);
+
 				onPreUpdate();
 
 				if(_static) { spatialInfo.preUpdate(); return; }
@@ -74,8 +77,9 @@ namespace ssvsc
 			}
 			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
 
-			inline void applyForce(const Vec2f& mForce)			{ acceleration += mForce; }
-			inline void applyImpulse(const Vec2f& mImpulse)		{ velocity += getInvMass() * mImpulse; }
+			inline void applyForce(const Vec2f& mForce)							{ acceleration += mForce; }
+			inline void applyImpulse(const Body& mBody, const Vec2f& mImpulse)	{ if(resolve && !mustIgnoreResolution(mBody)) velocity += getInvMass() * mImpulse; }
+			inline void resolvePosition(const Vec2i& mOffset)					{ shape.move(mOffset); lastResolution += mOffset; }
 
 			inline void setPosition(const Vec2i& mPosition)		{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
 			inline void setX(int mX)							{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
@@ -96,26 +100,28 @@ namespace ssvsc
 			inline void setRestitutionY(float mRestY)			{ restitutionData.setRestitutionY(mRestY); }
 			inline void setSpatialPaint(int mSpatialPaint)		{ spatialPaint = mSpatialPaint; }
 
-			inline BaseType getType() override			{ return BaseType::Body; }
-			inline AABB& getShape() override			{ return shape; }
-			inline AABB& getOldShape() override			{ return oldShape; }
-			inline const Vec2i& getPosition() const		{ return shape.getPosition(); }
-			inline const Vec2f& getVelocity() const		{ return velocity; }
-			inline const Vec2f& getAcceleration() const	{ return acceleration; }
-			inline const Vec2i& getSize() const			{ return shape.getSize(); }
-			inline float getMass() const				{ return _static ? 0 : massData.getMass(); }
-			inline float getInvMass() const				{ return _static ? 0 : massData.getInvMass(); }
-			inline float getRestitutionX() const		{ return restitutionData.getRestitutionX(); }
-			inline float getRestitutionY() const		{ return restitutionData.getRestitutionY(); }
-			inline int getWidth() const					{ return shape.getWidth(); }
-			inline int getHeight() const				{ return shape.getHeight(); }
-			inline bool isStatic() const				{ return _static; }
-			inline void* getUserData() const			{ return userData; }
-			inline bool hasMovedLeft() const			{ return shape.getX() < oldShape.getX(); }
-			inline bool hasMovedRight() const			{ return shape.getX() > oldShape.getX(); }
-			inline bool hasMovedUp() const				{ return shape.getY() < oldShape.getY(); }
-			inline bool hasMovedDown() const			{ return shape.getY() > oldShape.getY(); }
-			inline int getSpatialPaint() const			{ return spatialPaint; }
+			inline BaseType getType() override				{ return BaseType::Body; }
+			inline AABB& getShape() override				{ return shape; }
+			inline AABB& getOldShape() override				{ return oldShape; }
+			inline const Vec2i& getPosition() const			{ return shape.getPosition(); }
+			inline const Vec2f& getVelocity() const			{ return velocity; }
+			inline const Vec2f& getAcceleration() const		{ return acceleration; }
+			inline const Vec2i& getSize() const				{ return shape.getSize(); }
+			inline float getMass() const					{ return _static ? 0 : massData.getMass(); }
+			inline float getInvMass() const					{ return _static ? 0 : massData.getInvMass(); }
+			inline float getRestitutionX() const			{ return restitutionData.getRestitutionX(); }
+			inline float getRestitutionY() const			{ return restitutionData.getRestitutionY(); }
+			inline int getWidth() const						{ return shape.getWidth(); }
+			inline int getHeight() const					{ return shape.getHeight(); }
+			inline bool isStatic() const					{ return _static; }
+			inline void* getUserData() const				{ return userData; }
+			inline bool hasMovedLeft() const				{ return shape.getX() < oldShape.getX(); }
+			inline bool hasMovedRight() const				{ return shape.getX() > oldShape.getX(); }
+			inline bool hasMovedUp() const					{ return shape.getY() < oldShape.getY(); }
+			inline bool hasMovedDown() const				{ return shape.getY() > oldShape.getY(); }
+			inline int getSpatialPaint() const				{ return spatialPaint; }
+			inline bool getResolve() const					{ return resolve; }
+			inline const Vec2i& getLastResolution() const	{ return lastResolution; }
 	};
 }
 
