@@ -16,9 +16,12 @@ namespace ssvsc
 
 	struct Impulse : public ResolverBase
 	{
-		void resolve(float mFrameTime, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
+		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
 		{
 			AABB& shape(mBody.getShape());
+			const AABB& oldShape(mBody.getOldShape());
+
+			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
 			int resXNeg{0}, resXPos{0}, resYNeg{0}, resYPos{0};
 
 			for(const auto& b : mBodiesToResolve)
@@ -27,21 +30,20 @@ namespace ssvsc
 
 				if(std::abs(iX) < std::abs(iY))
 				{
-					if(iX < 0) resXNeg = std::min(resXNeg, iX);
-					else if(iX > 0) resXPos = std::max(resXPos, iX);
+					resXNeg = std::min(resXNeg, iX);
+					resXPos = std::max(resXPos, iX);
 				}
 				else
 				{
-					if(iY < 0) resYNeg = std::min(resYNeg, iY);
-					else if(iY > 0) resYPos = std::max(resYPos, iY);
+					resYNeg = std::min(resYNeg, iY);
+					resYPos = std::max(resYPos, iY);
 				}
 			}
 
-			const AABB& oldShape(mBody.getOldShape());
-			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
 			for(const auto& b : mBodiesToResolve)
 			{
 				const AABB& s(b->getShape());
+				if(!shape.isOverlapping(s)) continue;
 
 				int iX{Utils::getMinIntersectionX(shape, s)}, iY{Utils::getMinIntersectionY(shape, s)};
 				bool noResolvePosition{false}, noResolveVelocity{false};
@@ -49,7 +51,7 @@ namespace ssvsc
 
 				mBody.onResolution({*b, b->getUserData(), {iX, iY}, resolution, noResolvePosition, noResolveVelocity});
 
-				if(!noResolvePosition) shape.move(resolution);
+				if(!noResolvePosition) mBody.resolvePosition(resolution);
 				if(noResolveVelocity) continue;
 
 				bool oldShapeLeftOfS{oldShape.isLeftOf(s)}, oldShapeRightOfS{oldShape.isRightOf(s)};
@@ -61,36 +63,37 @@ namespace ssvsc
 				float desiredX{velocity.x}, desiredY{velocity.y};
 
 				Vec2f normal;
-				if (resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap)))
+				if(resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap)))
 				{
 					if(iY == resYNeg) normal.y = 1.f;
 					desiredY *= mBody.getRestitutionY();
 				}
-				else if (resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap)))
+				else if(resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap)))
 				{
 					if(iY == resYPos) normal.y = -1.f;
 					desiredY *= mBody.getRestitutionY();
 				}
 
-				if (resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap)))
+				if(resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap)))
 				{
 					if(iX == resXNeg) normal.x = 1.f;
 					desiredX *= mBody.getRestitutionX();
 				}
-				else if (resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap)))
+				else if(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap)))
 				{
 					if(iX == resXPos) normal.x = -1.f;
 					desiredX *= mBody.getRestitutionX();
 				}
 
 				Vec2f velDiff{b->getVelocity() - mBody.getVelocity()};
-				float velAlongNormal = ssvs::getDotProduct(velDiff, normal);
+				float velAlongNormal{ssvs::getDotProduct(velDiff, normal)};
 				if(velAlongNormal > 0) continue;
-				float computedVel{velAlongNormal / (mBody.getInvMass() + b->getInvMass())};
+				float invMassSum{mBody.getInvMass() + b->getInvMass()};
+				float computedVel{velAlongNormal / invMassSum};
 				Vec2f impulse{-(1.f + mBody.getRestitutionX()) * computedVel * normal.x , -(1.f + mBody.getRestitutionY()) * computedVel * normal.y};
 
-				mBody.applyImpulse(-impulse);
-				b->applyImpulse(impulse);
+				mBody.applyImpulse(*b, -impulse);
+				b->applyImpulse(mBody, impulse);
 
 				mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
 				mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
