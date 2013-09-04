@@ -92,11 +92,35 @@ namespace ssvsc
 				float computedVel{velAlongNormal / invMassSum};
 				Vec2f impulse{-(1.f + mBody.getRestitutionX()) * computedVel * normal.x , -(1.f + mBody.getRestitutionY()) * computedVel * normal.y};
 
+				if(normal.y != 0)
+				{
+					float velTransferX{b->getVelocity().x - mBody.getVelocity().x};
+					velTransferX /= invMassSum;
+					if(b->getVelTransferMultX() != 0) velTransferX *= std::sqrt(mBody.getVelTransferMultX() * b->getVelTransferMultX()); else velTransferX *= 0;
+					mBody.getVelTransferImpulse().x += velTransferX;
+
+				}
+				if(normal.x != 0)
+				{
+					float velTransferY{b->getVelocity().y - mBody.getVelocity().y};
+					velTransferY /= invMassSum;
+					if(b->getVelTransferMultY() != 0) velTransferY *= std::sqrt(mBody.getVelTransferMultY() * b->getVelTransferMultY()); else velTransferY *= 0;
+					mBody.getVelTransferImpulse().y += velTransferY;
+				}
+
 				mBody.applyImpulse(*b, -impulse);
 				b->applyImpulse(mBody, impulse);
 
 				mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
 				mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
+			}
+		}
+		inline void postUpdate(World& mWorld) override
+		{
+			for(const auto& b : mWorld.getBodies())
+			{
+				b->applyImpulse(b->getVelTransferImpulse());
+				ssvs::nullify(b->getVelTransferImpulse());
 			}
 		}
 	};
