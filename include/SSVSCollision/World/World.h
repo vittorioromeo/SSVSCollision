@@ -30,8 +30,8 @@ namespace ssvsc
 			Uptr<ResolverBase> resolver;
 			Uptr<SpatialBase> spatial;
 
-			std::vector<Body*> bodies; // TODO: remove?
-			std::vector<Sensor*> sensors; // TODO: remove?
+			std::vector<Body*> bodies;
+			std::vector<Sensor*> sensors;
 
 			inline void del(Base& mBase) { bases.del(mBase); }
 
@@ -55,8 +55,8 @@ namespace ssvsc
 			inline decltype(bases)::Container& getBases()	{ return bases.getItems(); }
 			inline ResolverBase& getResolver()				{ return *resolver; }
 			inline SpatialBase& getSpatial()				{ return *spatial; }
-			inline std::vector<Body*>& getBodies()			{ return bodies; } // TODO: remove?
-			inline std::vector<Sensor*>& getSensors()		{ return sensors; } // TODO: remove?
+			inline std::vector<Body*>& getBodies()			{ return bodies; }
+			inline std::vector<Sensor*>& getSensors()		{ return sensors; }
 
 			template<typename T> inline T& getResolver()	{ return static_cast<T&>(getResolver()); }
 			template<typename T> inline T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
