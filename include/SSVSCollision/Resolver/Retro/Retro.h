@@ -53,6 +53,7 @@ namespace ssvsc
 						mBody.setVelocityX(velocity.x * -mBody.getRestitutionX());
 			}
 		}
+		inline void postUpdate(World& mWorld) override { }
 	};
 }
 

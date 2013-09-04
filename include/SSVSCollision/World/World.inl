@@ -14,7 +14,7 @@ namespace ssvsc
 
 		bases.refresh();
 		for(const auto& b : bases) b->update(mFrameTime);
-
+		resolver->postUpdate(*this);
 		spatial->refresh();
 	}
 }
