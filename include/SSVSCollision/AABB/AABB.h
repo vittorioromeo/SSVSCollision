@@ -19,55 +19,55 @@ namespace ssvsc
 		public:
 			inline AABB(const AABB& mAABB) = default;
 			inline AABB(AABB&& mAABB) = default;
-			inline AABB(const Vec2i& mPosition, const Vec2i& mHalfSize) : position{mPosition}, halfSize{mHalfSize}, size{halfSize * 2} { }
-			inline AABB(int mLeft, int mRight, int mTop, int mBottom) : position{mLeft + (mRight - mLeft) / 2, mTop + (mBottom - mTop) / 2}, halfSize{(mRight - mLeft) / 2, (mBottom - mTop) / 2}, size{halfSize * 2} { }
+			inline AABB(const Vec2i& mPosition, const Vec2i& mHalfSize) noexcept : position{mPosition}, halfSize{mHalfSize}, size{halfSize * 2} { }
+			inline AABB(int mLeft, int mRight, int mTop, int mBottom) noexcept : position{mLeft + (mRight - mLeft) / 2, mTop + (mBottom - mTop) / 2}, halfSize{(mRight - mLeft) / 2, (mBottom - mTop) / 2}, size{halfSize * 2} { }
 
-			inline AABB& operator=(const AABB& mAABB)			= default;
-			inline AABB& operator=(AABB&& mAABB)				= default;
-			inline bool operator==(const AABB& mOther) const	{ return position == mOther.position && halfSize == mOther.halfSize; }
-			inline bool operator!=(const AABB& mOther) const	{ return !(*this == mOther); }
+			inline AABB& operator=(const AABB& mAABB) noexcept = default;
+			inline AABB& operator=(AABB&& mAABB) noexcept = default;
+			inline bool operator==(const AABB& mOther) const noexcept { return position == mOther.position && halfSize == mOther.halfSize; }
+			inline bool operator!=(const AABB& mOther) const noexcept { return !(*this == mOther); }
 
-			inline void move(const Vec2i& mOffset) { position += mOffset; }
+			inline void move(const Vec2i& mOffset) noexcept { position += mOffset; }
 
-			inline void setPosition(const Vec2i& mPosition)	{ position = mPosition; }
-			inline void setX(int mX)						{ position.x = mX; }
-			inline void setY(int mY)						{ position.y = mY; }
-			inline void setHalfSize(const Vec2i& mHalfSize)	{ halfSize = mHalfSize;			size = halfSize * 2; }
-			inline void setSize(const Vec2i& mSize)			{ halfSize = mSize / 2;			size = mSize; }
-			inline void setWidth(int mWidth)				{ halfSize.x = mWidth / 2;		size.x = mWidth; }
-			inline void setHeight(int mHeight)				{ halfSize.y = mHeight / 2;		size.y = mHeight; }
+			inline void setPosition(const Vec2i& mPosition) noexcept	{ position = mPosition; }
+			inline void setX(int mX) noexcept							{ position.x = mX; }
+			inline void setY(int mY) noexcept							{ position.y = mY; }
+			inline void setHalfSize(const Vec2i& mHalfSize) noexcept	{ halfSize = mHalfSize;			size = halfSize * 2; }
+			inline void setSize(const Vec2i& mSize) noexcept			{ halfSize = mSize / 2;			size = mSize; }
+			inline void setWidth(int mWidth) noexcept					{ halfSize.x = mWidth / 2;		size.x = mWidth; }
+			inline void setHeight(int mHeight) noexcept					{ halfSize.y = mHeight / 2;		size.y = mHeight; }
 
-			inline const Vec2i& getPosition() const	{ return position; }
-			inline int getX() const					{ return position.x; }
-			inline int getY() const					{ return position.y; }
-			inline int getLeft() const				{ return position.x - halfSize.x; }
-			inline int getRight() const				{ return position.x + halfSize.x; }
-			inline int getTop() const				{ return position.y - halfSize.y; }
-			inline int getBottom() const			{ return position.y + halfSize.y; }
-			inline const Vec2i& getHalfSize() const	{ return halfSize; }
-			inline int getHalfWidth() const			{ return halfSize.x; }
-			inline int getHalfHeight() const		{ return halfSize.y; }
-			inline const Vec2i& getSize() const		{ return size; }
-			inline int getWidth() const				{ return size.x; }
-			inline int getHeight() const			{ return size.y; }
+			inline const Vec2i& getPosition() const noexcept	{ return position; }
+			inline int getX() const noexcept					{ return position.x; }
+			inline int getY() const noexcept					{ return position.y; }
+			inline int getLeft() const noexcept					{ return position.x - halfSize.x; }
+			inline int getRight() const noexcept				{ return position.x + halfSize.x; }
+			inline int getTop() const noexcept					{ return position.y - halfSize.y; }
+			inline int getBottom() const noexcept				{ return position.y + halfSize.y; }
+			inline const Vec2i& getHalfSize() const noexcept	{ return halfSize; }
+			inline int getHalfWidth() const noexcept			{ return halfSize.x; }
+			inline int getHalfHeight() const noexcept			{ return halfSize.y; }
+			inline const Vec2i& getSize() const noexcept		{ return size; }
+			inline int getWidth() const noexcept				{ return size.x; }
+			inline int getHeight() const noexcept				{ return size.y; }
 
-			template<typename T> inline Vec2<T> getVertexNW() const			{ return Vec2<T>(getLeft(), getTop()); }
-			template<typename T> inline Vec2<T> getVertexNE() const			{ return Vec2<T>(getRight(), getTop()); }
-			template<typename T> inline Vec2<T> getVertexSW() const			{ return Vec2<T>(getLeft(), getBottom()); }
-			template<typename T> inline Vec2<T> getVertexSE() const			{ return Vec2<T>(getRight(), getBottom()); }
-			template<typename T> inline Segment<T> getSegmentLeft() const	{ return {getVertexNW<T>(), getVertexSW<T>()}; }
-			template<typename T> inline Segment<T> getSegmentRight() const	{ return {getVertexNE<T>(), getVertexSE<T>()}; }
-			template<typename T> inline Segment<T> getSegmentTop() const	{ return {getVertexNW<T>(), getVertexNE<T>()}; }
-			template<typename T> inline Segment<T> getSegmentBottom() const	{ return {getVertexSW<T>(), getVertexSE<T>()}; }
+			template<typename T> inline Vec2<T> getVertexNW() const noexcept			{ return Vec2<T>(getLeft(), getTop()); }
+			template<typename T> inline Vec2<T> getVertexNE() const noexcept			{ return Vec2<T>(getRight(), getTop()); }
+			template<typename T> inline Vec2<T> getVertexSW() const noexcept			{ return Vec2<T>(getLeft(), getBottom()); }
+			template<typename T> inline Vec2<T> getVertexSE() const noexcept			{ return Vec2<T>(getRight(), getBottom()); }
+			template<typename T> inline Segment<T> getSegmentLeft() const noexcept		{ return {getVertexNW<T>(), getVertexSW<T>()}; }
+			template<typename T> inline Segment<T> getSegmentRight() const noexcept		{ return {getVertexNE<T>(), getVertexSE<T>()}; }
+			template<typename T> inline Segment<T> getSegmentTop() const noexcept		{ return {getVertexNW<T>(), getVertexNE<T>()}; }
+			template<typename T> inline Segment<T> getSegmentBottom() const noexcept	{ return {getVertexSW<T>(), getVertexSE<T>()}; }
 
-			inline bool isLeftOf(const AABB& mAABB) const	{ return getRight() <= mAABB.getLeft(); }
-			inline bool isRightOf(const AABB& mAABB) const	{ return getLeft() >= mAABB.getRight(); }
-			inline bool isAbove(const AABB& mAABB) const	{ return getBottom() <= mAABB.getTop(); }
-			inline bool isBelow(const AABB& mAABB) const	{ return getTop() >= mAABB.getBottom(); }
+			inline bool isLeftOf(const AABB& mAABB) const noexcept	{ return getRight() <= mAABB.getLeft(); }
+			inline bool isRightOf(const AABB& mAABB) const noexcept	{ return getLeft() >= mAABB.getRight(); }
+			inline bool isAbove(const AABB& mAABB) const noexcept	{ return getBottom() <= mAABB.getTop(); }
+			inline bool isBelow(const AABB& mAABB) const noexcept	{ return getTop() >= mAABB.getBottom(); }
 
-			inline bool isOverlapping(const AABB& mAABB) const	{ return !isLeftOf(mAABB) && !isRightOf(mAABB) && !isAbove(mAABB) && !isBelow(mAABB); }
-			inline bool contains(const AABB& mAABB) const		{ return mAABB.getLeft() >= getLeft() && mAABB.getRight() < getRight() && mAABB.getTop() >= getTop() && mAABB.getBottom() < getBottom(); }
-			inline bool contains(const Vec2i& mPoint) const		{ return mPoint.x >= getLeft() && mPoint.x < getRight() && mPoint.y >= getTop() && mPoint.y < getBottom(); }
+			inline bool isOverlapping(const AABB& mAABB) const noexcept	{ return !isLeftOf(mAABB) && !isRightOf(mAABB) && !isAbove(mAABB) && !isBelow(mAABB); }
+			inline bool contains(const AABB& mAABB) const noexcept		{ return mAABB.getLeft() >= getLeft() && mAABB.getRight() < getRight() && mAABB.getTop() >= getTop() && mAABB.getBottom() < getBottom(); }
+			inline bool contains(const Vec2i& mPoint) const noexcept	{ return mPoint.x >= getLeft() && mPoint.x < getRight() && mPoint.y >= getTop() && mPoint.y < getBottom(); }
 	};
 }
 

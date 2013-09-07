@@ -24,7 +24,7 @@ namespace ssvsc
 			inline void add(Base* mBase) { if(mBase->getType() == BaseType::Body) addBody(static_cast<Body*>(mBase)); }
 			inline void del(Base* mBase) { if(mBase->getType() == BaseType::Body) delBody(static_cast<Body*>(mBase)); }
 
-			inline const decltype(bodies)& getBodies() const { return bodies; }
+			inline const decltype(bodies)& getBodies() const noexcept { return bodies; }
 	};
 }
 

@@ -36,13 +36,13 @@ namespace ssvsc
 			virtual void handleCollision(float mFrameTime, Body* mBody) = 0;
 			inline virtual void destroy() { world.del(*this); }
 
-			inline void setOutOfBounds(bool mOutOfBounds) { outOfBounds = mOutOfBounds; }
+			inline void setOutOfBounds(bool mOutOfBounds) noexcept { outOfBounds = mOutOfBounds; }
 
-			virtual AABB& getShape() = 0;
-			virtual AABB& getOldShape() = 0;
-			virtual BaseType getType() = 0;
-			inline SpatialInfoBase& getSpatialInfo()	{ return spatialInfo; }
-			inline World& getWorld() const				{ return world; }
+			virtual AABB& getShape() noexcept = 0;
+			virtual AABB& getOldShape() noexcept = 0;
+			virtual BaseType getType() const noexcept = 0;
+			inline SpatialInfoBase& getSpatialInfo() noexcept	{ return spatialInfo; }
+			inline World& getWorld() const noexcept				{ return world; }
 
 			inline void addGroup(Group mGroup)					{ groupData.addGroup(mGroup); }
 			inline void addGroupToCheck(Group mGroup)			{ groupData.addGroupToCheck(mGroup); }

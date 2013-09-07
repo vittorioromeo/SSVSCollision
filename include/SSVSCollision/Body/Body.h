@@ -78,58 +78,58 @@ namespace ssvsc
 			}
 			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
 
-			inline void applyForce(const Vec2f& mForce)							{ acceleration += mForce; }
-			inline void applyImpulse(const Vec2f& mImpulse)						{ velocity += getInvMass() * mImpulse; }
-			inline void applyImpulse(const Body& mBody, const Vec2f& mImpulse)	{ if(resolve && !mustIgnoreResolution(mBody)) velocity += getInvMass() * mImpulse; }
-			inline void resolvePosition(const Vec2i& mOffset)					{ shape.move(mOffset); lastResolution += mOffset; }
+			inline void applyForce(const Vec2f& mForce) noexcept						{ acceleration += mForce; }
+			inline void applyImpulse(const Vec2f& mImpulse) noexcept					{ velocity += getInvMass() * mImpulse; }
+			inline void applyImpulse(const Body& mBody, const Vec2f& mImpulse) noexcept	{ if(resolve && !mustIgnoreResolution(mBody)) velocity += getInvMass() * mImpulse; }
+			inline void resolvePosition(const Vec2i& mOffset) noexcept					{ shape.move(mOffset); lastResolution += mOffset; }
 
-			inline void setPosition(const Vec2i& mPosition)		{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
-			inline void setX(int mX)							{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
-			inline void setY(int mY)							{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
-			inline void setSize(const Vec2i& mSize)				{ shape.setSize(mSize); spatialInfo.invalidate(); }
-			inline void setHalfSize(const Vec2i& mSize)			{ shape.setHalfSize(mSize); spatialInfo.invalidate(); }
-			inline void setWidth(int mWidth)					{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
-			inline void setHeight(int mHeight)					{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
-			inline void setVelocity(const Vec2f& mVelocity) 	{ velocity = mVelocity; }
-			inline void setAcceleration(const Vec2f& mAccel)	{ acceleration = mAccel; }
-			inline void setStatic(bool mStatic)					{ _static = mStatic; spatialInfo.invalidate(); }
-			inline void setUserData(void* mUserData)			{ userData = mUserData; }
-			inline void setVelocityX(float mX)					{ velocity.x = mX; }
-			inline void setVelocityY(float mY)					{ velocity.y = mY; }
-			inline void setResolve(bool mResolve)				{ resolve = mResolve; }
-			inline void setMass(float mMass)					{ massData.setMass(mMass); }
-			inline void setRestitutionX(float mRestX)			{ restitutionData.setRestitutionX(mRestX); }
-			inline void setRestitutionY(float mRestY)			{ restitutionData.setRestitutionY(mRestY); }
-			inline void setSpatialPaint(int mSpatialPaint)		{ spatialPaint = mSpatialPaint; }
-			inline void setVelTransferMultX(float mValue)		{ velTransferMult.x = mValue; }
-			inline void setVelTransferMultY(float mValue)		{ velTransferMult.y = mValue; }
+			inline void setPosition(const Vec2i& mPosition)				{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
+			inline void setX(int mX)									{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
+			inline void setY(int mY)									{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
+			inline void setSize(const Vec2i& mSize)						{ shape.setSize(mSize); spatialInfo.invalidate(); }
+			inline void setHalfSize(const Vec2i& mSize)					{ shape.setHalfSize(mSize); spatialInfo.invalidate(); }
+			inline void setWidth(int mWidth)							{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
+			inline void setHeight(int mHeight)							{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
+			inline void setVelocity(const Vec2f& mVelocity) noexcept 	{ velocity = mVelocity; }
+			inline void setAcceleration(const Vec2f& mAccel) noexcept	{ acceleration = mAccel; }
+			inline void setStatic(bool mStatic)							{ _static = mStatic; spatialInfo.invalidate(); }
+			inline void setUserData(void* mUserData) noexcept			{ userData = mUserData; }
+			inline void setVelocityX(float mX) noexcept					{ velocity.x = mX; }
+			inline void setVelocityY(float mY) noexcept					{ velocity.y = mY; }
+			inline void setResolve(bool mResolve) noexcept				{ resolve = mResolve; }
+			inline void setMass(float mMass) noexcept					{ massData.setMass(mMass); }
+			inline void setRestitutionX(float mRestX) noexcept			{ restitutionData.setRestitutionX(mRestX); }
+			inline void setRestitutionY(float mRestY) noexcept			{ restitutionData.setRestitutionY(mRestY); }
+			inline void setSpatialPaint(int mSpatialPaint) noexcept		{ spatialPaint = mSpatialPaint; }
+			inline void setVelTransferMultX(float mValue) noexcept		{ velTransferMult.x = mValue; }
+			inline void setVelTransferMultY(float mValue) noexcept		{ velTransferMult.y = mValue; }
 
-			inline BaseType getType() override					{ return BaseType::Body; }
-			inline AABB& getShape() override					{ return shape; }
-			inline AABB& getOldShape() override					{ return oldShape; }
-			inline const Vec2i& getPosition() const				{ return shape.getPosition(); }
-			inline const Vec2f& getVelocity() const				{ return velocity; }
-			inline const Vec2f& getAcceleration() const			{ return acceleration; }
-			inline const Vec2i& getSize() const					{ return shape.getSize(); }
-			inline float getMass() const						{ return _static ? 0 : massData.getMass(); }
-			inline float getInvMass() const						{ return _static ? 0 : massData.getInvMass(); }
-			inline float getRestitutionX() const				{ return restitutionData.getRestitutionX(); }
-			inline float getRestitutionY() const				{ return restitutionData.getRestitutionY(); }
-			inline int getWidth() const							{ return shape.getWidth(); }
-			inline int getHeight() const						{ return shape.getHeight(); }
-			inline bool isStatic() const						{ return _static; }
-			inline void* getUserData() const					{ return userData; }
-			inline bool hasMovedLeft() const					{ return shape.getX() < oldShape.getX(); }
-			inline bool hasMovedRight() const					{ return shape.getX() > oldShape.getX(); }
-			inline bool hasMovedUp() const						{ return shape.getY() < oldShape.getY(); }
-			inline bool hasMovedDown() const					{ return shape.getY() > oldShape.getY(); }
-			inline int getSpatialPaint() const					{ return spatialPaint; }
-			inline bool getResolve() const						{ return resolve; }
-			inline const Vec2i& getLastResolution() const		{ return lastResolution; }
-			inline float getVelTransferMultX() const			{ return velTransferMult.x; }
-			inline float getVelTransferMultY() const			{ return velTransferMult.y; }
-			inline Vec2f& getVelTransferImpulse()				{ return velTransferImpulse; }
-			inline const Vec2f& getVelTransferImpulse() const	{ return velTransferImpulse; }
+			inline BaseType getType() const noexcept override			{ return BaseType::Body; }
+			inline AABB& getShape() noexcept override					{ return shape; }
+			inline AABB& getOldShape() noexcept override				{ return oldShape; }
+			inline const Vec2i& getPosition() const noexcept			{ return shape.getPosition(); }
+			inline const Vec2f& getVelocity() const noexcept			{ return velocity; }
+			inline const Vec2f& getAcceleration() const noexcept		{ return acceleration; }
+			inline const Vec2i& getSize() const noexcept				{ return shape.getSize(); }
+			inline float getMass() const noexcept						{ return _static ? 0 : massData.getMass(); }
+			inline float getInvMass() const noexcept					{ return _static ? 0 : massData.getInvMass(); }
+			inline float getRestitutionX() const noexcept				{ return restitutionData.getRestitutionX(); }
+			inline float getRestitutionY() const noexcept				{ return restitutionData.getRestitutionY(); }
+			inline int getWidth() const noexcept						{ return shape.getWidth(); }
+			inline int getHeight() const noexcept						{ return shape.getHeight(); }
+			inline bool isStatic() const noexcept						{ return _static; }
+			inline void* getUserData() const noexcept					{ return userData; }
+			inline bool hasMovedLeft() const noexcept					{ return shape.getX() < oldShape.getX(); }
+			inline bool hasMovedRight() const noexcept					{ return shape.getX() > oldShape.getX(); }
+			inline bool hasMovedUp() const noexcept						{ return shape.getY() < oldShape.getY(); }
+			inline bool hasMovedDown() const noexcept					{ return shape.getY() > oldShape.getY(); }
+			inline int getSpatialPaint() const noexcept					{ return spatialPaint; }
+			inline bool getResolve() const noexcept						{ return resolve; }
+			inline const Vec2i& getLastResolution() const noexcept		{ return lastResolution; }
+			inline float getVelTransferMultX() const noexcept			{ return velTransferMult.x; }
+			inline float getVelTransferMultY() const noexcept			{ return velTransferMult.y; }
+			inline Vec2f& getVelTransferImpulse() noexcept				{ return velTransferImpulse; }
+			inline const Vec2f& getVelTransferImpulse() const noexcept	{ return velTransferImpulse; }
 	};
 }
 

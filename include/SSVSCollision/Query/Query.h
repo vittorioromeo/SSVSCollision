@@ -57,9 +57,7 @@ namespace ssvsc
 
 		public:
 			template<typename... TArgs> Query(TArgs&&... mArgs) : internal(std::forward<TArgs>(mArgs)...) { }
-
 			template<typename... TArgs> inline Body* next(TArgs&&... mArgs) { return nextImpl(std::forward<TArgs>(mArgs)...); }
-
 
 			inline void reset() { bodies.clear(); internal.reset(); }
 			inline const Vec2f& getLastPos() { return internal.getLastPos(); }

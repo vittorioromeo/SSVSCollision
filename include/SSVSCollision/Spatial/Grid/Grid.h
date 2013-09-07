@@ -32,24 +32,24 @@ namespace ssvsc
 				inline void refresh() override									{ gridInfos.refresh(); }
 				inline void del(SpatialInfoBase& mSpatialInfo) override			{ gridInfos.del(static_cast<GridInfo<TDerived>&>(mSpatialInfo)); }
 
-				inline int getIndexXMin() const	{ return 0 - offset; }
-				inline int getIndexYMin() const	{ return 0 - offset; }
-				inline int getIndexXMax() const	{ return columns - offset; }
-				inline int getIndexYMax() const	{ return rows - offset; }
-				inline int getRows() const		{ return rows; }
-				inline int getColumns() const	{ return columns; }
-				inline int getOffset() const	{ return offset; }
-				inline int getCellSize() const	{ return cellSize; }
+				inline int getIndexXMin() const noexcept	{ return 0 - offset; }
+				inline int getIndexYMin() const noexcept	{ return 0 - offset; }
+				inline int getIndexXMax() const noexcept	{ return columns - offset; }
+				inline int getIndexYMax() const noexcept	{ return rows - offset; }
+				inline int getRows() const noexcept			{ return rows; }
+				inline int getColumns() const noexcept		{ return columns; }
+				inline int getOffset() const noexcept		{ return offset; }
+				inline int getCellSize() const noexcept		{ return cellSize; }
 
-				inline int getIndex(int mValue) const				{ return mValue / cellSize; }
-				inline Vec2i getIndex(const Vec2i& mPosition) const	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
+				inline int getIndex(int mValue) const noexcept					{ return mValue / cellSize; }
+				inline Vec2i getIndex(const Vec2i& mPosition) const noexcept	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
 
-				inline Cell& getCell(int mX, int mY)				{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
-				inline Cell& getCell(const Vec2i& mIndex)			{ return getCell(mIndex.x, mIndex.y); }
+				inline Cell& getCell(int mX, int mY)		{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
+				inline Cell& getCell(const Vec2i& mIndex)	{ return getCell(mIndex.x, mIndex.y); }
 
-				inline const decltype(cells)& getCells() { return cells; }
-				inline bool isIndexValid(const Vec2i& mIndex) const								{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
-				inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
+				inline const decltype(cells)& getCells() noexcept { return cells; }
+				inline bool isIndexValid(const Vec2i& mIndex) const noexcept							{ return mIndex.x >= getIndexXMin() && mIndex.x < getIndexXMax() && mIndex.y >= getIndexYMin() && mIndex.y < getIndexYMax(); }
+				inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const noexcept	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
 		};
 	}
 

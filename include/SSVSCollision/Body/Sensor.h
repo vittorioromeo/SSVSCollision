@@ -45,9 +45,9 @@ namespace ssvsc
 				shape.setPosition(mPosition);
 			}
 
-			inline AABB& getShape() override	{ return shape; }
-			inline AABB& getOldShape() override	{ return shape; }
-			inline BaseType getType() override	{ return BaseType::Sensor; }
+			inline AABB& getShape() noexcept override			{ return shape; }
+			inline AABB& getOldShape() noexcept override		{ return shape; }
+			inline BaseType getType() const noexcept override	{ return BaseType::Sensor; }
 	};
 }
 

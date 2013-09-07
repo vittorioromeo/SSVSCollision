@@ -52,11 +52,11 @@ namespace ssvsc
 			void update(float mFrameTime);
 			inline void clear() { bases.clear(); bodies.clear(); sensors.clear(); }
 
-			inline decltype(bases)::Container& getBases()	{ return bases.getItems(); }
-			inline ResolverBase& getResolver()				{ return *resolver; }
-			inline SpatialBase& getSpatial()				{ return *spatial; }
-			inline std::vector<Body*>& getBodies()			{ return bodies; }
-			inline std::vector<Sensor*>& getSensors()		{ return sensors; }
+			inline decltype(bases)::Container& getBases() noexcept	{ return bases.getItems(); }
+			inline ResolverBase& getResolver() noexcept				{ return *resolver; }
+			inline SpatialBase& getSpatial() noexcept				{ return *spatial; }
+			inline std::vector<Body*>& getBodies() noexcept			{ return bodies; }
+			inline std::vector<Sensor*>& getSensors() noexcept		{ return sensors; }
 
 			template<typename T> inline T& getResolver()	{ return static_cast<T&>(getResolver()); }
 			template<typename T> inline T& getSpatial()		{ return static_cast<T&>(getSpatial()); }

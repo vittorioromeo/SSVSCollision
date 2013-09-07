@@ -13,9 +13,9 @@ namespace ssvsc
 			float mass{1.f}, invMass{1.f};
 
 		public:
-			inline void setMass(float mMass)	{ mass = mMass; invMass = (mMass == 0 ? 0 : (1.f / mMass)); }
-			inline float getMass() const		{ return mass; }
-			inline float getInvMass() const		{ return invMass; }
+			inline void setMass(float mMass) noexcept	{ mass = mMass; invMass = (mMass == 0 ? 0 : (1.f / mMass)); }
+			inline float getMass() const noexcept		{ return mass; }
+			inline float getInvMass() const noexcept	{ return invMass; }
 	};
 
 	class RestitutionData
@@ -24,10 +24,10 @@ namespace ssvsc
 			float restitutionX{0.f}, restitutionY{0.f};
 
 		public:
-			inline void setRestitutionX(float mRestX)	{ restitutionX = mRestX; }
-			inline void setRestitutionY(float mRestY)	{ restitutionY = mRestY; }
-			inline float getRestitutionX() const		{ return restitutionX; }
-			inline float getRestitutionY() const		{ return restitutionY; }
+			inline void setRestitutionX(float mRestX)		{ restitutionX = mRestX; }
+			inline void setRestitutionY(float mRestY)		{ restitutionY = mRestY; }
+			inline float getRestitutionX() const noexcept	{ return restitutionX; }
+			inline float getRestitutionY() const noexcept	{ return restitutionY; }
 	};
 }
 
