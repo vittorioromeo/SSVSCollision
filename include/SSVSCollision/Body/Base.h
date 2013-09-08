@@ -30,7 +30,7 @@ namespace ssvsc
 			ssvu::Delegate<void()> onPreUpdate;
 			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
 
-			virtual ~Base() { }
+			inline virtual ~Base() { }
 
 			virtual	void update(float mFrameTime) = 0;
 			virtual void handleCollision(float mFrameTime, Body* mBody) = 0;
