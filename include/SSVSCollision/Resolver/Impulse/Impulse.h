@@ -23,6 +23,7 @@ namespace ssvsc
 
 			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
 			int resXNeg{0}, resXPos{0}, resYNeg{0}, resYPos{0};
+			constexpr int tolerance{20};
 
 			for(const auto& b : mBodiesToResolve)
 			{
@@ -65,23 +66,23 @@ namespace ssvsc
 				Vec2f normal;
 				if(resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap)))
 				{
-					if(iY == resYNeg) normal.y = 1.f;
+					if(std::abs(iY - resYNeg) < tolerance) normal.y = 1.f;
 					desiredY *= mBody.getRestitutionY();
 				}
 				else if(resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap)))
 				{
-					if(iY == resYPos) normal.y = -1.f;
+					if(std::abs(iY - resYPos) < tolerance) normal.y = -1.f;
 					desiredY *= mBody.getRestitutionY();
 				}
 
 				if(resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap)))
 				{
-					if(iX == resXNeg) normal.x = 1.f;
+					if(std::abs(iX - resXNeg) < tolerance) normal.x = 1.f;
 					desiredX *= mBody.getRestitutionX();
 				}
 				else if(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap)))
 				{
-					if(iX == resXPos) normal.x = -1.f;
+					if(std::abs(iX - resXPos) < tolerance) normal.x = -1.f;
 					desiredX *= mBody.getRestitutionX();
 				}
 
