@@ -13,17 +13,12 @@ namespace ssvsc
 	class AABB
 	{
 		private:
-			Vec2i position, halfSize;
-			Vec2i size; // size depends on halfSize
+			Vec2i position, halfSize, size; // size depends on halfSize
 
 		public:
-			inline AABB(const AABB& mAABB) = default;
-			inline AABB(AABB&& mAABB) = default;
 			inline AABB(const Vec2i& mPosition, const Vec2i& mHalfSize) noexcept : position{mPosition}, halfSize{mHalfSize}, size{halfSize * 2} { }
 			inline AABB(int mLeft, int mRight, int mTop, int mBottom) noexcept : position{mLeft + (mRight - mLeft) / 2, mTop + (mBottom - mTop) / 2}, halfSize{(mRight - mLeft) / 2, (mBottom - mTop) / 2}, size{halfSize * 2} { }
 
-			inline AABB& operator=(const AABB& mAABB) noexcept = default;
-			inline AABB& operator=(AABB&& mAABB) noexcept = default;
 			inline bool operator==(const AABB& mOther) const noexcept { return position == mOther.position && halfSize == mOther.halfSize; }
 			inline bool operator!=(const AABB& mOther) const noexcept { return !(*this == mOther); }
 
