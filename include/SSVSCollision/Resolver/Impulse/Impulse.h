@@ -14,6 +14,8 @@ namespace ssvsc
 {
 	class Body;
 
+	// try  pressure instead of velocity.y
+
 	struct Impulse : public ResolverBase
 	{
 		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
