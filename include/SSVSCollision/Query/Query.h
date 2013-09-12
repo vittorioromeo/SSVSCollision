@@ -2,8 +2,6 @@
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 
-// TODO: create a resolver-independent querybase class
-
 #ifndef SSVSC_QUERY
 #define SSVSC_QUERY
 
