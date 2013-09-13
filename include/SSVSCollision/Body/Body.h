@@ -19,6 +19,9 @@ namespace ssvsc
 
 	class Body : public Base
 	{
+		friend struct Retro;
+		friend struct Impulse;
+
 		private:
 			ResolverBase& resolver;
 			AABB shape, oldShape;
@@ -30,11 +33,13 @@ namespace ssvsc
 			std::vector<Body*> bodiesToResolve;
 			int spatialPaint{-1};
 			Vec2i lastResolution;
-			Vec2f velTransferMult, velTransferImpulse;
+			Vec2f velTransferMult, velTransferImpulse, stress, nextStress;
+			float stressMult{1.f};
 
 			inline void integrate(float mFrameTime)
 			{
 				velocity += acceleration * mFrameTime;
+				//stress += acceleration * mFrameTime;
 				shape.move(Vec2i(velocity * mFrameTime));
 				ssvs::nullify(acceleration);
 			}
@@ -74,25 +79,27 @@ namespace ssvsc
 				onDetection({*mBody, mBody->getUserData(), intersection, mFrameTime});
 				mBody->onDetection({*this, userData, -intersection, mFrameTime});
 
-				if(resolve && !mustIgnoreResolution(*mBody)) bodiesToResolve.push_back(mBody);
+				if(mustResolveAgainst(*mBody)) bodiesToResolve.push_back(mBody);
 			}
 			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
 
 			inline void applyForce(const Vec2f& mForce) noexcept						{ acceleration += mForce; }
-			inline void applyImpulse(const Vec2f& mImpulse) noexcept					{ velocity += getInvMass() * mImpulse; }
-			inline void applyImpulse(const Body& mBody, const Vec2f& mImpulse) noexcept	{ if(resolve && !mustIgnoreResolution(mBody)) velocity += getInvMass() * mImpulse; }
+			inline void applyImpulse(Vec2f mImpulse) noexcept							{ velocity += getInvMass() * mImpulse; }
+			inline void applyImpulse(const Body& mBody, const Vec2f& mImpulse) noexcept	{ if(mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
+			inline void applyStress(const Vec2f& mStress) noexcept						{ nextStress += ssvs::getAbs(getInvMass() * mStress * stressMult); }
+			inline void applyStress(const Body& mBody, const Vec2f& mStress) noexcept	{ if(mustResolveAgainst(mBody)) applyStress(mStress); }
 			inline void resolvePosition(const Vec2i& mOffset) noexcept					{ shape.move(mOffset); lastResolution += mOffset; }
 
-			inline void setPosition(const Vec2i& mPosition)				{ oldShape = shape; shape.setPosition(mPosition); spatialInfo.invalidate(); }
-			inline void setX(int mX)									{ oldShape = shape; shape.setX(mX); spatialInfo.invalidate(); }
-			inline void setY(int mY)									{ oldShape = shape; shape.setY(mY); spatialInfo.invalidate(); }
-			inline void setSize(const Vec2i& mSize)						{ shape.setSize(mSize); spatialInfo.invalidate(); }
-			inline void setHalfSize(const Vec2i& mSize)					{ shape.setHalfSize(mSize); spatialInfo.invalidate(); }
-			inline void setWidth(int mWidth)							{ shape.setWidth(mWidth); spatialInfo.invalidate(); }
-			inline void setHeight(int mHeight)							{ shape.setHeight(mHeight); spatialInfo.invalidate(); }
+			inline void setPosition(const Vec2i& mPosition)				{ oldShape = shape; shape.setPosition(mPosition);	spatialInfo.invalidate(); }
+			inline void setX(int mX)									{ oldShape = shape; shape.setX(mX);					spatialInfo.invalidate(); }
+			inline void setY(int mY)									{ oldShape = shape; shape.setY(mY);					spatialInfo.invalidate(); }
+			inline void setSize(const Vec2i& mSize)						{ shape.setSize(mSize);								spatialInfo.invalidate(); }
+			inline void setHalfSize(const Vec2i& mSize)					{ shape.setHalfSize(mSize);							spatialInfo.invalidate(); }
+			inline void setWidth(int mWidth)							{ shape.setWidth(mWidth);							spatialInfo.invalidate(); }
+			inline void setHeight(int mHeight)							{ shape.setHeight(mHeight);							spatialInfo.invalidate(); }
+			inline void setStatic(bool mStatic)							{ _static = mStatic;								spatialInfo.invalidate(); }
 			inline void setVelocity(const Vec2f& mVelocity) noexcept 	{ velocity = mVelocity; }
 			inline void setAcceleration(const Vec2f& mAccel) noexcept	{ acceleration = mAccel; }
-			inline void setStatic(bool mStatic)							{ _static = mStatic; spatialInfo.invalidate(); }
 			inline void setUserData(void* mUserData) noexcept			{ userData = mUserData; }
 			inline void setVelocityX(float mX) noexcept					{ velocity.x = mX; }
 			inline void setVelocityY(float mY) noexcept					{ velocity.y = mY; }
@@ -103,6 +110,7 @@ namespace ssvsc
 			inline void setSpatialPaint(int mSpatialPaint) noexcept		{ spatialPaint = mSpatialPaint; }
 			inline void setVelTransferMultX(float mValue) noexcept		{ velTransferMult.x = mValue; }
 			inline void setVelTransferMultY(float mValue) noexcept		{ velTransferMult.y = mValue; }
+			inline void setStressMult(float mValue) noexcept			{ stressMult = mValue; }
 
 			inline BaseType getType() const noexcept override			{ return BaseType::Body; }
 			inline AABB& getShape() noexcept override					{ return shape; }
@@ -130,6 +138,9 @@ namespace ssvsc
 			inline float getVelTransferMultY() const noexcept			{ return velTransferMult.y; }
 			inline Vec2f& getVelTransferImpulse() noexcept				{ return velTransferImpulse; }
 			inline const Vec2f& getVelTransferImpulse() const noexcept	{ return velTransferImpulse; }
+			inline const Vec2f& getStress() const noexcept				{ return stress; }
+			inline float getStressMult() const noexcept					{ return stressMult; }
+			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return resolve && !mustIgnoreResolution(mBody); }
 	};
 }
 

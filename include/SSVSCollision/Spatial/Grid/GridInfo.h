@@ -30,10 +30,15 @@ namespace ssvsc
 				oldEndX = endX;
 				oldEndY = endY;
 
-				startX = grid.getIndex(std::min(oldShape.getLeft(), shape.getLeft()));
+				/*startX = grid.getIndex(std::min(oldShape.getLeft(), shape.getLeft()));
 				startY = grid.getIndex(std::min(oldShape.getTop(), shape.getTop()));
 				endX = grid.getIndex(std::max(oldShape.getRight(), shape.getRight()));
-				endY = grid.getIndex(std::max(oldShape.getBottom(), shape.getBottom()));
+				endY = grid.getIndex(std::max(oldShape.getBottom(), shape.getBottom()));*/
+
+				startX = grid.getIndex(shape.getLeft());
+				startY = grid.getIndex(shape.getTop());
+				endX = grid.getIndex(shape.getRight());
+				endY = grid.getIndex(shape.getBottom());
 
 				if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells();
 				else invalid = false;

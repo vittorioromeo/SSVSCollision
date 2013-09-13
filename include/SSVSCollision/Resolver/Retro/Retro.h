@@ -18,13 +18,13 @@ namespace ssvsc
 	{
 		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
 		{
-			AABB& shape(mBody.getShape());
-			const AABB& oldShape(mBody.getOldShape());
-			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
+			AABB& shape(mBody.shape);
+			const AABB& oldShape(mBody.oldShape);
+			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
 
 			for(const auto& b : mBodiesToResolve)
 			{
-				const AABB& s(b->getShape());
+				const AABB& s(b->shape);
 				if(!shape.isOverlapping(s)) continue;
 
 				int iX{Utils::getMinIntersectionX(shape, s)}, iY{Utils::getMinIntersectionY(shape, s)};
@@ -41,20 +41,21 @@ namespace ssvsc
 				bool oldHOverlap{!(oldShapeLeftOfS || oldShapeRightOfS)}, oldVOverlap{!(oldShapeAboveS || oldShapeBelowS)};
 
 				// TODO: consider when two different bodies with two different rest. collide
-				const auto& velocity(mBody.getVelocity());
-				const AABB& os(b->getOldShape());
+				const auto& velocity(mBody.velocity);
+				const AABB& os(b->oldShape);
 
 				if	((resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) ||
 					(resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))))
-						mBody.setVelocityY(velocity.y * -mBody.getRestitutionY());
+						mBody.velocity.y *= -mBody.getRestitutionY();
 
 				if	((resolution.x < 0 && velocity.x > 0 && (oldShapeLeftOfS || (os.isRightOf(shape) && oldVOverlap))) ||
 					(resolution.x > 0 && velocity.x < 0 && (oldShapeRightOfS || (os.isLeftOf(shape) && oldVOverlap))))
-						mBody.setVelocityX(velocity.x * -mBody.getRestitutionX());
+						mBody.velocity.x *= -mBody.getRestitutionX();
 			}
 		}
-		inline void postUpdate(World& mWorld) override { }
 	};
+
+	// TODO: stress calc
 }
 
 #endif

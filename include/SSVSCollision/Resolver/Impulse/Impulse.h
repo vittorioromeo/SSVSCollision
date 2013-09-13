@@ -14,22 +14,20 @@ namespace ssvsc
 {
 	class Body;
 
-	// try  pressure instead of velocity.y
-
 	struct Impulse : public ResolverBase
 	{
 		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
 		{
-			AABB& shape(mBody.getShape());
-			const AABB& oldShape(mBody.getOldShape());
+			AABB& shape(mBody.shape);
+			const AABB& oldShape(mBody.oldShape);
 
-			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
+			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
 			int resXNeg{0}, resXPos{0}, resYNeg{0}, resYPos{0};
 			constexpr int tolerance{20};
 
 			for(const auto& b : mBodiesToResolve)
 			{
-				int iX{Utils::getMinIntersectionX(shape, b->getShape())}, iY{Utils::getMinIntersectionY(shape, b->getShape())};
+				int iX{Utils::getMinIntersectionX(shape, b->shape)}, iY{Utils::getMinIntersectionY(shape, b->shape)};
 
 				if(std::abs(iX) < std::abs(iY))
 				{
@@ -45,7 +43,7 @@ namespace ssvsc
 
 			for(const auto& b : mBodiesToResolve)
 			{
-				const AABB& s(b->getShape());
+				const AABB& s(b->shape);
 				if(!shape.isOverlapping(s)) continue;
 
 				int iX{Utils::getMinIntersectionX(shape, s)}, iY{Utils::getMinIntersectionY(shape, s)};
@@ -61,8 +59,8 @@ namespace ssvsc
 				bool oldShapeAboveS{oldShape.isAbove(s)}, oldShapeBelowS{oldShape.isBelow(s)};
 				bool oldHOverlap{!(oldShapeLeftOfS || oldShapeRightOfS)}, oldVOverlap{!(oldShapeAboveS || oldShapeBelowS)};
 
-				const auto& velocity(mBody.getVelocity());
-				const AABB& os(b->getOldShape());
+				const auto& velocity(mBody.velocity);
+				const AABB& os(b->oldShape);
 				float desiredX{velocity.x}, desiredY{velocity.y};
 
 				Vec2f normal;
@@ -88,8 +86,8 @@ namespace ssvsc
 					desiredX *= mBody.getRestitutionX();
 				}
 
-				Vec2f velDiff{b->getVelocity() - mBody.getVelocity()};
-				float velAlongNormal{ssvs::getDotProduct(velDiff, normal)};
+				Vec2f velDiff{b->velocity - mBody.velocity};
+				float velAlongNormal{ssvs::getDotProduct (velDiff, normal)};
 				if(velAlongNormal > 0) continue;
 				float invMassSum{mBody.getInvMass() + b->getInvMass()};
 				float computedVel{velAlongNormal / invMassSum};
@@ -97,33 +95,44 @@ namespace ssvsc
 
 				if(normal.y != 0)
 				{
-					float velTransferX{b->getVelocity().x - mBody.getVelocity().x};
+					float velTransferX{b->velocity.x - mBody.velocity.x};
 					velTransferX /= invMassSum;
-					if(b->getVelTransferMultX() != 0) velTransferX *= std::sqrt(mBody.getVelTransferMultX() * b->getVelTransferMultX()); else velTransferX *= 0;
-					mBody.getVelTransferImpulse().x += velTransferX;
+					if(b->velTransferMult.x != 0) velTransferX *= std::sqrt(mBody.velTransferMult.x * b->velTransferMult.x); else velTransferX *= 0;
 
+					//if(ssvu::getSign(velTransferX) != ssvu::getSign(mBody.velocity.x)) velTransferX /= (mBody.stress.y / 2.f + 1);
+					//else if(ssvu::getSign(velTransferX) != ssvu::getSign(mBody.velocity.x)) velTransferX += mBody.stress.y * ssvu::getSign(velTransferX);
+					//else velTransferX += mBody.stress.y * ssvu::getSign(velTransferX);
+					//velTransferX /= ((mBody.stress.y / 2.f + 1) * ssvu::getSign(mBody.getVelocity().x)) + 1;
+					mBody.velTransferImpulse.x += velTransferX;
 				}
 				if(normal.x != 0)
 				{
-					float velTransferY{b->getVelocity().y - mBody.getVelocity().y};
+					float velTransferY{b->velocity.y - mBody.velocity.y};
 					velTransferY /= invMassSum;
-					if(b->getVelTransferMultY() != 0) velTransferY *= std::sqrt(mBody.getVelTransferMultY() * b->getVelTransferMultY()); else velTransferY *= 0;
-					mBody.getVelTransferImpulse().y += velTransferY;
+					if(b->velTransferMult.y != 0) velTransferY *= std::sqrt(mBody.velTransferMult.y * b->velTransferMult.y); else velTransferY *= 0;
+					//if(ssvu::getSign(velTransferY) == ssvu::getSign(mBody.getVelocity().y)) velTransferY /= (mBody.stress.x / 2.f + 1);
+					mBody.velTransferImpulse.y += velTransferY;
 				}
 
 				mBody.applyImpulse(*b, -impulse);
 				b->applyImpulse(mBody, impulse);
+				b->applyStress(mBody, (mBody.stress + impulse) * mBody.getMass());
 
-				mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
-				mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
+				mBody.velocity.x = std::abs(desiredX) * ssvu::getSign(mBody.velocity.x);
+				mBody.velocity.y = std::abs(desiredY) * ssvu::getSign(mBody.velocity.y);
 			}
 		}
 		inline void postUpdate(World& mWorld) override
 		{
 			for(const auto& b : mWorld.getBodies())
 			{
-				b->applyImpulse(b->getVelTransferImpulse());
-				ssvs::nullify(b->getVelTransferImpulse());
+				b->stress = b->nextStress;
+				ssvs::nullify(b->nextStress);
+
+
+
+				b->applyImpulse(b->velTransferImpulse);
+				ssvs::nullify(b->velTransferImpulse);
 			}
 		}
 	};
