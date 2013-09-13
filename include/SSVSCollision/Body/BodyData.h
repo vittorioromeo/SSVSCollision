@@ -24,10 +24,10 @@ namespace ssvsc
 			float restitutionX{0.f}, restitutionY{0.f};
 
 		public:
-			inline void setRestitutionX(float mRestX)		{ restitutionX = mRestX; }
-			inline void setRestitutionY(float mRestY)		{ restitutionY = mRestY; }
-			inline float getRestitutionX() const noexcept	{ return restitutionX; }
-			inline float getRestitutionY() const noexcept	{ return restitutionY; }
+			inline void setRestitutionX(float mRestX) noexcept	{ restitutionX = mRestX; }
+			inline void setRestitutionY(float mRestY) noexcept	{ restitutionY = mRestY; }
+			inline float getRestitutionX() const noexcept		{ return restitutionX; }
+			inline float getRestitutionY() const noexcept		{ return restitutionY; }
 	};
 }
 
