@@ -9,7 +9,6 @@
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Query/Query.h"
 
-
 namespace ssvsc
 {
 	class Base;
