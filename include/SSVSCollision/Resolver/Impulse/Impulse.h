@@ -98,11 +98,6 @@ namespace ssvsc
 					float velTransferX{b->velocity.x - mBody.velocity.x};
 					velTransferX /= invMassSum;
 					if(b->velTransferMult.x != 0) velTransferX *= std::sqrt(mBody.velTransferMult.x * b->velTransferMult.x); else velTransferX *= 0;
-
-					//if(ssvu::getSign(velTransferX) != ssvu::getSign(mBody.velocity.x)) velTransferX /= (mBody.stress.y / 2.f + 1);
-					//else if(ssvu::getSign(velTransferX) != ssvu::getSign(mBody.velocity.x)) velTransferX += mBody.stress.y * ssvu::getSign(velTransferX);
-					//else velTransferX += mBody.stress.y * ssvu::getSign(velTransferX);
-					//velTransferX /= ((mBody.stress.y / 2.f + 1) * ssvu::getSign(mBody.getVelocity().x)) + 1;
 					mBody.velTransferImpulse.x += velTransferX;
 				}
 				if(normal.x != 0)
@@ -110,7 +105,6 @@ namespace ssvsc
 					float velTransferY{b->velocity.y - mBody.velocity.y};
 					velTransferY /= invMassSum;
 					if(b->velTransferMult.y != 0) velTransferY *= std::sqrt(mBody.velTransferMult.y * b->velTransferMult.y); else velTransferY *= 0;
-					//if(ssvu::getSign(velTransferY) == ssvu::getSign(mBody.getVelocity().y)) velTransferY /= (mBody.stress.x / 2.f + 1);
 					mBody.velTransferImpulse.y += velTransferY;
 				}
 
@@ -128,8 +122,6 @@ namespace ssvsc
 			{
 				b->stress = b->nextStress;
 				ssvs::nullify(b->nextStress);
-
-
 
 				b->applyImpulse(b->velTransferImpulse);
 				ssvs::nullify(b->velTransferImpulse);

@@ -84,7 +84,11 @@ namespace ssvsc
 			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
 
 			inline void applyForce(const Vec2f& mForce) noexcept						{ acceleration += mForce; }
-			inline void applyImpulse(Vec2f mImpulse) noexcept							{ velocity += getInvMass() * mImpulse; }
+			inline void applyImpulse(const Vec2f& mImpulse) noexcept
+			{
+				velocity.x += getInvMass() * (mImpulse.x / (1.f + (stress.y * 0.1f)));
+				velocity.y += getInvMass() * (mImpulse.y / (1.f + (stress.x * 0.1f))); // TODO: some mult
+			}
 			inline void applyImpulse(const Body& mBody, const Vec2f& mImpulse) noexcept	{ if(mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
 			inline void applyStress(const Vec2f& mStress) noexcept						{ nextStress += ssvs::getAbs(getInvMass() * mStress * stressMult); }
 			inline void applyStress(const Body& mBody, const Vec2f& mStress) noexcept	{ if(mustResolveAgainst(mBody)) applyStress(mStress); }
