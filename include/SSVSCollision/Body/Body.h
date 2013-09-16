@@ -33,13 +33,14 @@ namespace ssvsc
 			std::vector<Body*> bodiesToResolve;
 			int spatialPaint{-1};
 			Vec2i lastResolution;
+
+			// TODO: ResolverInfo?
 			Vec2f velTransferMult, velTransferImpulse, stress, nextStress;
-			float stressMult{1.f};
+			float stressMult{1.f}, stressPropagationMult{0.1f};
 
 			inline void integrate(float mFrameTime)
 			{
 				velocity += acceleration * mFrameTime;
-				//stress += acceleration * mFrameTime;
 				shape.move(Vec2i(velocity * mFrameTime));
 				ssvs::nullify(acceleration);
 			}
@@ -83,11 +84,11 @@ namespace ssvsc
 			}
 			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
 
-			inline void applyForce(const Vec2f& mForce) noexcept						{ acceleration += mForce; }
+			inline void applyForce(const Vec2f& mForce) noexcept { acceleration += mForce; }
 			inline void applyImpulse(const Vec2f& mImpulse) noexcept
 			{
-				velocity.x += getInvMass() * (mImpulse.x / (1.f + (stress.y * 0.1f)));
-				velocity.y += getInvMass() * (mImpulse.y / (1.f + (stress.x * 0.1f))); // TODO: some mult
+				velocity.x += getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult)));
+				velocity.y += getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult)));
 			}
 			inline void applyImpulse(const Body& mBody, const Vec2f& mImpulse) noexcept	{ if(mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
 			inline void applyStress(const Vec2f& mStress) noexcept						{ nextStress += ssvs::getAbs(getInvMass() * mStress * stressMult); }
