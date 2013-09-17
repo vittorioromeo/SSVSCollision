@@ -19,6 +19,8 @@ namespace ssvsc
 			Base& base;
 
 		public:
+			int spatialPaint{-1};
+
 			SpatialInfoBase(SpatialBase& mSpatial, Base& mBase) : spatial(mSpatial), base(mBase) { }
 			inline virtual ~SpatialInfoBase() { }
 

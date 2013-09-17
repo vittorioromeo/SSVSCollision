@@ -31,7 +31,6 @@ namespace ssvsc
 			RestitutionData restitutionData;
 			void* userData{nullptr};
 			std::vector<Body*> bodiesToResolve;
-			int spatialPaint{-1};
 			Vec2i lastResolution;
 
 			// TODO: ResolverInfo?
@@ -112,10 +111,10 @@ namespace ssvsc
 			inline void setMass(float mMass) noexcept					{ massData.setMass(mMass); }
 			inline void setRestitutionX(float mRestX) noexcept			{ restitutionData.setRestitutionX(mRestX); }
 			inline void setRestitutionY(float mRestY) noexcept			{ restitutionData.setRestitutionY(mRestY); }
-			inline void setSpatialPaint(int mSpatialPaint) noexcept		{ spatialPaint = mSpatialPaint; }
 			inline void setVelTransferMultX(float mValue) noexcept		{ velTransferMult.x = mValue; }
 			inline void setVelTransferMultY(float mValue) noexcept		{ velTransferMult.y = mValue; }
 			inline void setStressMult(float mValue) noexcept			{ stressMult = mValue; }
+			inline void setStressPropagationMult(float mValue) noexcept	{ stressPropagationMult = mValue; }
 
 			inline BaseType getType() const noexcept override			{ return BaseType::Body; }
 			inline AABB& getShape() noexcept override					{ return shape; }
@@ -136,7 +135,6 @@ namespace ssvsc
 			inline bool hasMovedRight() const noexcept					{ return shape.getX() > oldShape.getX(); }
 			inline bool hasMovedUp() const noexcept						{ return shape.getY() < oldShape.getY(); }
 			inline bool hasMovedDown() const noexcept					{ return shape.getY() > oldShape.getY(); }
-			inline int getSpatialPaint() const noexcept					{ return spatialPaint; }
 			inline bool getResolve() const noexcept						{ return resolve; }
 			inline const Vec2i& getLastResolution() const noexcept		{ return lastResolution; }
 			inline float getVelTransferMultX() const noexcept			{ return velTransferMult.x; }
@@ -145,6 +143,7 @@ namespace ssvsc
 			inline const Vec2f& getVelTransferImpulse() const noexcept	{ return velTransferImpulse; }
 			inline const Vec2f& getStress() const noexcept				{ return stress; }
 			inline float getStressMult() const noexcept					{ return stressMult; }
+			inline float getStressPropagationMult() const noexcept		{ return stressPropagationMult; }
 			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return resolve && !mustIgnoreResolution(mBody); }
 	};
 }

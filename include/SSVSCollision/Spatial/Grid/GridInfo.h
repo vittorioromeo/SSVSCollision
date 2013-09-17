@@ -75,9 +75,9 @@ namespace ssvsc
 				for(const auto& c : cells)
 					for(const auto& b : c->getBodies())
 					{
-						if(b->getSpatialPaint() == lastPaint) continue;
+						if(b->getSpatialInfo().spatialPaint == lastPaint) continue;
 						base.handleCollision(mFrameTime, b);
-						b->setSpatialPaint(lastPaint);
+						b->getSpatialInfo().spatialPaint = lastPaint;
 					}
 			}
 	};
