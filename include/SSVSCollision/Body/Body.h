@@ -37,6 +37,8 @@ namespace ssvsc
 			Vec2f velTransferMult, velTransferImpulse, stress, nextStress;
 			float stressMult{1.f}, stressPropagationMult{0.1f};
 
+			bool mustInit{true};
+
 			inline void integrate(float mFrameTime)
 			{
 				velocity += acceleration * mFrameTime;
@@ -48,10 +50,12 @@ namespace ssvsc
 			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
 			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
 
-			Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { spatialInfo.init(); }
+			Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 
 			void update(float mFrameTime) override
 			{
+				if(mustInit) { spatialInfo.init(); mustInit = false; }
+
 				ssvs::nullify(lastResolution);
 
 				onPreUpdate();
