@@ -50,7 +50,8 @@ namespace ssvsc
 			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
 			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
 
-			Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+			inline Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+			inline ~Body() { destroy(); }
 
 			void update(float mFrameTime) override
 			{
