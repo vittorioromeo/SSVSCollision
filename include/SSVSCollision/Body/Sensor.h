@@ -25,18 +25,18 @@ namespace ssvsc
 			inline Sensor(World& mWorld, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
 			inline ~Sensor() { destroy(); }
 
-			inline void update(float mFrameTime) override
+			inline void update(float mFT) override
 			{
 				onPreUpdate();
 				if(outOfBounds) { outOfBounds = false; return; };
 				spatialInfo.preUpdate();
-				spatialInfo.handleCollisions(mFrameTime);
+				spatialInfo.handleCollisions(mFT);
 				spatialInfo.postUpdate();
 			}
-			inline void handleCollision(float mFrameTime, Body* mBody) override
+			inline void handleCollision(float mFT, Body* mBody) override
 			{
 				if(!mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
-				onDetection({*mBody, mBody->getUserData(), Utils::getMinIntersection(shape, mBody->getShape()), mFrameTime});
+				onDetection({*mBody, mBody->getUserData(), Utils::getMinIntersection(shape, mBody->getShape()), mFT});
 			}
 			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
 

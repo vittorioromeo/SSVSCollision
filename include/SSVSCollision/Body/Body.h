@@ -39,10 +39,10 @@ namespace ssvsc
 
 			bool mustInit{true};
 
-			inline void integrate(float mFrameTime)
+			inline void integrate(float mFT)
 			{
-				velocity += acceleration * mFrameTime;
-				shape.move(Vec2i(velocity * mFrameTime));
+				velocity += acceleration * mFT;
+				shape.move(Vec2i(velocity * mFT));
 				ssvs::nullify(acceleration);
 			}
 
@@ -53,7 +53,7 @@ namespace ssvsc
 			inline Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 			inline ~Body() { destroy(); }
 
-			void update(float mFrameTime) override
+			void update(float mFT) override
 			{
 				if(mustInit) { spatialInfo.init(); mustInit = false; }
 
@@ -64,25 +64,25 @@ namespace ssvsc
 				if(_static) { spatialInfo.preUpdate(); return; }
 				if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
 				oldShape = shape;
-				integrate(mFrameTime);
+				integrate(mFT);
 				spatialInfo.preUpdate();
 
 				bodiesToResolve.clear();
-				spatialInfo.handleCollisions(mFrameTime);
+				spatialInfo.handleCollisions(mFT);
 
-				resolver.resolve(mFrameTime, *this, bodiesToResolve);
+				resolver.resolve(mFT, *this, bodiesToResolve);
 				if(oldShape != shape) spatialInfo.invalidate();
 
 				spatialInfo.postUpdate(); onPostUpdate();
 			}
-			void handleCollision(float mFrameTime, Body* mBody) override
+			void handleCollision(float mFT, Body* mBody) override
 			{
 				if(mBody == this || !mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 
 				auto intersection(Utils::getMinIntersection(shape, mBody->getShape()));
 
-				onDetection({*mBody, mBody->getUserData(), intersection, mFrameTime});
-				mBody->onDetection({*this, userData, -intersection, mFrameTime});
+				onDetection({*mBody, mBody->getUserData(), intersection, mFT});
+				mBody->onDetection({*this, userData, -intersection, mFT});
 
 				if(mustResolveAgainst(*mBody)) bodiesToResolve.push_back(mBody);
 			}

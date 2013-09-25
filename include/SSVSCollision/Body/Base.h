@@ -32,8 +32,8 @@ namespace ssvsc
 
 			inline virtual ~Base() { }
 
-			virtual	void update(float mFrameTime) = 0;
-			virtual void handleCollision(float mFrameTime, Body* mBody) = 0;
+			virtual	void update(float mFT) = 0;
+			virtual void handleCollision(float mFT, Body* mBody) = 0;
 			inline virtual void destroy() { world.del(*this); }
 
 			inline void setOutOfBounds(bool mOutOfBounds) noexcept { outOfBounds = mOutOfBounds; }

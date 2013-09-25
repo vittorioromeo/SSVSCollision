@@ -15,7 +15,7 @@ namespace ssvsc
 	struct ResolverBase
 	{
 		virtual ~ResolverBase() { }
-		virtual void resolve(float mFrameTime, Body& mBody, std::vector<Body*>& mBodiesToResolve) = 0;
+		virtual void resolve(float mFT, Body& mBody, std::vector<Body*>& mBodiesToResolve) = 0;
 		virtual void postUpdate(World&) { }
 	};
 }

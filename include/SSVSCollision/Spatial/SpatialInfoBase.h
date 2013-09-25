@@ -28,7 +28,7 @@ namespace ssvsc
 			virtual void invalidate() = 0;
 			virtual void preUpdate() = 0;
 			virtual void postUpdate() = 0;
-			virtual void handleCollisions(float mFrameTime) = 0;
+			virtual void handleCollisions(float mFT) = 0;
 			inline virtual void destroy() { spatial.del(*this); }
 	};
 }

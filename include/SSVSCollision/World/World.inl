@@ -7,13 +7,13 @@
 
 namespace ssvsc
 {
-	inline void World::update(float mFrameTime)
+	inline void World::update(float mFT)
 	{
 		ssvu::eraseRemoveIf(bodies, &bases.isDead<Body*>);
 		ssvu::eraseRemoveIf(sensors, &bases.isDead<Sensor*>);
 
 		bases.refresh();
-		for(const auto& b : bases) b->update(mFrameTime);
+		for(const auto& b : bases) b->update(mFT);
 		resolver->postUpdate(*this);
 		spatial->refresh();
 	}

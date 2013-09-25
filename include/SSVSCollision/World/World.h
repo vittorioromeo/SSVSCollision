@@ -48,7 +48,7 @@ namespace ssvsc
 				sensors.push_back(&result); return result;
 			}
 
-			void update(float mFrameTime);
+			void update(float mFT);
 			inline void clear() { bases.clear(); bodies.clear(); sensors.clear(); }
 
 			inline decltype(bases)::Container& getBases() noexcept	{ return bases.getItems(); }
