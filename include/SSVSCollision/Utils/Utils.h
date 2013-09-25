@@ -14,11 +14,11 @@ namespace ssvsc
 	struct ResolverBase;
 	struct SpatialBase;
 
+	template<typename T, typename... TArgs> static ResolverBase& createResolver(TArgs&&... mArgs)	{ return *(new T(std::forward<TArgs>(mArgs)...)); }
+	template<typename T, typename... TArgs> static SpatialBase& createSpatial(TArgs&&... mArgs)		{ return *(new T(std::forward<TArgs>(mArgs)...)); }
+
 	namespace Utils
 	{
-		template<typename T, typename... TArgs> static ResolverBase& createResolver(TArgs&&... mArgs)	{ return *(new T(std::forward<TArgs>(mArgs)...)); }
-		template<typename T, typename... TArgs> static SpatialBase& createSpatial(TArgs&&... mArgs)		{ return *(new T(std::forward<TArgs>(mArgs)...)); }
-
 		template<typename T> inline T getSigned2DTriangleArea(const Vec2<T>& mA, const Vec2<T>& mB, const Vec2<T>& mC) noexcept
 		{
 			return (mA.x - mC.x) * (mB.y - mC.y) - (mA.y - mC.y) * (mB.x - mC.x);
