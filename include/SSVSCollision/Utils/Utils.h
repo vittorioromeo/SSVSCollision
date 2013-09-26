@@ -31,6 +31,7 @@ namespace ssvsc
 			float a3{getSigned2DTriangleArea(mB.start, mB.end, mA.start)}, a4{a3 + a2 - a1};
 			if(a3 * a4 > 0.f) return false;
 
+			// TODO: BUG: (a3-a4) can be 0!!!
 			mIntersection = mA.start + (a3 / (a3 - a4)) * (mA.end - mA.start);
 			return true;
 		}
