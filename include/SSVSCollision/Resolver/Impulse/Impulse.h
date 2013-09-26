@@ -12,10 +12,12 @@
 
 namespace ssvsc
 {
-	class Body;
+	template<typename> class BodyType;
 
-	struct Impulse : public ResolverBase
+	template<typename TS> struct Impulse : public ResolverBase<TS>
 	{
+		using Body = BodyType<TS>;
+
 		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
 		{
 			AABB& shape(mBody.shape);
@@ -116,7 +118,7 @@ namespace ssvsc
 				mBody.velocity.y = std::abs(desiredY) * ssvu::getSign(mBody.velocity.y);
 			}
 		}
-		inline void postUpdate(World& mWorld) override
+		inline void postUpdate(World<TS>& mWorld) override
 		{
 			for(const auto& b : mWorld.getBodies())
 			{

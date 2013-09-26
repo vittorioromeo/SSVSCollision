@@ -20,7 +20,7 @@ namespace ssvsc
 
 	enum class QueryType{Point, Distance, RayCast, OrthoLeft, OrthoRight, OrthoUp, OrthoDown};
 	enum class QueryMode{All, ByGroup};
-	enum class BaseType{Body, Sensor};
+	enum class BType{Body, Sensor};
 }
 
 #endif

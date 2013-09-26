@@ -15,13 +15,13 @@ namespace ssvsc
 {
 	namespace GridQueryTypes
 	{
-		template<typename TGrid> struct Base
+		template<typename TS> struct Base
 		{
-			TGrid& grid;
+			TS& grid;
 			Vec2f startPos, pos, lastPos;
 			Vec2i startIndex, index;
 
-			Base(TGrid& mGrid, const Vec2i& mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIndex(Vec2i(mPos))}, index{startIndex} { }
+			Base(TS& mGrid, const Vec2i& mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIndex(Vec2i(mPos))}, index{startIndex} { }
 
 			inline void reset()					{ pos = startPos; index = startIndex; }
 			inline const Vec2f& getLastPos()	{ return lastPos; }
@@ -31,76 +31,76 @@ namespace ssvsc
 		{
 			struct All
 			{
-				template<typename T> inline static void getBodies(std::vector<Body*>& mBodies, const T& mInternal) { mBodies = mInternal.grid.getCell(mInternal.index).getBodies(); }
+				template<typename TS, typename T> inline static void getBodies(std::vector<BodyType<TS>*>& mBodies, const T& mInternal) { mBodies = mInternal.grid.getCell(mInternal.index).getBodies(); }
 			};
 			struct ByGroup
 			{
-				template<typename T> inline static void getBodies(std::vector<Body*>& mBodies, const T& mInternal, Group mGroup)
+				template<typename TS, typename T> inline static void getBodies(std::vector<BodyType<TS>*>& mBodies, const T& mInternal, Group mGroup)
 				{
-					std::vector<Body*> result;
+					std::vector<BodyType<TS>*> result;
 					for(const auto& b : mInternal.grid.getCell(mInternal.index).getBodies()) if(b->hasGroup(mGroup)) result.push_back(b);
 					mBodies = result;
 				}
 			};
 		}
 
-		template<typename TGrid> struct OrthoLeft : public Base<TGrid>
+		template<typename TS> struct OrthoLeft : public Base<TS>
 		{
-			template<typename... TArgs> OrthoLeft(TArgs&&... mArgs) : Base<TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> OrthoLeft(TArgs&&... mArgs) : Base<TS>(std::forward<TArgs>(mArgs)...) { }
 			inline bool isValid()									{ return this->index.x >= this->grid.getIndexXMin(); }
 			inline void step()										{ --this->index.x; }
-			inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().x < mB->getPosition().x; }
+			inline bool getSorting(const BodyType<TS>* mA, const BodyType<TS>* mB)	{ return mA->getPosition().x < mB->getPosition().x; }
 			inline bool hits(const AABB& mShape)					{ return mShape.getLeft() <= this->pos.x && this->pos.y >= mShape.getTop() && this->pos.y <= mShape.getBottom(); }
 			inline void setOut(const AABB& mShape)					{ this->lastPos = Vec2f(mShape.getRight(), this->pos.y); }
 		};
-		template<typename TGrid> struct OrthoRight : public Base<TGrid>
+		template<typename TS> struct OrthoRight : public Base<TS>
 		{
-			template<typename... TArgs> OrthoRight(TArgs&&... mArgs) : Base<TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> OrthoRight(TArgs&&... mArgs) : Base<TS>(std::forward<TArgs>(mArgs)...) { }
 			inline bool isValid()									{ return this->index.x < this->grid.getIndexXMax(); }
 			inline void step()										{ ++this->index.x; }
-			inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().x > mB->getPosition().x; }
+			inline bool getSorting(const BodyType<TS>* mA, const BodyType<TS>* mB)	{ return mA->getPosition().x > mB->getPosition().x; }
 			inline bool hits(const AABB& mShape)					{ return mShape.getRight() >= this->pos.x && this->pos.y >= mShape.getTop() && this->pos.y <= mShape.getBottom(); }
 			inline void setOut(const AABB& mShape)					{ this->lastPos = Vec2f(mShape.getLeft(), this->pos.y); }
 		};
-		template<typename TGrid> struct OrthoUp : public Base<TGrid>
+		template<typename TS> struct OrthoUp : public Base<TS>
 		{
-			template<typename... TArgs> OrthoUp(TArgs&&... mArgs) : Base<TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> OrthoUp(TArgs&&... mArgs) : Base<TS>(std::forward<TArgs>(mArgs)...) { }
 			inline bool isValid()									{ return this->index.y >= this->grid.getIndexYMin(); }
 			inline void step()										{ --this->index.y; }
-			inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().y < mB->getPosition().y; }
+			inline bool getSorting(const BodyType<TS>* mA, const BodyType<TS>* mB)	{ return mA->getPosition().y < mB->getPosition().y; }
 			inline bool hits(const AABB& mShape)					{ return mShape.getTop() <= this->pos.y && this->pos.x >= mShape.getLeft() && this->pos.x <= mShape.getRight(); }
 			inline void setOut(const AABB& mShape)					{ this->lastPos = Vec2f(this->pos.x, mShape.getBottom()); }
 		};
-		template<typename TGrid> struct OrthoDown : public Base<TGrid>
+		template<typename TS> struct OrthoDown : public Base<TS>
 		{
-			template<typename... TArgs> OrthoDown(TArgs&&... mArgs) : Base<TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> OrthoDown(TArgs&&... mArgs) : Base<TS>(std::forward<TArgs>(mArgs)...) { }
 			inline bool isValid()									{ return this->index.y < this->grid.getIndexYMax(); }
 			inline void step()										{ ++this->index.y; }
-			inline bool getSorting(const Body* mA, const Body* mB)	{ return mA->getPosition().y > mB->getPosition().y; }
+			inline bool getSorting(const BodyType<TS>* mA, const BodyType<TS>* mB)	{ return mA->getPosition().y > mB->getPosition().y; }
 			inline bool hits(const AABB& mShape)					{ return mShape.getBottom() >= this->pos.y && this->pos.x >= mShape.getLeft() && this->pos.x <= mShape.getRight(); }
 			inline void setOut(const AABB& mShape)					{ this->lastPos = Vec2f(this->pos.x, mShape.getTop()); }
 		};
 
-		template<typename TGrid> struct Point : public Base<TGrid>
+		template<typename TS> struct Point : public Base<TS>
 		{
 			bool finished{false};
 
-			template<typename... TArgs> Point(TArgs&&... mArgs) : Base<TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> Point(TArgs&&... mArgs) : Base<TS>(std::forward<TArgs>(mArgs)...) { }
 
 			inline bool isValid()										{ return !finished && this->grid.isIndexValid(this->index); }
 			inline void step()											{ finished = true; }
-			inline bool getSorting(const Body*, const Body*)			{ return true; }
+			inline bool getSorting(const BodyType<TS>*, const BodyType<TS>*)			{ return true; }
 			inline bool hits(const AABB& mShape)						{ return mShape.contains(Vec2i(this->pos)); }
 			inline void setOut(const AABB&)								{ }
 		};
 
-		template<typename TGrid> struct RayCast : public Base<TGrid>
+		template<typename TS> struct RayCast : public Base<TS>
 		{
 			int cellSize;
 			Vec2i next;
 			Vec2f dir, deltaDist, increment, max;
 
-			RayCast(TGrid& mGrid, const Vec2i& mPos, const Vec2f& mDir) : Base<TGrid>{mGrid, mPos}, cellSize{this->grid.getCellSize()}, dir{ssvs::getNormalized(mDir)},
+			RayCast(TS& mGrid, const Vec2i& mPos, const Vec2f& mDir) : Base<TS>{mGrid, mPos}, cellSize{this->grid.getCellSize()}, dir{ssvs::getNormalized(mDir)},
 				increment{dir * static_cast<float>(cellSize)}, max{Vec2f(this->startIndex * cellSize) - this->startPos}
 			{
 				next.x = dir.x < 0 ? -1 : 1;
@@ -130,7 +130,7 @@ namespace ssvsc
 				if(max.x < max.y)	{ max.x += deltaDist.x; this->index.x += next.x; }
 				else				{ max.y += deltaDist.y; this->index.y += next.y; }
 			}
-			inline bool getSorting(const Body* mA, const Body* mB)
+			inline bool getSorting(const BodyType<TS>* mA, const BodyType<TS>* mB)
 			{
 				const auto& aPos(mA->getPosition());
 				const auto& bPos(mB->getPosition());
@@ -156,12 +156,12 @@ namespace ssvsc
 
 
 
-		template<typename TGrid> struct Distance : public Base<TGrid>
+		template<typename TS> struct Distance : public Base<TS>
 		{
 			int cellSize, distance, cellRadius;
 			std::queue<Vec2i> offsets;
 
-			Distance(TGrid& mGrid, const Vec2i& mPos, int mDistance) : Base<TGrid>{mGrid, mPos}, cellSize{this->grid.getCellSize()}, distance{mDistance}, cellRadius{distance / cellSize}
+			Distance(TS& mGrid, const Vec2i& mPos, int mDistance) : Base<TS>{mGrid, mPos}, cellSize{this->grid.getCellSize()}, distance{mDistance}, cellRadius{distance / cellSize}
 			{
 				for(int iRadius{0}; iRadius < cellRadius + 1; ++iRadius)
 				{
@@ -185,7 +185,7 @@ namespace ssvsc
 				this->index = this->startIndex + offsets.front();
 				if(!offsets.empty()) offsets.pop();
 			}
-			inline bool getSorting(const Body* mA, const Body* mB)
+			inline bool getSorting(const BodyType<TS>* mA, const BodyType<TS>* mB)
 			{
 				const auto& aPos(mA->getPosition());
 				const auto& bPos(mB->getPosition());

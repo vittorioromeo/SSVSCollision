@@ -18,6 +18,4 @@
 #include "SSVSCollision/Spatial/Grid/GridQueryTypes.h"
 #include "SSVSCollision/Query/Query.h"
 
-#include "SSVSCollision/World/World.inl"
-
 #endif

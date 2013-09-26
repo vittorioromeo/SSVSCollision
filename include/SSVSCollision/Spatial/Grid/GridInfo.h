@@ -6,24 +6,24 @@
 #define SSVSC_SPATIAL_GRIDINFO
 
 #include <vector>
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 
 namespace ssvsc
 {
-	template<typename TGrid> class GridInfo : public SpatialInfoBase
+	template<typename TS> class GridInfo
 	{
 		private:
-			TGrid& grid;
-			std::vector<Cell*> cells;
+			TS& grid;
+			BaseType<TS>& base;
+			std::vector<Cell<TS>*> cells;
 			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
 			int oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1};
 			bool invalid{true};
 
 			inline void calcEdges()
 			{
-				const AABB& oldShape(base.getOldShape());
-				const AABB& shape(base.getShape());
+				const AABB& oldShape(this->base.getOldShape());
+				const AABB& shape(this->base.getShape());
 
 				oldStartX = startX;
 				oldStartY = startY;
@@ -42,32 +42,34 @@ namespace ssvsc
 			{
 				clear();
 
-				if(!grid.isIndexValid(startX, startY, endX, endY)) { base.setOutOfBounds(true); return; }
+				if(!grid.isIndexValid(startX, startY, endX, endY)) { this->base.setOutOfBounds(true); return; }
 				for(int iX{startX}; iX <= endX; ++iX)
 					for(int iY{startY}; iY <= endY; ++iY)
 					{
 						auto& c(grid.getCell(iX, iY));
 						cells.push_back(&c);
-						c.add(&base);
+						c.add(&this->base);
 					}
 
 				invalid = false;
 			}
 			inline void clear()
 			{
-				for(const auto& c : cells) c->del(&base);
+				for(const auto& c : cells) c->del(&this->base);
 				cells.clear();
 			}
 
 		public:
-			GridInfo(TGrid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { }
+			int spatialPaint{-1};
 
-			inline void init() override			{ calcEdges(); calcCells(); }
-			inline void invalidate() override	{ invalid = true; }
-			inline void preUpdate() override	{ if(invalid) calcEdges(); }
-			inline void postUpdate() override	{ }
-			inline void destroy() override		{ clear(); SpatialInfoBase::destroy(); }
-			inline void handleCollisions(float mFT) override
+			GridInfo(TS& mGrid, BaseType<TS>& mBase) : grid(mGrid), base(mBase) { }
+
+			inline void init() 			{ calcEdges(); calcCells(); }
+			inline void invalidate() 	{ invalid = true; }
+			inline void preUpdate() 	{ if(invalid) calcEdges(); }
+			inline void postUpdate() 	{ }
+			inline void destroy() 		{ clear(); }
+			inline void handleCollisions(float mFT)
 			{
 				static int lastPaint{-1};
 				++lastPaint;
@@ -76,7 +78,7 @@ namespace ssvsc
 					for(const auto& b : c->getBodies())
 					{
 						if(b->getSpatialInfo().spatialPaint == lastPaint) continue;
-						base.handleCollision(mFT, b);
+						this->base.handleCollision(mFT, b);
 						b->getSpatialInfo().spatialPaint = lastPaint;
 					}
 			}

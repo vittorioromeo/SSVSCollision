@@ -11,11 +11,9 @@
 
 namespace ssvsc
 {
-	struct ResolverBase;
-	struct SpatialBase;
+	template<typename> struct ResolverBase;
 
-	template<typename T, typename... TArgs> static ResolverBase& createResolver(TArgs&&... mArgs)	{ return *(new T(std::forward<TArgs>(mArgs)...)); }
-	template<typename T, typename... TArgs> static SpatialBase& createSpatial(TArgs&&... mArgs)		{ return *(new T(std::forward<TArgs>(mArgs)...)); }
+	template<typename TS, typename T, typename... TArgs> static ResolverBase<TS>& createResolver(TArgs&&... mArgs)	{ return *(new T(std::forward<TArgs>(mArgs)...)); }
 
 	namespace Utils
 	{

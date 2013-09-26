@@ -9,19 +9,19 @@
 
 namespace ssvsc
 {
-	class Body;
+	template<typename> class BodyType;
 
-	struct DetectionInfo
+	template<typename TS> struct DetectionInfo
 	{
-		Body& body;
+		BodyType<TS>& body;
 		void* userData;
 		const Vec2i& intersection;
 		float frameTime;
 	};
 
-	struct ResolutionInfo
+	template<typename TS> struct ResolutionInfo
 	{
-		Body& body;
+		BodyType<TS>& body;
 		void* userData;
 		const Vec2i& intersection;
 		const Vec2i& resolution;

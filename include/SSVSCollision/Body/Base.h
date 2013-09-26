@@ -7,30 +7,40 @@
 
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/World/World.h"
-#include "SSVSCollision/Spatial/SpatialBase.h"
 #include "SSVSCollision/Body/GroupData.h"
 
 namespace ssvsc
 {
 	class AABB;
-	class Body;
-	class SpatialInfoBase;
+	template<typename> class BodyType;
 
-	class Base : public ssvu::MemoryManageable
+	template<typename TS> class BaseType : public ssvu::MemoryManageable
 	{
 		protected:
-			World& world;
-			SpatialInfoBase& spatialInfo;
+			World<TS>& world;
+
+		public:
+			using WT = typename std::remove_reference<decltype(world)>::type;
+			using Base = typename WT::Base;
+			using Body = typename WT::Body;
+			using Sensor = typename WT::Sensor;
+			using Resolver = typename WT::Resolver;
+			using DI = typename WT::DI;
+			using RI = typename WT::RI;
+			using SI = typename WT::SI;
+
+		protected:
+			SI spatialInfo;
 			GroupData groupData;
 			bool outOfBounds{false};
 
-			Base(World& mWorld) : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
+			BaseType(World<TS>& mWorld) : world(mWorld), spatialInfo(world.getSpatial(), *this) { }
 
 		public:
 			ssvu::Delegate<void()> onPreUpdate;
-			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
+			ssvu::Delegate<void(const DI&)> onDetection;
 
-			inline virtual ~Base() { }
+			inline virtual ~BaseType() { }
 
 			virtual	void update(float mFT) = 0;
 			virtual void handleCollision(float mFT, Body* mBody) = 0;
@@ -40,9 +50,9 @@ namespace ssvsc
 
 			virtual AABB& getShape() noexcept = 0;
 			virtual AABB& getOldShape() noexcept = 0;
-			virtual BaseType getType() const noexcept = 0;
-			inline SpatialInfoBase& getSpatialInfo() noexcept	{ return spatialInfo; }
-			inline World& getWorld() const noexcept				{ return world; }
+			virtual BType getType() const noexcept = 0;
+			inline SI& getSpatialInfo() noexcept	{ return spatialInfo; }
+			inline World<TS>& getWorld() const noexcept				{ return world; }
 
 			inline void addGroup(Group mGroup)					{ groupData.addGroup(mGroup); }
 			inline void addGroupToCheck(Group mGroup)			{ groupData.addGroupToCheck(mGroup); }

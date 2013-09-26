@@ -9,14 +9,14 @@
 
 namespace ssvsc
 {
-	class Body;
-	class World;
+	template<typename> class BodyType;
+	template<typename> class World;
 
-	struct ResolverBase
+	template<typename TS> struct ResolverBase
 	{
 		virtual ~ResolverBase() { }
-		virtual void resolve(float mFT, Body& mBody, std::vector<Body*>& mBodiesToResolve) = 0;
-		virtual void postUpdate(World&) { }
+		virtual void resolve(float mFT, BodyType<TS>& mBody, std::vector<BodyType<TS>*>& mBodiesToResolve) = 0;
+		virtual void postUpdate(World<TS>&) { }
 	};
 }
 

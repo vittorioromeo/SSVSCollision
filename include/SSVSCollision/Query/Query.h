@@ -10,21 +10,24 @@
 
 namespace ssvsc
 {
-	class Body;
+	template<typename> class BodyType;
 
-	template<typename TSpatial, QueryType TType> struct QueryTypeDispatcher;
-	template<typename TSpatial, QueryMode TMode> struct QueryModeDispatcher;
+	template<typename TS, QueryType TType> struct QueryTypeDispatcher;
+	template<typename TS, QueryMode TMode> struct QueryModeDispatcher;
 
-	template<typename TSpatial, typename TType, typename TMode> class Query
+	template<typename TS, typename TType, typename TMode> class Query
 	{
-		friend TSpatial;
+		friend TS;
 		friend TType;
+
+		public:
+			using Body = BodyType<TS>;
 
 		private:
 			std::vector<Body*> bodies;
 			TType internal;
 
-			template<typename TBody = Body, typename... TArgs> Body* nextImpl(TArgs&&... mArgs)
+			template<typename TBody = Body, typename... TArgs> TBody* nextImpl(TArgs&&... mArgs)
 			{
 				while(internal.isValid())
 				{
@@ -32,7 +35,7 @@ namespace ssvsc
 					if(bodies.empty())
 					{
 						TMode::getBodies(bodies, internal, std::forward<TArgs>(mArgs)...);
-						ssvu::sort(bodies, [this](const Body* mA, const Body* mB){ return internal.getSorting(mA, mB); });
+						ssvu::sort(bodies, [this](const TBody* mA, const TBody* mB){ return internal.getSorting(mA, mB); });
 						internal.step();
 					}
 

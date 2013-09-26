@@ -12,10 +12,12 @@
 
 namespace ssvsc
 {
-	class Body;
+	template<typename> class BodyType;
 
-	struct Retro : public ResolverBase
+	template<typename TS> struct Retro : public ResolverBase<TS>
 	{
+		using Body = BodyType<TS>;
+
 		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
 		{
 			AABB& shape(mBody.shape);

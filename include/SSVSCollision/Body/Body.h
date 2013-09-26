@@ -8,22 +8,30 @@
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
 #include "SSVSCollision/Body/BodyData.h"
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Body/Base.h"
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/Resolver/ResolverBase.h"
 
 namespace ssvsc
 {
-	class World;
+	template<typename> class World;
 
-	class Body : public Base
+	template<typename TS> class BodyType : public BaseType<TS>
 	{
-		friend struct Retro;
-		friend struct Impulse;
+		template<typename> friend struct Retro;
+		template<typename> friend struct Impulse;
+
+		public:
+			using Base = BaseType<TS>;
+			using Body = typename Base::Body;
+			using Sensor = typename Base::Sensor;
+			using Resolver = typename Base::Resolver;
+			using DI = typename Base::DI;
+			using RI = typename Base::RI;
+			using SI = typename Base::SI;
 
 		private:
-			ResolverBase& resolver;
+			Resolver& resolver;
 			AABB shape, oldShape;
 			bool _static, resolve{true};
 			Vec2f velocity, acceleration;
@@ -48,45 +56,45 @@ namespace ssvsc
 
 		public:
 			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
-			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
+			ssvu::Delegate<void(const RI&)> onResolution;
 
-			inline Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
-			inline ~Body() { destroy(); }
+			inline BodyType(World<TS>& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+			inline ~BodyType() { destroy(); }
 
 			void update(float mFT) override
 			{
-				if(mustInit) { spatialInfo.init(); mustInit = false; }
+				if(mustInit) { this->spatialInfo.init(); mustInit = false; }
 
 				ssvs::nullify(lastResolution);
 
-				onPreUpdate();
+				this->onPreUpdate();
 
-				if(_static) { spatialInfo.preUpdate(); return; }
-				if(outOfBounds) { onOutOfBounds(); outOfBounds = false; return; }
+				if(_static) { this->spatialInfo.preUpdate(); return; }
+				if(this->outOfBounds) { onOutOfBounds(); this->outOfBounds = false; return; }
 				oldShape = shape;
 				integrate(mFT);
-				spatialInfo.preUpdate();
+				this->spatialInfo.preUpdate();
 
 				bodiesToResolve.clear();
-				spatialInfo.handleCollisions(mFT);
+				this->spatialInfo.handleCollisions(mFT);
 
 				resolver.resolve(mFT, *this, bodiesToResolve);
-				if(oldShape != shape) spatialInfo.invalidate();
+				if(oldShape != shape) this->spatialInfo.invalidate();
 
-				spatialInfo.postUpdate(); onPostUpdate();
+				this->spatialInfo.postUpdate(); onPostUpdate();
 			}
 			void handleCollision(float mFT, Body* mBody) override
 			{
-				if(mBody == this || !mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
+				if(mBody == this || !this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 
 				auto intersection(Utils::getMinIntersection(shape, mBody->getShape()));
 
-				onDetection({*mBody, mBody->getUserData(), intersection, mFT});
+				this->onDetection({*mBody, mBody->getUserData(), intersection, mFT});
 				mBody->onDetection({*this, userData, -intersection, mFT});
 
 				if(mustResolveAgainst(*mBody)) bodiesToResolve.push_back(mBody);
 			}
-			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
+			inline void destroy() override { this->spatialInfo.destroy(); Base::destroy(); }
 
 			inline void applyForce(const Vec2f& mForce) noexcept { acceleration += mForce; }
 			inline void applyImpulse(const Vec2f& mImpulse) noexcept
@@ -94,19 +102,19 @@ namespace ssvsc
 				velocity.x += getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult)));
 				velocity.y += getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult)));
 			}
-			inline void applyImpulse(const Body& mBody, const Vec2f& mImpulse) noexcept	{ if(mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
+			inline void applyImpulse(const BodyType& mBody, const Vec2f& mImpulse) noexcept	{ if(mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
 			inline void applyStress(const Vec2f& mStress) noexcept						{ nextStress += ssvs::getAbs(getInvMass() * mStress * stressMult); }
-			inline void applyStress(const Body& mBody, const Vec2f& mStress) noexcept	{ if(mustResolveAgainst(mBody)) applyStress(mStress); }
+			inline void applyStress(const BodyType& mBody, const Vec2f& mStress) noexcept	{ if(mustResolveAgainst(mBody)) applyStress(mStress); }
 			inline void resolvePosition(const Vec2i& mOffset) noexcept					{ shape.move(mOffset); lastResolution += mOffset; }
 
-			inline void setPosition(const Vec2i& mPosition)				{ oldShape = shape; shape.setPosition(mPosition);	spatialInfo.invalidate(); }
-			inline void setX(int mX)									{ oldShape = shape; shape.setX(mX);					spatialInfo.invalidate(); }
-			inline void setY(int mY)									{ oldShape = shape; shape.setY(mY);					spatialInfo.invalidate(); }
-			inline void setSize(const Vec2i& mSize)						{ shape.setSize(mSize);								spatialInfo.invalidate(); }
-			inline void setHalfSize(const Vec2i& mSize)					{ shape.setHalfSize(mSize);							spatialInfo.invalidate(); }
-			inline void setWidth(int mWidth)							{ shape.setWidth(mWidth);							spatialInfo.invalidate(); }
-			inline void setHeight(int mHeight)							{ shape.setHeight(mHeight);							spatialInfo.invalidate(); }
-			inline void setStatic(bool mStatic)							{ _static = mStatic;								spatialInfo.invalidate(); }
+			inline void setPosition(const Vec2i& mPosition)				{ oldShape = shape; shape.setPosition(mPosition);	this->spatialInfo.invalidate(); }
+			inline void setX(int mX)									{ oldShape = shape; shape.setX(mX);					this->spatialInfo.invalidate(); }
+			inline void setY(int mY)									{ oldShape = shape; shape.setY(mY);					this->spatialInfo.invalidate(); }
+			inline void setSize(const Vec2i& mSize)						{ shape.setSize(mSize);								this->spatialInfo.invalidate(); }
+			inline void setHalfSize(const Vec2i& mSize)					{ shape.setHalfSize(mSize);							this->spatialInfo.invalidate(); }
+			inline void setWidth(int mWidth)							{ shape.setWidth(mWidth);							this->spatialInfo.invalidate(); }
+			inline void setHeight(int mHeight)							{ shape.setHeight(mHeight);							this->spatialInfo.invalidate(); }
+			inline void setStatic(bool mStatic)							{ _static = mStatic;								this->spatialInfo.invalidate(); }
 			inline void setVelocity(const Vec2f& mVelocity) noexcept 	{ velocity = mVelocity; }
 			inline void setAcceleration(const Vec2f& mAccel) noexcept	{ acceleration = mAccel; }
 			inline void setUserData(void* mUserData) noexcept			{ userData = mUserData; }
@@ -121,7 +129,7 @@ namespace ssvsc
 			inline void setStressMult(float mValue) noexcept			{ stressMult = mValue; }
 			inline void setStressPropagationMult(float mValue) noexcept	{ stressPropagationMult = mValue; }
 
-			inline BaseType getType() const noexcept override			{ return BaseType::Body; }
+			inline BType getType() const noexcept override			{ return BType::Body; }
 			inline AABB& getShape() noexcept override					{ return shape; }
 			inline AABB& getOldShape() noexcept override				{ return oldShape; }
 			inline const Vec2i& getPosition() const noexcept			{ return shape.getPosition(); }
@@ -149,7 +157,7 @@ namespace ssvsc
 			inline const Vec2f& getStress() const noexcept				{ return stress; }
 			inline float getStressMult() const noexcept					{ return stressMult; }
 			inline float getStressPropagationMult() const noexcept		{ return stressPropagationMult; }
-			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return resolve && !mustIgnoreResolution(mBody); }
+			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return resolve && !this->mustIgnoreResolution(mBody); }
 	};
 }
 
