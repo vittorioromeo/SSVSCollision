@@ -101,14 +101,24 @@ namespace ssvsc
 			Vec2f dir, deltaDist, increment, max;
 
 			RayCast(TGrid& mGrid, const Vec2i& mPos, const Vec2f& mDir) : Base<TGrid>{mGrid, mPos}, cellSize{this->grid.getCellSize()}, dir{ssvs::getNormalized(mDir)},
-				deltaDist(cellSize / std::abs(dir.x), cellSize / std::abs(dir.y)), increment{dir * static_cast<float>(cellSize)}, max{Vec2f(this->startIndex * cellSize) - this->startPos}
+				increment{dir * static_cast<float>(cellSize)}, max{Vec2f(this->startIndex * cellSize) - this->startPos}
 			{
 				next.x = dir.x < 0 ? -1 : 1;
 				next.y = dir.y < 0 ? -1 : 1;
 				if(dir.x >= 0) max.x += cellSize;
 				if(dir.y >= 0) max.y += cellSize;
-				max.x /= dir.x;
-				max.y /= dir.y;
+
+				if(dir.x != 0)
+				{
+					max.x /= dir.x;
+					deltaDist.x = cellSize / std::abs(dir.x);
+				}
+
+				if(dir.y != 0)
+				{
+					max.y /= dir.y;
+					deltaDist.y = cellSize / std::abs(dir.y);
+				}
 			}
 
 			inline bool isValid() { return this->grid.isIndexValid(this->index); }
