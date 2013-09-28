@@ -87,7 +87,7 @@ namespace ssvsc
 				}
 
 				Vec2f velDiff{b->velocity - mBody.velocity};
-				float velAlongNormal{ssvs::getDotProduct (velDiff, normal)};
+				float velAlongNormal{ssvs::getDotProduct(velDiff, normal)};
 				if(velAlongNormal > 0) continue;
 				float invMassSum{mBody.getInvMass() + b->getInvMass()};
 				float computedVel{velAlongNormal / invMassSum};
@@ -120,7 +120,7 @@ namespace ssvsc
 		{
 			for(const auto& b : mWorld.getBodies())
 			{
-				b->stress = b->nextStress;
+				b->stress = ssvs::getCClamped(b->nextStress, std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
 				ssvs::nullify(b->nextStress);
 
 				b->applyImpulse(b->velTransferImpulse);
