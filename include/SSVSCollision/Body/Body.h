@@ -50,8 +50,8 @@ namespace ssvsc
 			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
 			ssvu::Delegate<void(const ResolutionInfo&)> onResolution;
 
-			inline Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
-			inline ~Body() { destroy(); }
+			inline Body(World& mWorld, bool mIsStatic, const Vec2i& mPosition, const Vec2i& mSize) noexcept : Base(mWorld), resolver(mWorld.getResolver()), shape{mPosition, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+			inline ~Body() noexcept { destroy(); }
 
 			void update(float mFT) override
 			{
@@ -121,35 +121,35 @@ namespace ssvsc
 			inline void setStressMult(float mValue) noexcept			{ stressMult = mValue; }
 			inline void setStressPropagationMult(float mValue) noexcept	{ stressPropagationMult = mValue; }
 
-			inline BaseType getType() const noexcept override			{ return BaseType::Body; }
-			inline AABB& getShape() noexcept override					{ return shape; }
-			inline AABB& getOldShape() noexcept override				{ return oldShape; }
-			inline const Vec2i& getPosition() const noexcept			{ return shape.getPosition(); }
-			inline const Vec2f& getVelocity() const noexcept			{ return velocity; }
-			inline const Vec2f& getAcceleration() const noexcept		{ return acceleration; }
-			inline const Vec2i& getSize() const noexcept				{ return shape.getSize(); }
-			inline float getMass() const noexcept						{ return _static ? 0 : massData.getMass(); }
-			inline float getInvMass() const noexcept					{ return _static ? 0 : massData.getInvMass(); }
-			inline float getRestitutionX() const noexcept				{ return restitutionData.getRestitutionX(); }
-			inline float getRestitutionY() const noexcept				{ return restitutionData.getRestitutionY(); }
-			inline int getWidth() const noexcept						{ return shape.getWidth(); }
-			inline int getHeight() const noexcept						{ return shape.getHeight(); }
-			inline bool isStatic() const noexcept						{ return _static; }
-			inline void* getUserData() const noexcept					{ return userData; }
-			inline bool hasMovedLeft() const noexcept					{ return shape.getX() < oldShape.getX(); }
-			inline bool hasMovedRight() const noexcept					{ return shape.getX() > oldShape.getX(); }
-			inline bool hasMovedUp() const noexcept						{ return shape.getY() < oldShape.getY(); }
-			inline bool hasMovedDown() const noexcept					{ return shape.getY() > oldShape.getY(); }
-			inline bool getResolve() const noexcept						{ return resolve; }
-			inline const Vec2i& getLastResolution() const noexcept		{ return lastResolution; }
-			inline float getVelTransferMultX() const noexcept			{ return velTransferMult.x; }
-			inline float getVelTransferMultY() const noexcept			{ return velTransferMult.y; }
-			inline Vec2f& getVelTransferImpulse() noexcept				{ return velTransferImpulse; }
-			inline const Vec2f& getVelTransferImpulse() const noexcept	{ return velTransferImpulse; }
-			inline const Vec2f& getStress() const noexcept				{ return stress; }
-			inline float getStressMult() const noexcept					{ return stressMult; }
-			inline float getStressPropagationMult() const noexcept		{ return stressPropagationMult; }
-			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return resolve && !mustIgnoreResolution(mBody); }
+			inline BaseType getType() const noexcept override					{ return BaseType::Body; }
+			inline AABB& getShape() noexcept override							{ return shape; }
+			inline AABB& getOldShape() noexcept override						{ return oldShape; }
+			inline const Vec2i& getPosition() const noexcept					{ return shape.getPosition(); }
+			inline const Vec2f& getVelocity() const noexcept					{ return velocity; }
+			inline const Vec2f& getAcceleration() const noexcept				{ return acceleration; }
+			inline const Vec2i& getSize() const noexcept						{ return shape.getSize(); }
+			inline float getMass() const noexcept								{ return _static ? 0 : massData.getMass(); }
+			inline float getInvMass() const noexcept							{ return _static ? 0 : massData.getInvMass(); }
+			inline float getRestitutionX() const noexcept						{ return restitutionData.getRestitutionX(); }
+			inline float getRestitutionY() const noexcept						{ return restitutionData.getRestitutionY(); }
+			inline int getWidth() const noexcept								{ return shape.getWidth(); }
+			inline int getHeight() const noexcept								{ return shape.getHeight(); }
+			inline bool isStatic() const noexcept								{ return _static; }
+			inline void* getUserData() const noexcept							{ return userData; }
+			inline bool hasMovedLeft() const noexcept							{ return shape.getX() < oldShape.getX(); }
+			inline bool hasMovedRight() const noexcept							{ return shape.getX() > oldShape.getX(); }
+			inline bool hasMovedUp() const noexcept								{ return shape.getY() < oldShape.getY(); }
+			inline bool hasMovedDown() const noexcept							{ return shape.getY() > oldShape.getY(); }
+			inline bool getResolve() const noexcept								{ return resolve; }
+			inline const Vec2i& getLastResolution() const noexcept				{ return lastResolution; }
+			inline float getVelTransferMultX() const noexcept					{ return velTransferMult.x; }
+			inline float getVelTransferMultY() const noexcept					{ return velTransferMult.y; }
+			inline Vec2f& getVelTransferImpulse() noexcept						{ return velTransferImpulse; }
+			inline const Vec2f& getVelTransferImpulse() const noexcept			{ return velTransferImpulse; }
+			inline const Vec2f& getStress() const noexcept						{ return stress; }
+			inline float getStressMult() const noexcept							{ return stressMult; }
+			inline float getStressPropagationMult() const noexcept				{ return stressPropagationMult; }
+			inline bool mustResolveAgainst(const Body& mBody) const noexcept	{ return resolve && !mustIgnoreResolution(mBody); }
 	};
 }
 

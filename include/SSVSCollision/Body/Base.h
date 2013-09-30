@@ -8,7 +8,7 @@
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/World/World.h"
 #include "SSVSCollision/Spatial/SpatialBase.h"
-#include "SSVSCollision/Body/GroupData.h"
+#include "SSVSCollision/Body/Groupable.h"
 
 namespace ssvsc
 {
@@ -16,21 +16,22 @@ namespace ssvsc
 	class Body;
 	class SpatialInfoBase;
 
-	class Base : public ssvu::MemoryManageable
+	class Base : public ssvu::MemoryManageable, public Groupable
 	{
 		protected:
 			World& world;
 			SpatialInfoBase& spatialInfo;
-			GroupData groupData;
 			bool outOfBounds{false};
 
-			Base(World& mWorld) : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
+			inline Base(World& mWorld) noexcept : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
 
 		public:
+			using Groupable::Groupable;
+
 			ssvu::Delegate<void()> onPreUpdate;
 			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
 
-			inline virtual ~Base() { }
+			inline virtual ~Base() noexcept { }
 
 			virtual	void update(float mFT) = 0;
 			virtual void handleCollision(float mFT, Body* mBody) = 0;
@@ -44,25 +45,8 @@ namespace ssvsc
 			inline SpatialInfoBase& getSpatialInfo() noexcept	{ return spatialInfo; }
 			inline World& getWorld() const noexcept				{ return world; }
 
-			inline void addGroup(Group mGroup)					{ groupData.addGroup(mGroup); }
-			inline void addGroupToCheck(Group mGroup)			{ groupData.addGroupToCheck(mGroup); }
-			inline void addGroupNoResolve(Group mGroup)			{ groupData.addGroupNoResolve(mGroup); }
-			inline void delGroup(Group mGroup)					{ groupData.delGroup(mGroup); }
-			inline void delGroupToCheck(Group mGroup)			{ groupData.delGroupToCheck(mGroup); }
-			inline void delGroupNoResolve(Group mGroup)			{ groupData.delGroupNoResolve(mGroup); }
-			inline void clearGroups()							{ groupData.clearGroups(); }
-			inline void clearGroupsToCheck()					{ groupData.clearGroupsToCheck(); }
-			inline void clearGroupsNoResolve()					{ groupData.clearGroupsNoResolve(); }
-			inline bool hasGroup(Group mGroup) const			{ return groupData.hasGroup(mGroup); }
-			inline bool hasGroupToCheck(Group mGroup) const		{ return groupData.hasGroupToCheck(mGroup); }
-			inline bool hasGroupNoResolve(Group mGroup) const	{ return groupData.hasGroupNoResolve(mGroup); }
-			inline const Bitset& getGroups() const				{ return groupData.getGroups(); }
-			inline const Bitset& getGroupsToCheck()	const		{ return groupData.getGroupsToCheck(); }
-			inline const Bitset& getGroupsNoResolve() const		{ return groupData.getGroupsNoResolve(); }
-
-			inline bool hasAnyGroup(const Bitset& mGroups) const		{ return (groupData.getGroups() & mGroups).any(); }
-			inline bool mustCheck(const Base& mBase) const				{ return mBase.hasAnyGroup(groupData.getGroupsToCheck()); }
-			inline bool mustIgnoreResolution(const Base& mBase) const	{ return mBase.hasAnyGroup(groupData.getGroupsNoResolve()); }
+			inline bool mustCheck(const Base& mBase) const noexcept				{ return mBase.hasAnyGroup(getGroupsToCheck()); }
+			inline bool mustIgnoreResolution(const Base& mBase) const noexcept	{ return mBase.hasAnyGroup(getGroupsNoResolve()); }
 	};
 }
 
