@@ -47,9 +47,11 @@ namespace ssvsc
 				inline Cell& getCell(int mX, int mY)	{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
 				inline Cell& getCell(const Vec2i& mIdx)	{ return getCell(mIdx.x, mIdx.y); }
 
-				inline const decltype(cells)& getCells() noexcept { return cells; }
-				inline bool isIndexValid(const Vec2i& mIdx) const noexcept								{ return mIdx.x >= getIndexXMin() && mIdx.x < getIndexXMax() && mIdx.y >= getIndexYMin() && mIdx.y < getIndexYMax(); }
-				inline bool isIndexValid(int mStartX, int mStartY, int mEndX, int mEndY) const noexcept	{ return mStartX >= getIndexXMin() && mEndX < getIndexXMax() && mStartY >= getIndexYMin() && mEndY < getIndexYMax(); }
+				inline const decltype(cells)& getCells() const noexcept { return cells; }
+				inline decltype(cells)& getCells() noexcept				{ return cells; }
+
+				inline bool isIndexValid(const Vec2i& mIdx) const noexcept					{ return mIdx.x >= getIndexXMin() && mIdx.x < getIndexXMax() && mIdx.y >= getIndexYMin() && mIdx.y < getIndexYMax(); }
+				inline bool isIndexValid(int mX1, int mY1, int mX2, int mY2) const noexcept	{ return mX1 >= getIndexXMin() && mX2 < getIndexXMax() && mY1 >= getIndexYMin() && mY2 < getIndexYMax(); }
 		};
 	}
 

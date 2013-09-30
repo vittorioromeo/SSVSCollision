@@ -58,7 +58,7 @@ namespace ssvsc
 			template<typename... TArgs> inline Body* next(TArgs&&... mArgs) { return nextImpl(std::forward<TArgs>(mArgs)...); }
 
 			inline void reset() { bodies.clear(); internal.reset(); }
-			inline const Vec2f& getLastPos() { return internal.getLastPos(); }
+			inline const Vec2f& getLastPos() const noexcept { return internal.getLastPos(); }
 	};
 }
 

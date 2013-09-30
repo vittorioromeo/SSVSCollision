@@ -21,13 +21,13 @@ namespace ssvsc
 	class RestitutionData
 	{
 		private:
-			float restitutionX{0.f}, restitutionY{0.f};
+			float x{0.f}, y{0.f};
 
 		public:
-			inline void setRestitutionX(float mRestX) noexcept	{ restitutionX = mRestX; }
-			inline void setRestitutionY(float mRestY) noexcept	{ restitutionY = mRestY; }
-			inline float getRestitutionX() const noexcept		{ return restitutionX; }
-			inline float getRestitutionY() const noexcept		{ return restitutionY; }
+			inline void setRestitutionX(float mX) noexcept	{ x = mX; }
+			inline void setRestitutionY(float mY) noexcept	{ y = mY; }
+			inline float getRestitutionX() const noexcept	{ return x; }
+			inline float getRestitutionY() const noexcept	{ return y; }
 	};
 }
 

@@ -22,8 +22,8 @@ namespace ssvsc
 			AABB shape;
 
 		public:
-			inline Sensor(World& mWorld, const Vec2i& mPosition, const Vec2i& mSize) : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
-			inline ~Sensor() { destroy(); }
+			inline Sensor(World& mWorld, const Vec2i& mPosition, const Vec2i& mSize) noexcept : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
+			inline ~Sensor() noexcept { destroy(); }
 
 			inline void update(float mFT) override
 			{

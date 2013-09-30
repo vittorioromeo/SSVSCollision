@@ -23,8 +23,8 @@ namespace ssvsc
 
 			Base(TGrid& mGrid, const Vec2i& mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIndex(Vec2i(mPos))}, index{startIndex} { }
 
-			inline void reset()					{ pos = startPos; index = startIndex; }
-			inline const Vec2f& getLastPos()	{ return lastPos; }
+			inline void reset() noexcept { pos = startPos; index = startIndex; }
+			inline const Vec2f& getLastPos() const noexcept	{ return lastPos; }
 		};
 
 		namespace Bodies

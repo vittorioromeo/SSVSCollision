@@ -12,7 +12,7 @@ namespace ssvsc
 	template<typename T> struct Segment
 	{
 		Vec2<T> start, end;
-		Segment(Vec2<T> mStart, Vec2<T> mEnd) : start{mStart}, end{mEnd} { }
+		Segment(Vec2<T> mStart, Vec2<T> mEnd) noexcept : start{mStart}, end{mEnd} { }
 	};
 }
 
