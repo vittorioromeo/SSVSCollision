@@ -7,46 +7,50 @@
 
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/World/World.h"
-#include "SSVSCollision/Spatial/SpatialBase.h"
 #include "SSVSCollision/Body/Groupable.h"
 
 namespace ssvsc
 {
 	class AABB;
-	class Body;
-	class SpatialInfoBase;
+	template<typename TW> class Body;
 
-	class Base : public ssvu::MemoryManageable, public Groupable
+	template<typename TW> class Base : public ssvu::MemoryManageable, public Groupable
 	{
+		public:
+			using BaseType = Base<TW>;
+			using BodyType = Body<TW>;
+			using SpatialInfoType = typename TW::SpatialInfoType;
+			using DetectionInfoType = typename TW::DetectionInfoType;
+
 		protected:
-			World& world;
-			SpatialInfoBase& spatialInfo;
+			TW& world;
+			SpatialInfoType spatialInfo;
 			bool outOfBounds{false};
 
-			inline Base(World& mWorld) noexcept : world(mWorld), spatialInfo(world.getSpatial().createSpatialInfo(*this)) { }
+			inline Base(TW& mWorld) noexcept : world(mWorld), spatialInfo(world.spatial, *this) { }
 
 		public:
 			using Groupable::Groupable;
 
 			ssvu::Delegate<void()> onPreUpdate;
-			ssvu::Delegate<void(const DetectionInfo&)> onDetection;
+			ssvu::Delegate<void(const DetectionInfoType&)> onDetection;
 
 			inline virtual ~Base() noexcept { }
 
 			virtual	void update(float mFT) = 0;
-			virtual void handleCollision(float mFT, Body* mBody) = 0;
+			virtual void handleCollision(float mFT, BodyType* mBody) = 0;
 			inline virtual void destroy() { world.del(*this); }
 
 			inline void setOutOfBounds(bool mOutOfBounds) noexcept { outOfBounds = mOutOfBounds; }
 
 			virtual AABB& getShape() noexcept = 0;
 			virtual AABB& getOldShape() noexcept = 0;
-			virtual BaseType getType() const noexcept = 0;
-			inline SpatialInfoBase& getSpatialInfo() noexcept	{ return spatialInfo; }
-			inline World& getWorld() const noexcept				{ return world; }
+			virtual BBType getType() const noexcept = 0;
+			inline SpatialInfoType& getSpatialInfo() noexcept	{ return spatialInfo; }
+			inline TW& getWorld() const noexcept				{ return world; }
 
-			inline bool mustCheck(const Base& mBase) const noexcept				{ return mBase.hasAnyGroup(getGroupsToCheck()); }
-			inline bool mustIgnoreResolution(const Base& mBase) const noexcept	{ return mBase.hasAnyGroup(getGroupsNoResolve()); }
+			inline bool mustCheck(const BaseType& mBase) const noexcept				{ return mBase.hasAnyGroup(getGroupsToCheck()); }
+			inline bool mustIgnoreResolution(const BaseType& mBase) const noexcept	{ return mBase.hasAnyGroup(getGroupsNoResolve()); }
 	};
 }
 

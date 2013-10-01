@@ -7,48 +7,51 @@
 
 #include "SSVSCollision/AABB/AABB.h"
 #include "SSVSCollision/Body/CallbackInfo.h"
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Body/Base.h"
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Utils/Utils.h"
 
 namespace ssvsc
 {
-	class World;
-
-	class Sensor : public Base
+	template<typename TW> class Sensor : public Base<TW>
 	{
+		public:
+			using BaseType = Base<TW>;
+			using BodyType = Body<TW>;
+			using ResolverType = typename TW::ResolverType;
+			using SpatialInfoType = typename TW::SpatialInfoType;
+
 		private:
 			AABB shape;
 
 		public:
-			inline Sensor(World& mWorld, const Vec2i& mPosition, const Vec2i& mSize) noexcept : Base(mWorld), shape{mPosition, mSize / 2} { spatialInfo.preUpdate(); }
+			inline Sensor(TW& mWorld, const Vec2i& mPos, const Vec2i& mSize) noexcept : BaseType(mWorld), shape{mPos, mSize / 2} { this->spatialInfo.preUpdate(); }
 			inline ~Sensor() noexcept { destroy(); }
 
 			inline void update(float mFT) override
 			{
-				onPreUpdate();
-				if(outOfBounds) { outOfBounds = false; return; };
-				spatialInfo.preUpdate();
-				spatialInfo.handleCollisions(mFT);
-				spatialInfo.postUpdate();
+				this->onPreUpdate();
+				if(this->outOfBounds) { this->outOfBounds = false; return; };
+				this->spatialInfo.preUpdate();
+				this->spatialInfo.handleCollisions(mFT);
+				this->spatialInfo.postUpdate();
 			}
-			inline void handleCollision(float mFT, Body* mBody) override
+			inline void handleCollision(float mFT, BodyType* mBody) override
 			{
-				if(!mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
-				onDetection({*mBody, mBody->getUserData(), Utils::getMinIntersection(shape, mBody->getShape()), mFT});
+				if(!this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
+				this->onDetection({*mBody, mBody->getUserData(), Utils::getMinIntersection(shape, mBody->getShape()), mFT});
 			}
-			inline void destroy() override { spatialInfo.destroy(); Base::destroy(); }
+			inline void destroy() override { this->spatialInfo.destroy(); BaseType::destroy(); }
 
-			inline void setPosition(const Vec2i& mPosition)
+			inline void setPosition(const Vec2i& mPos)
 			{
-				if(mPosition != shape.getPosition()) spatialInfo.invalidate();
-				shape.setPosition(mPosition);
+				if(mPos != shape.getPosition()) this->spatialInfo.invalidate();
+				shape.setPosition(mPos);
 			}
 
-			inline AABB& getShape() noexcept override			{ return shape; }
-			inline AABB& getOldShape() noexcept override		{ return shape; }
-			inline BaseType getType() const noexcept override	{ return BaseType::Sensor; }
+			inline AABB& getShape() noexcept override		{ return shape; }
+			inline AABB& getOldShape() noexcept override	{ return shape; }
+			inline BBType getType() const noexcept override	{ return BBType::Sensor; }
 	};
 }
 

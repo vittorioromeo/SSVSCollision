@@ -11,63 +11,66 @@
 
 namespace ssvsc
 {
-	class Base;
-	class Body;
-	class Sensor;
-	struct ResolverBase;
-	struct SpatialBase;
+	template<typename TW> class Base;
+	template<typename TW> class Body;
+	template<typename TW> class Sensor;
+	template<typename TW> class DetectionInfo;
+	template<typename TW> class ResolutionInfo;
 
-	class World
+	template<template<typename> class TS, template<typename> class TR> class World
 	{
-		friend class Base;
-		friend class Body;
-		friend class Sensor;
+		public:
+			using SpatialType = TS<World>;
+			using ResolverType = TR<World>;
+			using SpatialInfoType = typename SpatialType::SpatialInfoType;
+			using BaseType = Base<World>;
+			using BodyType = Body<World>;
+			using SensorType = Sensor<World>;
+			using DetectionInfoType = DetectionInfo<World>;
+			using ResolutionInfoType = ResolutionInfo<World>;
+			friend BaseType;
+			friend BodyType;
+			friend SensorType;
 
 		private:
-			ssvu::MemoryManager<Base> bases;
+			ssvu::MemoryManager<BaseType> bases;
+			std::vector<BodyType*> bodies;
+			std::vector<SensorType*> sensors;
+			SpatialType spatial;
+			ResolverType resolver;
 
-			Uptr<ResolverBase> resolver;
-			Uptr<SpatialBase> spatial;
-
-			std::vector<Body*> bodies;
-			std::vector<Sensor*> sensors;
-
-			inline void del(Base& mBase) { bases.del(mBase); }
+			inline void del(BaseType& mBase) { bases.del(mBase); }
 
 		public:
-			World(ResolverBase& mResolver, SpatialBase& mSpatial) : resolver(&mResolver), spatial(&mSpatial) { }
+			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial(std::forward<TArgs>(mArgs)...) { }
 
-			inline Body& create(const Vec2i& mPosition, const Vec2i& mSize, bool mIsStatic)
-			{
-				auto& result(bases.create<Body>(*this, mIsStatic, mPosition, mSize));
-				bodies.push_back(&result); return result;
-			}
-			inline Sensor& createSensor(const Vec2i& mPosition, const Vec2i& mSize)
-			{
-				auto& result(bases.create<Sensor>(*this, mPosition, mSize));
-				sensors.push_back(&result); return result;
-			}
+			inline BodyType& create(const Vec2i& mPos, const Vec2i& mSize, bool mStatic)	{ auto& result(bases.template create<BodyType>(*this, mStatic, mPos, mSize)); bodies.push_back(&result); return result; }
+			inline SensorType& createSensor(const Vec2i& mPos, const Vec2i& mSize)			{ auto& result(bases.template create<SensorType>(*this, mPos, mSize)); sensors.push_back(&result); return result; }
 
-			void update(float mFT);
+			inline void update(float mFT)
+			{
+				ssvu::eraseRemoveIf(bodies, &bases.template isDead<BodyType*>);
+				ssvu::eraseRemoveIf(sensors, &bases.template isDead<SensorType*>);
+
+				bases.refresh();
+				for(const auto& b : bases) b->update(mFT);
+				resolver.postUpdate(*this);
+			}
 			inline void clear() { bases.clear(); bodies.clear(); sensors.clear(); }
 
-			inline decltype(bases)::Container& getBases() noexcept	{ return bases.getItems(); }
-			inline ResolverBase& getResolver() noexcept				{ return *resolver; }
-			inline SpatialBase& getSpatial() noexcept				{ return *spatial; }
-			inline std::vector<Body*>& getBodies() noexcept			{ return bodies; }
-			inline std::vector<Sensor*>& getSensors() noexcept		{ return sensors; }
+			inline const SpatialType& getSpatial() const noexcept						{ return spatial; }
+			inline const ResolverType& getResolver() const noexcept						{ return resolver; }
+			inline const decltype(bodies)& getBodies() const noexcept					{ return bodies; }
+			inline const decltype(sensors)& getSensors() const noexcept					{ return sensors; }
+			inline const typename decltype(bases)::Container& getBases() const noexcept	{ return bases.getItems(); }
 
-			template<typename T> inline T& getResolver()	{ return static_cast<T&>(getResolver()); }
-			template<typename T> inline T& getSpatial()		{ return static_cast<T&>(getSpatial()); }
 
-			template<typename TSpatial, QueryType TType, QueryMode TMode = QueryMode::All, typename... TArgs>
-			inline Query<TSpatial, typename QueryTypeDispatcher<TSpatial, TType>::Type, typename QueryModeDispatcher<TSpatial, TMode>::Type> getQuery(TArgs&&... mArgs)
+			template<QueryType TType, QueryMode TMode = QueryMode::All, typename... TArgs>
+			inline Query<World, typename QueryTypeDispatcher<World, SpatialType, TType>::Type, typename QueryModeDispatcher<World, SpatialType, TMode>::Type> getQuery(TArgs&&... mArgs) noexcept
 			{
-				return {getSpatial<TSpatial>(), std::forward<TArgs>(mArgs)...};
+				return {spatial, std::forward<TArgs>(mArgs)...};
 			}
 	};
-
-	// TODO: templatize?
 }
 
 #endif

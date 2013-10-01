@@ -12,17 +12,21 @@
 
 namespace ssvsc
 {
-	class Cell
+	template<typename TW> class Cell
 	{
-		private:
-			std::vector<Body*> bodies;
+		public:
+			using BaseType = Base<TW>;
+			using BodyType = Body<TW>;
 
-			inline void addBody(Body* mBody) { bodies.push_back(mBody); }
-			inline void delBody(Body* mBody) { ssvu::eraseRemove(bodies, mBody); }
+		private:
+			std::vector<BodyType*> bodies;
+
+			inline void addBody(BodyType* mBody) { bodies.push_back(mBody); }
+			inline void delBody(BodyType* mBody) { ssvu::eraseRemove(bodies, mBody); }
 
 		public:
-			inline void add(Base* mBase) { if(mBase->getType() == BaseType::Body) addBody(static_cast<Body*>(mBase)); }
-			inline void del(Base* mBase) { if(mBase->getType() == BaseType::Body) delBody(static_cast<Body*>(mBase)); }
+			inline void add(BaseType* mBase) { if(mBase->getType() == BBType::Body) addBody(static_cast<Body<TW>*>(mBase)); }
+			inline void del(BaseType* mBase) { if(mBase->getType() == BBType::Body) delBody(static_cast<Body<TW>*>(mBase)); }
 
 			inline const decltype(bodies)& getBodies() const noexcept { return bodies; }
 	};

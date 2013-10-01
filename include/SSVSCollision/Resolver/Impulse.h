@@ -5,23 +5,22 @@
 #ifndef SSVSC_RESOLVER_IMPULSE
 #define SSVSC_RESOLVER_IMPULSE
 
-#include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/Body/Body.h"
+#include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/Global/Typedefs.h"
-#include "SSVSCollision/Resolver/ResolverBase.h"
 
 namespace ssvsc
 {
-	class Body;
-
-	struct Impulse : public ResolverBase
+	template<typename TW> struct Impulse
 	{
-		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
+		using BodyType = Body<TW>;
+
+		inline void resolve(float, BodyType& mBody, std::vector<BodyType*>& mBodiesToResolve) const
 		{
 			AABB& shape(mBody.shape);
 			const AABB& oldShape(mBody.oldShape);
 
-			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
+			ssvu::sort(mBodiesToResolve, [&](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
 			int resXNeg{0}, resXPos{0}, resYNeg{0}, resYPos{0};
 			constexpr int tolerance{20};
 
@@ -116,7 +115,7 @@ namespace ssvsc
 				mBody.velocity.y = std::abs(desiredY) * ssvu::getSign(mBody.velocity.y);
 			}
 		}
-		inline void postUpdate(World& mWorld) override
+		inline void postUpdate(TW& mWorld) const
 		{
 			for(const auto& b : mWorld.getBodies())
 			{

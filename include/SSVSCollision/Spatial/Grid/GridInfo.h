@@ -6,18 +6,22 @@
 #define SSVSC_SPATIAL_GRIDINFO
 
 #include <vector>
-#include "SSVSCollision/Spatial/SpatialInfoBase.h"
 #include "SSVSCollision/Spatial/Grid/Cell.h"
 
 namespace ssvsc
 {
-	template<typename TGrid> class GridInfo : public SpatialInfoBase
+	template<typename TW> class GridInfo
 	{
+		public:
+			using SpatialType = typename TW::SpatialType;
+			using BaseType = Base<TW>;
+			using CellType = Cell<TW>;
+
 		private:
-			TGrid& grid;
-			std::vector<Cell*> cells;
-			int startX{0}, startY{0}, endX{0}, endY{0}; // Edge cell positions
-			int oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1};
+			SpatialType& grid;
+			BaseType& base;
+			std::vector<CellType*> cells;
+			int startX{0}, startY{0}, endX{0}, endY{0}, oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1}, spatialPaint{-1};
 			bool invalid{true};
 
 			inline void calcEdges()
@@ -60,14 +64,14 @@ namespace ssvsc
 			}
 
 		public:
-			GridInfo(TGrid& mGrid, Base& mBase) : SpatialInfoBase(mGrid, mBase), grid(mGrid) { }
+			inline GridInfo(SpatialType& mGrid, BaseType& mBase) noexcept : grid(mGrid), base(mBase) { }
 
-			inline void init() override			{ calcEdges(); calcCells(); }
-			inline void invalidate() override	{ invalid = true; }
-			inline void preUpdate() override	{ if(invalid) calcEdges(); }
-			inline void postUpdate() override	{ }
-			inline void destroy() override		{ clear(); SpatialInfoBase::destroy(); }
-			inline void handleCollisions(float mFT) override
+			inline void init()								{ calcEdges(); calcCells(); }
+			inline void invalidate() noexcept				{ invalid = true; }
+			inline void preUpdate()							{ if(invalid) calcEdges(); }
+			inline void postUpdate() const noexcept			{ }
+			inline void destroy()							{ clear(); }
+			inline void handleCollisions(float mFT)
 			{
 				static int lastPaint{-1};
 				++lastPaint;

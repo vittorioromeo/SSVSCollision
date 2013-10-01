@@ -5,22 +5,21 @@
 #ifndef SSVSC_RESOLVER_RETRO
 #define SSVSC_RESOLVER_RETRO
 
-#include "SSVSCollision/Resolver/ResolverBase.h"
 #include "SSVSCollision/Body/Body.h"
 #include "SSVSCollision/Utils/Utils.h"
 #include "SSVSCollision/Global/Typedefs.h"
 
 namespace ssvsc
 {
-	class Body;
-
-	struct Retro : public ResolverBase
+	template<typename TW> struct Retro
 	{
-		void resolve(float, Body& mBody, std::vector<Body*>& mBodiesToResolve) override
+		using BodyType = Body<TW>;
+
+		inline void resolve(float, BodyType& mBody, std::vector<BodyType*>& mBodiesToResolve) const
 		{
 			AABB& shape(mBody.shape);
 			const AABB& oldShape(mBody.oldShape);
-			ssvu::sort(mBodiesToResolve, [&](Body* mA, Body* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
+			ssvu::sort(mBodiesToResolve, [&](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
 
 			for(const auto& b : mBodiesToResolve)
 			{
@@ -53,6 +52,7 @@ namespace ssvsc
 						mBody.velocity.x *= -mBody.getRestitutionX();
 			}
 		}
+		inline void postUpdate(TW&) const noexcept { }
 	};
 
 	// TODO: stress calc

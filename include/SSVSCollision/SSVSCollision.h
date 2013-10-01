@@ -12,12 +12,10 @@
 #include "SSVSCollision/World/World.h"
 #include "SSVSCollision/Utils/Segment.h"
 #include "SSVSCollision/Utils/Utils.h"
-#include "SSVSCollision/Resolver/Impulse/Impulse.h"
-#include "SSVSCollision/Resolver/Retro/Retro.h"
+#include "SSVSCollision/Resolver/Impulse.h"
+#include "SSVSCollision/Resolver/Retro.h"
 #include "SSVSCollision/Spatial/Grid/Grid.h"
 #include "SSVSCollision/Spatial/Grid/GridQueryTypes.h"
 #include "SSVSCollision/Query/Query.h"
-
-#include "SSVSCollision/World/World.inl"
 
 #endif

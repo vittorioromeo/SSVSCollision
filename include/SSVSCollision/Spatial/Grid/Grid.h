@@ -7,30 +7,27 @@
 
 #include <vector>
 #include "SSVSCollision/Spatial/Grid/GridInfo.h"
-#include "SSVSCollision/Spatial/SpatialBase.h"
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Query/Query.h"
 
 namespace ssvsc
 {
-	class Cell;
-	class SpatialInfoBase;
+	template<typename TW> class Cell;
 
 	namespace Internal
 	{
-		template<typename TContainer, typename TDerived> class GridBase : public SpatialBase
+		template<typename TW, typename TContainer, typename TDerived> class GridBase
 		{
+			public:
+				using CellType = Cell<TW>;
+				using SpatialInfoType = GridInfo<TW>;
+
 			protected:
-				ssvu::MemoryManager<GridInfo<TDerived>> gridInfos;
 				TContainer cells;
 				int columns, rows, cellSize, offset;
 
 			public:
-				GridBase(int mColumns, int mRows, int mCellSize, int mOffset = 0) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset} { }
-
-				inline SpatialInfoBase& createSpatialInfo(Base& mBase) override	{ return gridInfos.create(static_cast<TDerived&>(*this), mBase); }
-				inline void refresh() override									{ gridInfos.refresh(); }
-				inline void del(SpatialInfoBase& mSpatialInfo) override			{ gridInfos.del(static_cast<GridInfo<TDerived>&>(mSpatialInfo)); }
+				inline GridBase(int mColumns, int mRows, int mCellSize, int mOffset = 0) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset} { }
 
 				inline int getIndexXMin() const noexcept	{ return 0 - offset; }
 				inline int getIndexYMin() const noexcept	{ return 0 - offset; }
@@ -41,11 +38,13 @@ namespace ssvsc
 				inline int getOffset() const noexcept		{ return offset; }
 				inline int getCellSize() const noexcept		{ return cellSize; }
 
-				inline int getIndex(int mValue) const noexcept					{ return mValue / cellSize; }
-				inline Vec2i getIndex(const Vec2i& mPosition) const noexcept	{ return {getIndex(mPosition.x), getIndex(mPosition.y)}; }
+				inline int getIndex(int mValue) const noexcept			{ return mValue / cellSize; }
+				inline Vec2i getIndex(const Vec2i& mPos) const noexcept	{ return {getIndex(mPos.x), getIndex(mPos.y)}; }
 
-				inline Cell& getCell(int mX, int mY)	{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
-				inline Cell& getCell(const Vec2i& mIdx)	{ return getCell(mIdx.x, mIdx.y); }
+				inline const CellType& getCell(int mX, int mY) const	{ return cells.at(ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)); }
+				inline CellType& getCell(int mX, int mY)				{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
+				inline const CellType& getCell(const Vec2i& mIdx) const	{ return getCell(mIdx.x, mIdx.y); }
+				inline CellType& getCell(const Vec2i& mIdx)				{ return getCell(mIdx.x, mIdx.y); }
 
 				inline const decltype(cells)& getCells() const noexcept { return cells; }
 				inline decltype(cells)& getCells() noexcept				{ return cells; }
@@ -55,37 +54,37 @@ namespace ssvsc
 		};
 	}
 
-	struct Grid : public Internal::GridBase<std::vector<Cell>, Grid>
+	template<typename TW> struct Grid : public Internal::GridBase<TW, std::vector<Cell<TW>>, Grid<TW>>
 	{
-		Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<std::vector<Cell>, Grid>{mColumns, mRows, mCellSize, mOffset} { cells.reserve(columns * rows); }
+		Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<TW, std::vector<Cell<TW>>, Grid<TW>>{mColumns, mRows, mCellSize, mOffset} { this->cells.reserve(this->columns * this->rows); }
 	};
-	struct HashGrid : public Internal::GridBase<std::unordered_map<int, Cell>, HashGrid>
+	template<typename TW> struct HashGrid : public Internal::GridBase<TW, std::unordered_map<int, Cell<TW>>, HashGrid<TW>>
 	{
-		HashGrid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<std::unordered_map<int, Cell>, HashGrid>{mColumns, mRows, mCellSize, mOffset} { }
+		HashGrid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<TW, std::unordered_map<int, Cell<TW>>, HashGrid<TW>>{mColumns, mRows, mCellSize, mOffset} { }
 	};
 
 	namespace GridQueryTypes
 	{
-		template<typename TGrid> struct Point;
-		template<typename TGrid> struct Distance;
-		template<typename TGrid> struct RayCast;
-		template<typename TGrid> struct OrthoLeft;
-		template<typename TGrid> struct OrthoRight;
-		template<typename TGrid> struct OrthoUp;
-		template<typename TGrid> struct OrthoDown;
-		namespace Bodies { struct All; struct ByGroup; }
+		template<typename TW, typename TGrid> struct Point;
+		template<typename TW, typename TGrid> struct Distance;
+		template<typename TW, typename TGrid> struct RayCast;
+		template<typename TW, typename TGrid> struct OrthoLeft;
+		template<typename TW, typename TGrid> struct OrthoRight;
+		template<typename TW, typename TGrid> struct OrthoUp;
+		template<typename TW, typename TGrid> struct OrthoDown;
+		namespace Bodies { template<typename TW> struct All; template<typename TW> struct ByGroup; }
 	}
 
-	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::Point>		{ using Type = GridQueryTypes::Point<TGrid>; };
-	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::Distance>		{ using Type = GridQueryTypes::Distance<TGrid>; };
-	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::RayCast>		{ using Type = GridQueryTypes::RayCast<TGrid>; };
-	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::OrthoLeft>	{ using Type = GridQueryTypes::OrthoLeft<TGrid>; };
-	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::OrthoRight>	{ using Type = GridQueryTypes::OrthoRight<TGrid>; };
-	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::OrthoUp>		{ using Type = GridQueryTypes::OrthoUp<TGrid>; };
-	template<typename TGrid> struct QueryTypeDispatcher<TGrid, QueryType::OrthoDown>	{ using Type = GridQueryTypes::OrthoDown<TGrid>; };
+	template<typename TW, typename TGrid> struct QueryTypeDispatcher<TW, TGrid, QueryType::Point>		{ using Type = GridQueryTypes::Point<TW, TGrid>; };
+	template<typename TW, typename TGrid> struct QueryTypeDispatcher<TW, TGrid, QueryType::Distance>	{ using Type = GridQueryTypes::Distance<TW, TGrid>; };
+	template<typename TW, typename TGrid> struct QueryTypeDispatcher<TW, TGrid, QueryType::RayCast>		{ using Type = GridQueryTypes::RayCast<TW, TGrid>; };
+	template<typename TW, typename TGrid> struct QueryTypeDispatcher<TW, TGrid, QueryType::OrthoLeft>	{ using Type = GridQueryTypes::OrthoLeft<TW, TGrid>; };
+	template<typename TW, typename TGrid> struct QueryTypeDispatcher<TW, TGrid, QueryType::OrthoRight>	{ using Type = GridQueryTypes::OrthoRight<TW, TGrid>; };
+	template<typename TW, typename TGrid> struct QueryTypeDispatcher<TW, TGrid, QueryType::OrthoUp>		{ using Type = GridQueryTypes::OrthoUp<TW, TGrid>; };
+	template<typename TW, typename TGrid> struct QueryTypeDispatcher<TW, TGrid, QueryType::OrthoDown>	{ using Type = GridQueryTypes::OrthoDown<TW, TGrid>; };
 
-	template<typename TGrid> struct QueryModeDispatcher<TGrid, QueryMode::All>			{ using Type = GridQueryTypes::Bodies::All; };
-	template<typename TGrid> struct QueryModeDispatcher<TGrid, QueryMode::ByGroup>		{ using Type = GridQueryTypes::Bodies::ByGroup; };
+	template<typename TW, typename TGrid> struct QueryModeDispatcher<TW, TGrid, QueryMode::All>			{ using Type = GridQueryTypes::Bodies::All<TW>; };
+	template<typename TW, typename TGrid> struct QueryModeDispatcher<TW, TGrid, QueryMode::ByGroup>		{ using Type = GridQueryTypes::Bodies::ByGroup<TW>; };
 }
 
 #endif
