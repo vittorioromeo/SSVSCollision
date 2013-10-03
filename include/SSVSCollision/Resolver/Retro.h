@@ -15,7 +15,7 @@ namespace ssvsc
 	{
 		using BodyType = Body<TW>;
 
-		inline void resolve(float, BodyType& mBody, std::vector<BodyType*>& mBodiesToResolve) const
+		inline void resolve(BodyType& mBody, std::vector<BodyType*>& mBodiesToResolve) const
 		{
 			AABB& shape(mBody.shape);
 			const AABB& oldShape(mBody.oldShape);

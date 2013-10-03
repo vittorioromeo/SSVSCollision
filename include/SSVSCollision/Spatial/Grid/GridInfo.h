@@ -34,10 +34,10 @@ namespace ssvsc
 				oldEndX = endX;
 				oldEndY = endY;
 
-				startX = grid.getIndex(shape.getLeft());
-				startY = grid.getIndex(shape.getTop());
-				endX = grid.getIndex(shape.getRight());
-				endY = grid.getIndex(shape.getBottom());
+				startX = grid.getIdx(shape.getLeft());
+				startY = grid.getIdx(shape.getTop());
+				endX = grid.getIdx(shape.getRight());
+				endY = grid.getIdx(shape.getBottom());
 
 				if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells();
 				else invalid = false;
@@ -46,7 +46,7 @@ namespace ssvsc
 			{
 				clear();
 
-				if(!grid.isIndexValid(startX, startY, endX, endY)) { base.setOutOfBounds(true); return; }
+				if(!grid.isIdxValid(startX, startY, endX, endY)) { base.setOutOfBounds(true); return; }
 				for(int iX{startX}; iX <= endX; ++iX)
 					for(int iY{startY}; iY <= endY; ++iY)
 					{

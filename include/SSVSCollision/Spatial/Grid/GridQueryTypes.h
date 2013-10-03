@@ -21,7 +21,7 @@ namespace ssvsc
 			Vec2f startPos, pos, lastPos;
 			Vec2i startIndex, index;
 
-			Base(TGrid& mGrid, const Vec2i& mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIndex(Vec2i(mPos))}, index{startIndex} { }
+			Base(TGrid& mGrid, const Vec2i& mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIdx(Vec2i(mPos))}, index{startIndex} { }
 
 			inline void reset() noexcept { pos = startPos; index = startIndex; }
 			inline const Vec2f& getLastPos() const noexcept	{ return lastPos; }
@@ -47,7 +47,7 @@ namespace ssvsc
 		template<typename TW, typename TGrid> struct OrthoLeft : public Base<TW, TGrid>
 		{
 			template<typename... TArgs> OrthoLeft(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
-			inline bool isValid()									{ return this->index.x >= this->grid.getIndexXMin(); }
+			inline bool isValid()									{ return this->index.x >= this->grid.getIdxXMin(); }
 			inline void step()										{ --this->index.x; }
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)	{ return mA->getPosition().x < mB->getPosition().x; }
 			inline bool hits(const AABB& mShape)					{ return mShape.getLeft() <= this->pos.x && this->pos.y >= mShape.getTop() && this->pos.y <= mShape.getBottom(); }
@@ -56,7 +56,7 @@ namespace ssvsc
 		template<typename TW, typename TGrid> struct OrthoRight : public Base<TW, TGrid>
 		{
 			template<typename... TArgs> OrthoRight(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
-			inline bool isValid()									{ return this->index.x < this->grid.getIndexXMax(); }
+			inline bool isValid()									{ return this->index.x < this->grid.getIdxXMax(); }
 			inline void step()										{ ++this->index.x; }
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)	{ return mA->getPosition().x > mB->getPosition().x; }
 			inline bool hits(const AABB& mShape)					{ return mShape.getRight() >= this->pos.x && this->pos.y >= mShape.getTop() && this->pos.y <= mShape.getBottom(); }
@@ -65,7 +65,7 @@ namespace ssvsc
 		template<typename TW, typename TGrid> struct OrthoUp : public Base<TW, TGrid>
 		{
 			template<typename... TArgs> OrthoUp(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
-			inline bool isValid()									{ return this->index.y >= this->grid.getIndexYMin(); }
+			inline bool isValid()									{ return this->index.y >= this->grid.getIdxYMin(); }
 			inline void step()										{ --this->index.y; }
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)	{ return mA->getPosition().y < mB->getPosition().y; }
 			inline bool hits(const AABB& mShape)					{ return mShape.getTop() <= this->pos.y && this->pos.x >= mShape.getLeft() && this->pos.x <= mShape.getRight(); }
@@ -74,7 +74,7 @@ namespace ssvsc
 		template<typename TW, typename TGrid> struct OrthoDown : public Base<TW, TGrid>
 		{
 			template<typename... TArgs> OrthoDown(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
-			inline bool isValid()									{ return this->index.y < this->grid.getIndexYMax(); }
+			inline bool isValid()									{ return this->index.y < this->grid.getIdxYMax(); }
 			inline void step()										{ ++this->index.y; }
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)	{ return mA->getPosition().y > mB->getPosition().y; }
 			inline bool hits(const AABB& mShape)					{ return mShape.getBottom() >= this->pos.y && this->pos.x >= mShape.getLeft() && this->pos.x <= mShape.getRight(); }
@@ -87,7 +87,7 @@ namespace ssvsc
 
 			template<typename... TArgs> Point(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
 
-			inline bool isValid()										{ return !finished && this->grid.isIndexValid(this->index); }
+			inline bool isValid()										{ return !finished && this->grid.isIdxValid(this->index); }
 			inline void step()											{ finished = true; }
 			inline bool getSorting(const Body<TW>*, const Body<TW>*)			{ return true; }
 			inline bool hits(const AABB& mShape)						{ return mShape.contains(Vec2i(this->pos)); }
@@ -121,7 +121,7 @@ namespace ssvsc
 				}
 			}
 
-			inline bool isValid() { return this->grid.isIndexValid(this->index); }
+			inline bool isValid() { return this->grid.isIdxValid(this->index); }
 			inline void step()
 			{
 				this->lastPos = this->pos;
@@ -134,16 +134,15 @@ namespace ssvsc
 			{
 				const auto& aPos(mA->getPosition());
 				const auto& bPos(mB->getPosition());
-				return pow((aPos.x - this->startPos.x), 2) + pow((aPos.y - this->startPos.y), 2) > pow((bPos.x - this->startPos.x), 2) + pow((bPos.y - this->startPos.y), 2);
+				return std::pow((aPos.x - this->startPos.x), 2) + std::pow((aPos.y - this->startPos.y), 2) > std::pow((bPos.x - this->startPos.x), 2) + std::pow((bPos.y - this->startPos.y), 2);
 			}
 			bool hits(const AABB& mShape)
 			{
 				Segment<float> ray{this->startPos, this->pos};
-				Segment<float> test1{dir.x > 0 ? mShape.getSegmentLeft<float>() : mShape.getSegmentRight<float>()};
-				Segment<float> test2{dir.y > 0 ? mShape.getSegmentTop<float>() : mShape.getSegmentBottom<float>()};
-
 				Vec2f intersection;
-				if(Utils::isSegmentInsersecting(ray, test1, intersection) || Utils::isSegmentInsersecting(ray, test2, intersection))
+
+				if(Utils::isSegmentInsersecting(ray, {dir.x > 0 ? mShape.getSegmentLeft<float>() : mShape.getSegmentRight<float>()}, intersection) ||
+				   Utils::isSegmentInsersecting(ray, {dir.y > 0 ? mShape.getSegmentTop<float>() : mShape.getSegmentBottom<float>()}, intersection))
 				{
 					this->lastPos = intersection;
 					return true;
@@ -178,7 +177,7 @@ namespace ssvsc
 				}
 			}
 
-			inline bool isValid() { return !offsets.empty() && this->grid.isIndexValid(this->index); }
+			inline bool isValid() { return !offsets.empty() && this->grid.isIdxValid(this->index); }
 			inline void step()
 			{
 				this->lastPos = this->pos;

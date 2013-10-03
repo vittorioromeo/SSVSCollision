@@ -12,7 +12,7 @@ namespace ssvsc
 	template<typename T> struct Segment
 	{
 		Vec2<T> start, end;
-		inline Segment(Vec2<T> mStart, Vec2<T> mEnd) noexcept : start{mStart}, end{mEnd} { }
+		inline Segment(Vec2<T> mStart, Vec2<T> mEnd) noexcept : start{std::move(mStart)}, end{std::move(mEnd)} { }
 	};
 }
 

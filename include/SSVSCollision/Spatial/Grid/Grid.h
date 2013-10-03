@@ -29,28 +29,28 @@ namespace ssvsc
 			public:
 				inline GridBase(int mColumns, int mRows, int mCellSize, int mOffset = 0) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset} { }
 
-				inline int getIndexXMin() const noexcept	{ return 0 - offset; }
-				inline int getIndexYMin() const noexcept	{ return 0 - offset; }
-				inline int getIndexXMax() const noexcept	{ return columns - offset; }
-				inline int getIndexYMax() const noexcept	{ return rows - offset; }
-				inline int getRows() const noexcept			{ return rows; }
-				inline int getColumns() const noexcept		{ return columns; }
-				inline int getOffset() const noexcept		{ return offset; }
-				inline int getCellSize() const noexcept		{ return cellSize; }
+				inline int getIdxXMin() const noexcept	{ return 0 - offset; }
+				inline int getIdxYMin() const noexcept	{ return 0 - offset; }
+				inline int getIdxXMax() const noexcept	{ return columns - offset; }
+				inline int getIdxYMax() const noexcept	{ return rows - offset; }
+				inline int getRows() const noexcept		{ return rows; }
+				inline int getColumns() const noexcept	{ return columns; }
+				inline int getOffset() const noexcept	{ return offset; }
+				inline int getCellSize() const noexcept	{ return cellSize; }
 
-				inline int getIndex(int mValue) const noexcept			{ return mValue / cellSize; }
-				inline Vec2i getIndex(const Vec2i& mPos) const noexcept	{ return {getIndex(mPos.x), getIndex(mPos.y)}; }
+				inline int getIdx(int mValue) const noexcept			{ return mValue / cellSize; }
+				inline Vec2i getIdx(const Vec2i& mPos) const noexcept	{ return {getIdx(mPos.x), getIdx(mPos.y)}; }
 
-				inline const CellType& getCell(int mX, int mY) const	{ return cells.at(ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)); }
-				inline CellType& getCell(int mX, int mY)				{ return cells[ssvu::get1DIndexFrom2D(mX + offset, mY + offset, columns)]; }
+				inline const CellType& getCell(int mX, int mY) const	{ return cells.at(ssvu::get1DIdxFrom2D(mX + offset, mY + offset, columns)); }
+				inline CellType& getCell(int mX, int mY)				{ return cells[ssvu::get1DIdxFrom2D(mX + offset, mY + offset, columns)]; }
 				inline const CellType& getCell(const Vec2i& mIdx) const	{ return getCell(mIdx.x, mIdx.y); }
 				inline CellType& getCell(const Vec2i& mIdx)				{ return getCell(mIdx.x, mIdx.y); }
 
 				inline const decltype(cells)& getCells() const noexcept { return cells; }
 				inline decltype(cells)& getCells() noexcept				{ return cells; }
 
-				inline bool isIndexValid(const Vec2i& mIdx) const noexcept					{ return mIdx.x >= getIndexXMin() && mIdx.x < getIndexXMax() && mIdx.y >= getIndexYMin() && mIdx.y < getIndexYMax(); }
-				inline bool isIndexValid(int mX1, int mY1, int mX2, int mY2) const noexcept	{ return mX1 >= getIndexXMin() && mX2 < getIndexXMax() && mY1 >= getIndexYMin() && mY2 < getIndexYMax(); }
+				inline bool isIdxValid(const Vec2i& mIdx) const noexcept					{ return mIdx.x >= getIdxXMin() && mIdx.x < getIdxXMax() && mIdx.y >= getIdxYMin() && mIdx.y < getIdxYMax(); }
+				inline bool isIdxValid(int mX1, int mY1, int mX2, int mY2) const noexcept	{ return mX1 >= getIdxXMin() && mX2 < getIdxXMax() && mY1 >= getIdxYMin() && mY2 < getIdxYMax(); }
 		};
 	}
 
