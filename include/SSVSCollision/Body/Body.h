@@ -26,7 +26,7 @@ namespace ssvsc
 			ResolverType& resolver;
 			AABB shape, oldShape;
 			bool _static, resolve{true};
-			Vec2f velocity, acceleration;
+			Vec2f velocity, oldVelocity, acceleration;
 			MassData massData;
 			RestitutionData restitutionData;
 			void* userData{nullptr};
@@ -64,6 +64,7 @@ namespace ssvsc
 				if(_static) { this->spatialInfo.preUpdate(); return; }
 				if(this->outOfBounds) { onOutOfBounds(); this->outOfBounds = false; return; }
 				oldShape = shape;
+				oldVelocity = velocity;
 				integrate(mFT);
 				this->spatialInfo.preUpdate();
 
@@ -126,6 +127,8 @@ namespace ssvsc
 			inline AABB& getOldShape() noexcept override							{ return oldShape; }
 			inline const Vec2i& getPosition() const noexcept						{ return shape.getPosition(); }
 			inline const Vec2f& getVelocity() const noexcept						{ return velocity; }
+			inline const Vec2i& getOldPosition() const noexcept						{ return oldShape.getPosition(); }
+			inline const Vec2f& getOldVelocity() const noexcept						{ return oldVelocity; }
 			inline const Vec2f& getAcceleration() const noexcept					{ return acceleration; }
 			inline const Vec2i& getSize() const noexcept							{ return shape.getSize(); }
 			inline float getMass() const noexcept									{ return _static ? 0 : massData.getMass(); }
