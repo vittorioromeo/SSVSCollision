@@ -9,6 +9,7 @@
 #include "SSVSCollision/Body/CallbackInfo.h"
 #include "SSVSCollision/Body/BodyData.h"
 #include "SSVSCollision/Body/Base.h"
+#include "SSVSCollision/Utils/UtilsAABB.h"
 #include "SSVSCollision/Utils/Utils.h"
 
 namespace ssvsc

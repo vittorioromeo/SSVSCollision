@@ -7,6 +7,7 @@
 
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Utils/Segment.h"
+#include "SSVSCollision/Utils/Utils.h"
 
 namespace ssvsc
 {
@@ -60,12 +61,12 @@ namespace ssvsc
 			inline bool isAbove(const AABB& mAABB) const noexcept	{ return getBottom() <= mAABB.getTop(); }
 			inline bool isBelow(const AABB& mAABB) const noexcept	{ return getTop() >= mAABB.getBottom(); }
 
-			inline bool isOverlapping(const Vec2i& mPoint) const noexcept		{ return mPoint.x >= getLeft() && mPoint.x < getRight() && mPoint.y >= getTop() && mPoint.y < getBottom(); }
-			// TODO: isOverlapping segment
-			inline bool isOverlapping(const AABB& mAABB) const noexcept			{ return !isLeftOf(mAABB) && !isRightOf(mAABB) && !isAbove(mAABB) && !isBelow(mAABB); }
-			inline bool contains(const Vec2i& mPoint) const noexcept			{ return isOverlapping(mPoint); }
-			inline bool contains(const Segment<int> mSegment) const noexcept	{ return contains(mSegment.start) && contains(mSegment.end); }
-			inline bool contains(const AABB& mAABB) const noexcept				{ return mAABB.getLeft() >= getLeft() && mAABB.getRight() < getRight() && mAABB.getTop() >= getTop() && mAABB.getBottom() < getBottom(); }
+			inline bool isOverlapping(const Vec2i& mPoint) const noexcept			{ return mPoint.x >= getLeft() && mPoint.x < getRight() && mPoint.y >= getTop() && mPoint.y < getBottom(); }
+			inline bool isOverlapping(const Segment<int>& mSegment) const noexcept	{ return Utils::isSegmentInsersecting(mSegment, getSegmentLeft<int>()) || Utils::isSegmentInsersecting(mSegment, getSegmentRight<int>()) || Utils::isSegmentInsersecting(mSegment, getSegmentTop<int>()) || Utils::isSegmentInsersecting(mSegment, getSegmentBottom<int>()); }
+			inline bool isOverlapping(const AABB& mAABB) const noexcept				{ return !isLeftOf(mAABB) && !isRightOf(mAABB) && !isAbove(mAABB) && !isBelow(mAABB); }
+			inline bool contains(const Vec2i& mPoint) const noexcept				{ return isOverlapping(mPoint); }
+			inline bool contains(const Segment<int>& mSegment) const noexcept		{ return contains(mSegment.start) && contains(mSegment.end); }
+			inline bool contains(const AABB& mAABB) const noexcept					{ return mAABB.getLeft() >= getLeft() && mAABB.getRight() < getRight() && mAABB.getTop() >= getTop() && mAABB.getBottom() < getBottom(); }
 	};
 }
 

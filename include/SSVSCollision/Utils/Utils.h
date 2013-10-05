@@ -17,6 +17,14 @@ namespace ssvsc
 		{
 			return (mA.x - mC.x) * (mB.y - mC.y) - (mA.y - mC.y) * (mB.x - mC.x);
 		}
+		template<typename T> inline bool isSegmentInsersecting(const Segment<T>& mA, const Segment<T>& mB) noexcept
+		{
+			float a1{getSigned2DTriangleArea(mA.start, mA.end, mB.end)}, a2{getSigned2DTriangleArea(mA.start, mA.end, mB.start)};
+			if(a1 * a2 > 0.f) return false;
+
+			float a3{getSigned2DTriangleArea(mB.start, mB.end, mA.start)}, a4{a3 + a2 - a1};
+			return a3 * a4 > 0.f || a3 - a4 == 0;
+		}
 		template<typename T> inline bool isSegmentInsersecting(const Segment<T>& mA, const Segment<T>& mB, Vec2<T>& mIntersection) noexcept
 		{
 			float a1{getSigned2DTriangleArea(mA.start, mA.end, mB.end)}, a2{getSigned2DTriangleArea(mA.start, mA.end, mB.start)};
@@ -28,21 +36,6 @@ namespace ssvsc
 			mIntersection = mA.start + (a3 / (a3 - a4)) * (mA.end - mA.start);
 			return true;
 		}
-
-		template<typename T> inline T getMinAbs(const T& mA, const T& mB) noexcept { return abs(mA) < abs(mB) ? mA : mB; }
-
-		inline int getMinIntersectionX(const AABB& mA, const AABB& mB) noexcept { return getMinAbs(mB.getLeft() - mA.getRight(), mB.getRight() - mA.getLeft()); }
-		inline int getMinIntersectionY(const AABB& mA, const AABB& mB) noexcept { return getMinAbs(mB.getTop() - mA.getBottom(), mB.getBottom() - mA.getTop()); }
-		inline Vec2i getMin1DIntersection(const AABB& mA, const AABB& mB) noexcept
-		{
-			int iX{getMinIntersectionX(mA, mB)}, iY{getMinIntersectionY(mA, mB)};
-			return abs(iX) < abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY};
-		}
-		inline Vec2i getMinIntersection(const AABB& mA, const AABB& mB) noexcept	{ return {getMinIntersectionX(mA, mB), getMinIntersectionY(mA, mB)}; }
-		inline int getOverlapX(const AABB& mA, const AABB& mB) noexcept				{ return mA.getLeft() < mB.getLeft() ? mA.getRight() - mB.getLeft() : mB.getRight() - mA.getLeft(); }
-		inline int getOverlapY(const AABB& mA, const AABB& mB) noexcept				{ return mA.getTop() < mB.getTop() ? mA.getBottom() - mB.getTop() : mB.getBottom() - mA.getTop(); }
-		inline int getOverlapArea(const AABB& mA, const AABB& mB) noexcept			{ return getOverlapX(mA, mB) * getOverlapY(mA, mB); }
-
 	}
 }
 
