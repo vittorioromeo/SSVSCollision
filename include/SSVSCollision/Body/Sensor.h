@@ -15,33 +15,27 @@ namespace ssvsc
 {
 	template<typename TW> class Sensor : public Base<TW>
 	{
-		public:
-			using BaseType = Base<TW>;
-			using BodyType = Body<TW>;
-			using ResolverType = typename TW::ResolverType;
-			using SpatialInfoType = typename TW::SpatialInfoType;
-
 		private:
 			AABB shape;
 
 		public:
-			inline Sensor(TW& mWorld, const Vec2i& mPos, const Vec2i& mSize) noexcept : BaseType(mWorld), shape{mPos, mSize / 2} { this->spatialInfo.preUpdate(); }
+			inline Sensor(TW& mWorld, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, shape{mPos, mSize / 2} { this->spatialInfo.template preUpdate<SensorTag>(); }
 			inline ~Sensor() noexcept { destroy(); }
+			inline void destroy() { this->spatialInfo.template destroy<SensorTag>(); this->world.delSensor(*this); }
 
-			inline void update(float mFT) override
+			inline void update(float mFT)
 			{
 				this->onPreUpdate();
 				if(this->outOfBounds) { this->outOfBounds = false; return; };
-				this->spatialInfo.preUpdate();
-				this->spatialInfo.handleCollisions(mFT);
+				this->spatialInfo.template preUpdate<SensorTag>();
+				this->spatialInfo.template handleCollisions<SensorTag>(mFT);
 				this->spatialInfo.postUpdate();
 			}
-			inline void handleCollision(float mFT, BodyType* mBody) override
+			inline void handleCollision(float mFT, Body<TW>* mBody)
 			{
 				if(!this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 				this->onDetection({*mBody, mBody->getUserData(), Utils::getMinIntersection(shape, mBody->getShape()), mFT});
 			}
-			inline void destroy() override { this->spatialInfo.destroy(); BaseType::destroy(); }
 
 			inline void setPosition(const Vec2i& mPos)
 			{
@@ -49,9 +43,7 @@ namespace ssvsc
 				shape.setPosition(mPos);
 			}
 
-			inline AABB& getShape() noexcept override		{ return shape; }
-			inline AABB& getOldShape() noexcept override	{ return shape; }
-			inline BBType getType() const noexcept override	{ return BBType::Sensor; }
+			inline AABB& getShape() noexcept { return shape; }
 	};
 }
 

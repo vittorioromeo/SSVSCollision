@@ -5,7 +5,6 @@
 #ifndef SSVSC_WORLD
 #define SSVSC_WORLD
 
-#include <vector>
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/Query/Query.h"
 
@@ -21,8 +20,9 @@ namespace ssvsc
 	{
 		public:
 			using SpatialType = TS<World>;
-			using ResolverType = TR<World>;
 			using SpatialInfoType = typename SpatialType::SpatialInfoType;
+			using ResolverType = TR<World>;
+			using ResolverInfoType = typename ResolverType::ResolverInfoType;
 			using BaseType = Base<World>;
 			using BodyType = Body<World>;
 			using SensorType = Sensor<World>;
@@ -33,37 +33,35 @@ namespace ssvsc
 			friend SensorType;
 
 		private:
-			ssvu::MemoryManager<BaseType> bases;
-			std::vector<BodyType*> bodies;
-			std::vector<SensorType*> sensors;
+			ssvu::MemoryManager<BodyType> bodies;
+			ssvu::MemoryManager<SensorType> sensors;
+
 			SpatialType spatial;
 			ResolverType resolver;
 
-			inline void del(BaseType& mBase) { bases.del(mBase); }
+			inline void delBody(BodyType& mBase) noexcept		{ bodies.del(mBase); }
+			inline void delSensor(SensorType& mBase) noexcept	{ sensors.del(mBase); }
 
 		public:
-			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial{std::forward<TArgs>(mArgs)...} { }
 
-			inline BodyType& create(const Vec2i& mPos, const Vec2i& mSize, bool mStatic)	{ auto& result(bases.template create<BodyType>(*this, mStatic, mPos, mSize)); bodies.push_back(&result); return result; }
-			inline SensorType& createSensor(const Vec2i& mPos, const Vec2i& mSize)			{ auto& result(bases.template create<SensorType>(*this, mPos, mSize)); sensors.push_back(&result); return result; }
+			inline BodyType& create(const Vec2i& mPos, const Vec2i& mSize, bool mStatic)	{ return bodies.create(*this, mStatic, mPos, mSize); }
+			inline SensorType& createSensor(const Vec2i& mPos, const Vec2i& mSize)			{ return sensors.create(*this, mPos, mSize); }
 
 			inline void update(float mFT)
 			{
-				ssvu::eraseRemoveIf(bodies, &bases.template isDead<BodyType*>);
-				ssvu::eraseRemoveIf(sensors, &bases.template isDead<SensorType*>);
-
-				bases.refresh();
-				for(const auto& b : bases) b->update(mFT);
+				bodies.refresh();
+				sensors.refresh();
+				for(const auto& b : bodies) b->update(mFT);
+				for(const auto& s : sensors) s->update(mFT);
 				resolver.postUpdate(*this);
 			}
-			inline void clear() { bases.clear(); bodies.clear(); sensors.clear(); }
+			inline void clear() { bodies.clear(); sensors.clear(); }
 
-			inline const SpatialType& getSpatial() const noexcept						{ return spatial; }
-			inline const ResolverType& getResolver() const noexcept						{ return resolver; }
-			inline const decltype(bodies)& getBodies() const noexcept					{ return bodies; }
-			inline const decltype(sensors)& getSensors() const noexcept					{ return sensors; }
-			inline const typename decltype(bases)::Container& getBases() const noexcept	{ return bases.getItems(); }
-
+			inline const decltype(bodies)& getBodies() const noexcept	{ return bodies; }
+			inline const decltype(sensors)& getSensors() const noexcept	{ return sensors; }
+			inline const SpatialType& getSpatial() const noexcept		{ return spatial; }
+			inline const ResolverType& getResolver() const noexcept		{ return resolver; }
 
 			template<QueryType TType, QueryMode TMode = QueryMode::All, typename... TArgs>
 			inline Query<World, typename QueryTypeDispatcher<World, SpatialType, TType>::Type, typename QueryModeDispatcher<World, SpatialType, TMode>::Type> getQuery(TArgs&&... mArgs) noexcept

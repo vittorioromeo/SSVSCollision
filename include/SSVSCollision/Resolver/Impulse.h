@@ -11,20 +11,59 @@
 
 namespace ssvsc
 {
+	template<typename TW> struct ImpulseInfo
+	{
+		public:
+			using BodyType = Body<TW>;
+			using ResolverType = typename TW::ResolverType;
+			friend ResolverType;
+
+		protected:
+			BodyType& body;
+			Vec2f velTransferMult, velTransferImpulse, stress, nextStress;
+			float stressMult{1.f}, stressPropagationMult{0.1f};
+
+		public:
+			inline ImpulseInfo(BodyType& mBody) : body(mBody) { }
+
+			inline void applyImpulse(const Vec2f& mImpulse) noexcept
+			{
+				body.velocity.x += body.getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult)));
+				body.velocity.y += body.getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult)));
+			}
+			inline void applyImpulse(const BodyType& mBody, const Vec2f& mImpulse) noexcept	{ if(body.mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
+			inline void applyStress(const Vec2f& mStress) noexcept							{ nextStress += ssvs::getAbs(body.getInvMass() * mStress * stressMult); }
+			inline void applyStress(const BodyType& mBody, const Vec2f& mStress) noexcept	{ if(body.mustResolveAgainst(mBody)) applyStress(mStress); }
+
+			inline void setVelTransferMultX(float mValue) noexcept					{ velTransferMult.x = mValue; }
+			inline void setVelTransferMultY(float mValue) noexcept					{ velTransferMult.y = mValue; }
+			inline void setStressMult(float mValue) noexcept						{ stressMult = mValue; }
+			inline void setStressPropagationMult(float mValue) noexcept				{ stressPropagationMult = mValue; }
+
+			inline float getVelTransferMultX() const noexcept						{ return velTransferMult.x; }
+			inline float getVelTransferMultY() const noexcept						{ return velTransferMult.y; }
+			inline Vec2f& getVelTransferImpulse() noexcept							{ return velTransferImpulse; }
+			inline const Vec2f& getVelTransferImpulse() const noexcept				{ return velTransferImpulse; }
+			inline const Vec2f& getStress() const noexcept							{ return stress; }
+			inline float getStressMult() const noexcept								{ return stressMult; }
+			inline float getStressPropagationMult() const noexcept					{ return stressPropagationMult; }
+	};
+
 	template<typename TW> struct Impulse
 	{
 		using BodyType = Body<TW>;
+		using ResolverInfoType = ImpulseInfo<TW>;
 
-		inline void resolve(BodyType& mBody, std::vector<BodyType*>& mBodiesToResolve) const
+		inline void resolve(BodyType& mBody, std::vector<BodyType*>& mToResolve) const
 		{
 			AABB& shape(mBody.shape);
 			const AABB& oldShape(mBody.oldShape);
 
-			ssvu::sort(mBodiesToResolve, [&](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
+			ssvu::sort(mToResolve, [&](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
 			int resXNeg{0}, resXPos{0}, resYNeg{0}, resYPos{0};
 			constexpr int tolerance{20};
 
-			for(const auto& b : mBodiesToResolve)
+			for(const auto& b : mToResolve)
 			{
 				int iX{Utils::getMinIntersectionX(shape, b->shape)}, iY{Utils::getMinIntersectionY(shape, b->shape)};
 
@@ -40,7 +79,7 @@ namespace ssvsc
 				}
 			}
 
-			for(const auto& b : mBodiesToResolve)
+			for(const auto& b : mToResolve)
 			{
 				const AABB& s(b->shape);
 				if(!shape.isOverlapping(s)) continue;

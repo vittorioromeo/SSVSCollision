@@ -5,7 +5,6 @@
 #ifndef SSVSC_UTILS
 #define SSVSC_UTILS
 
-#include <vector>
 #include "SSVSCollision/Global/Typedefs.h"
 #include "SSVSCollision/AABB/AABB.h"
 

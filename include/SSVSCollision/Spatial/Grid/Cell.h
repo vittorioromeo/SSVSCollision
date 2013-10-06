@@ -21,12 +21,11 @@ namespace ssvsc
 		private:
 			std::vector<BodyType*> bodies;
 
-			inline void addBody(BodyType* mBody) { bodies.push_back(mBody); }
-			inline void delBody(BodyType* mBody) { ssvu::eraseRemove(bodies, mBody); }
-
 		public:
-			inline void add(BaseType* mBase) { if(mBase->getType() == BBType::Body) addBody(static_cast<Body<TW>*>(mBase)); }
-			inline void del(BaseType* mBase) { if(mBase->getType() == BBType::Body) delBody(static_cast<Body<TW>*>(mBase)); }
+			inline void add(BaseType* mBase, BodyTag) { bodies.push_back(reinterpret_cast<BodyType*>(mBase)); }
+			inline void del(BaseType* mBase, BodyTag) { ssvu::eraseRemove(bodies, reinterpret_cast<BodyType*>(mBase)); }
+			inline void add(BaseType* mBase, SensorTag) { }
+			inline void del(BaseType* mBase, SensorTag) { }
 
 			inline const decltype(bodies)& getBodies() const noexcept { return bodies; }
 	};

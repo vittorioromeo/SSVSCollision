@@ -15,6 +15,8 @@ namespace ssvsc
 		public:
 			using SpatialType = typename TW::SpatialType;
 			using BaseType = Base<TW>;
+			using BodyType = Body<TW>;
+			using SensorType = Sensor<TW>;
 			using CellType = Cell<TW>;
 
 		private:
@@ -24,10 +26,14 @@ namespace ssvsc
 			int startX{0}, startY{0}, endX{0}, endY{0}, oldStartX{-1}, oldStartY{-1}, oldEndX{-1}, oldEndY{-1}, spatialPaint{-1};
 			bool invalid{true};
 
-			inline void calcEdges()
+			inline const AABB& getShapeImpl(BodyTag) const noexcept		{ return reinterpret_cast<BodyType&>(base).getShape(); }
+			inline const AABB& getShapeImpl(SensorTag) const noexcept	{ return reinterpret_cast<SensorType&>(base).getShape(); }
+			inline void handleCollisionImpl(float mFT, BodyType* mBody, BodyTag) const noexcept		{ return reinterpret_cast<BodyType&>(base).handleCollision(mFT, mBody); }
+			inline void handleCollisionImpl(float mFT, BodyType* mBody, SensorTag) const noexcept	{ return reinterpret_cast<SensorType&>(base).handleCollision(mFT, mBody); }
+
+			template<typename TTag> inline void calcEdges()
 			{
-				const AABB& oldShape(base.getOldShape());
-				const AABB& shape(base.getShape());
+				const auto& shape(getShapeImpl(TTag{}));
 
 				oldStartX = startX;
 				oldStartY = startY;
@@ -39,12 +45,12 @@ namespace ssvsc
 				endX = grid.getIdx(shape.getRight());
 				endY = grid.getIdx(shape.getBottom());
 
-				if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells();
+				if(oldStartX != startX || oldStartY != startY || oldEndX != endX || oldEndY != endY) calcCells<TTag>();
 				else invalid = false;
 			}
-			inline void calcCells()
+			template<typename TTag> inline void calcCells()
 			{
-				clear();
+				clear<TTag>();
 
 				if(!grid.isIdxValid(startX, startY, endX, endY)) { base.setOutOfBounds(true); return; }
 				for(int iX{startX}; iX <= endX; ++iX)
@@ -52,26 +58,26 @@ namespace ssvsc
 					{
 						auto& c(grid.getCell(iX, iY));
 						cells.push_back(&c);
-						c.add(&base);
+						c.add(&base, TTag{});
 					}
 
 				invalid = false;
 			}
-			inline void clear()
+			template<typename TTag> inline void clear()
 			{
-				for(const auto& c : cells) c->del(&base);
+				for(const auto& c : cells) c->del(&base, TTag{});
 				cells.clear();
 			}
 
 		public:
 			inline GridInfo(SpatialType& mGrid, BaseType& mBase) noexcept : grid(mGrid), base(mBase) { }
 
-			inline void init()								{ calcEdges(); calcCells(); }
+			template<typename TTag> inline void init()		{ calcEdges<TTag>(); calcCells<TTag>(); }
 			inline void invalidate() noexcept				{ invalid = true; }
-			inline void preUpdate()							{ if(invalid) calcEdges(); }
+			template<typename TTag> inline void preUpdate()	{ if(invalid) calcEdges<TTag>(); }
 			inline void postUpdate() const noexcept			{ }
-			inline void destroy()							{ clear(); }
-			inline void handleCollisions(float mFT)
+			template<typename TTag> inline void destroy()	{ clear<TTag>(); }
+			template<typename TTag> inline void handleCollisions(float mFT)
 			{
 				static int lastPaint{-1};
 				++lastPaint;
@@ -80,7 +86,7 @@ namespace ssvsc
 					for(const auto& b : c->getBodies())
 					{
 						if(b->getSpatialInfo().spatialPaint == lastPaint) continue;
-						base.handleCollision(mFT, b);
+						handleCollisionImpl(mFT, b, TTag{});
 						b->getSpatialInfo().spatialPaint = lastPaint;
 					}
 			}

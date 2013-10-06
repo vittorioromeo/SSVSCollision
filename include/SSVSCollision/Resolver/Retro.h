@@ -11,17 +11,32 @@
 
 namespace ssvsc
 {
+	template<typename TW> struct RetroInfo
+	{
+		public:
+			using BodyType = Body<TW>;
+			using ResolverType = typename TW::ResolverType;
+			friend ResolverType;
+
+		protected:
+			BodyType& body;
+
+		public:
+			inline RetroInfo(BodyType& mBody) : body(mBody) { }
+	};
+
 	template<typename TW> struct Retro
 	{
 		using BodyType = Body<TW>;
+		using ResolverInfoType = RetroInfo<TW>;
 
-		inline void resolve(BodyType& mBody, std::vector<BodyType*>& mBodiesToResolve) const
+		inline void resolve(BodyType& mBody, std::vector<BodyType*>& mToResolve) const
 		{
 			AABB& shape(mBody.shape);
 			const AABB& oldShape(mBody.oldShape);
-			ssvu::sort(mBodiesToResolve, [&](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
+			ssvu::sort(mToResolve, [&](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
 
-			for(const auto& b : mBodiesToResolve)
+			for(const auto& b : mToResolve)
 			{
 				const AABB& s(b->shape);
 				if(!shape.isOverlapping(s)) continue;
@@ -54,8 +69,6 @@ namespace ssvsc
 		}
 		inline void postUpdate(TW&) const noexcept { }
 	};
-
-	// TODO: stress calc
 }
 
 #endif
