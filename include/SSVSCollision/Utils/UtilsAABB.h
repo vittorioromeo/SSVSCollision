@@ -12,7 +12,7 @@ namespace ssvsc
 {
 	namespace Utils
 	{
-		template<typename T> inline T getMinAbs(const T& mA, const T& mB) noexcept { return abs(mA) < abs(mB) ? mA : mB; }
+		template<typename T> inline T getMinAbs(const T& mA, const T& mB) noexcept { return std::abs(mA) < std::abs(mB) ? mA : mB; }
 
 		inline int getMinIntersectionX(const AABB& mA, const AABB& mB) noexcept { return getMinAbs(mB.getLeft() - mA.getRight(), mB.getRight() - mA.getLeft()); }
 		inline int getMinIntersectionY(const AABB& mA, const AABB& mB) noexcept { return getMinAbs(mB.getTop() - mA.getBottom(), mB.getBottom() - mA.getTop()); }
