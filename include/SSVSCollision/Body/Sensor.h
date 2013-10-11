@@ -34,7 +34,7 @@ namespace ssvsc
 			inline void handleCollision(float mFT, Body<TW>* mBody)
 			{
 				if(!this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
-				this->onDetection({*mBody, mBody->getUserData(), Utils::getMinIntersection(shape, mBody->getShape()), mFT});
+				this->onDetection({*mBody, mBody->getUserData(), mFT});
 			}
 
 			inline void setPosition(const Vec2i& mPos)

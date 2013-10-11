@@ -88,7 +88,7 @@ namespace ssvsc
 				bool noResolvePosition{false}, noResolveVelocity{false};
 				Vec2i resolution{std::abs(iX) < std::abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY}};
 
-				mBody.onResolution({*b, b->getUserData(), {iX, iY}, resolution, noResolvePosition, noResolveVelocity});
+				mBody.onResolution({*b, b->getUserData(), resolution, noResolvePosition, noResolveVelocity});
 
 				if(!noResolvePosition) mBody.resolvePosition(resolution);
 				if(noResolveVelocity) continue;

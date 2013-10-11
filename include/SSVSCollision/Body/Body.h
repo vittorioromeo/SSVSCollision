@@ -78,10 +78,8 @@ namespace ssvsc
 			{
 				if(mBody == this || !this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 
-				auto intersection(Utils::getMinIntersection(shape, mBody->getShape()));
-
-				this->onDetection({*mBody, mBody->getUserData(), intersection, mFT});
-				mBody->onDetection({*this, userData, -intersection, mFT});
+				this->onDetection({*mBody, mBody->getUserData(), mFT});
+				mBody->onDetection({*this, userData, mFT});
 
 				if(mustResolveAgainst(*mBody)) toResolve.push_back(mBody);
 			}
