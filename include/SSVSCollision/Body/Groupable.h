@@ -12,7 +12,7 @@ namespace ssvsc
 	class Groupable
 	{
 		private:
-			Bitset groups, groupsToCheck, groupsNoResolve;
+			GroupBitset groups, groupsToCheck, groupsNoResolve;
 
 		public:
 			inline void addGroups(Group mGroup)	noexcept													{ groups[mGroup] = true; }
@@ -46,17 +46,17 @@ namespace ssvsc
 			constexpr inline bool hasGroupToCheck(Group mGroup) const noexcept		{ return groupsToCheck[mGroup]; }
 			constexpr inline bool hasGroupNoResolve(Group mGroup) const noexcept	{ return groupsNoResolve[mGroup]; }
 
-			inline bool hasAnyGroup(const Bitset& mGroups) const noexcept			{ return (groups & mGroups).any(); }
-			inline bool hasAnyGroupToCheck(const Bitset& mGroups) const noexcept	{ return (groupsToCheck & mGroups).any(); }
-			inline bool hasAnyGroupNoResolve(const Bitset& mGroups) const noexcept	{ return (groupsNoResolve & mGroups).any(); }
+			inline bool hasAnyGroup(const GroupBitset& mGroups) const noexcept			{ return (groups & mGroups).any(); }
+			inline bool hasAnyGroupToCheck(const GroupBitset& mGroups) const noexcept	{ return (groupsToCheck & mGroups).any(); }
+			inline bool hasAnyGroupNoResolve(const GroupBitset& mGroups) const noexcept	{ return (groupsNoResolve & mGroups).any(); }
 
-			inline bool hasAllGroups(const Bitset& mGroups) const noexcept			{ return (groups & mGroups).all(); }
-			inline bool hasAllGroupsToCheck(const Bitset& mGroups) const noexcept	{ return (groupsToCheck & mGroups).all(); }
-			inline bool hasAllGroupsNoResolve(const Bitset& mGroups) const noexcept	{ return (groupsNoResolve & mGroups).all(); }
+			inline bool hasAllGroups(const GroupBitset& mGroups) const noexcept			{ return (groups & mGroups).all(); }
+			inline bool hasAllGroupsToCheck(const GroupBitset& mGroups) const noexcept	{ return (groupsToCheck & mGroups).all(); }
+			inline bool hasAllGroupsNoResolve(const GroupBitset& mGroups) const noexcept	{ return (groupsNoResolve & mGroups).all(); }
 
-			inline const Bitset& getGroups() const noexcept				{ return groups; }
-			inline const Bitset& getGroupsToCheck()	const noexcept		{ return groupsToCheck; }
-			inline const Bitset& getGroupsNoResolve() const noexcept	{ return groupsNoResolve; }
+			inline const GroupBitset& getGroups() const noexcept				{ return groups; }
+			inline const GroupBitset& getGroupsToCheck()	const noexcept		{ return groupsToCheck; }
+			inline const GroupBitset& getGroupsNoResolve() const noexcept	{ return groupsNoResolve; }
 	};
 }
 
