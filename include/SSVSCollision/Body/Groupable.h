@@ -30,17 +30,17 @@ namespace ssvsc
 			template<typename... TGroups> inline void addGroupsNoResolve(Group mGroup, TGroups... mGroups) noexcept	{ addGroupsNoResolve(mGroup); addGroupsNoResolve(mGroups...); }
 			template<typename... TGroups> inline void delGroupsNoResolve(Group mGroup, TGroups... mGroups) noexcept	{ delGroupsNoResolve(mGroup); delGroupsNoResolve(mGroups...); }
 
-			inline void addGroup(Group mGroup) noexcept					{ addGroups(mGroup); }
-			inline void addGroupToCheck(Group mGroup) noexcept			{ addGroupsToCheck(mGroup); }
-			inline void addGroupNoResolve(Group mGroup)	noexcept 		{ addGroupsNoResolve(mGroup); }
+			inline void addGroup(Group mGroup) noexcept				{ addGroups(mGroup); }
+			inline void addGroupToCheck(Group mGroup) noexcept		{ addGroupsToCheck(mGroup); }
+			inline void addGroupNoResolve(Group mGroup)	noexcept 	{ addGroupsNoResolve(mGroup); }
 
-			inline void delGroup(Group mGroup) noexcept					{ delGroups(mGroup); }
-			inline void delGroupToCheck(Group mGroup) noexcept			{ delGroupsToCheck(mGroup); }
-			inline void delGroupNoResolve(Group mGroup) noexcept		{ delGroupNoResolve(mGroup); }
+			inline void delGroup(Group mGroup) noexcept				{ delGroups(mGroup); }
+			inline void delGroupToCheck(Group mGroup) noexcept		{ delGroupsToCheck(mGroup); }
+			inline void delGroupNoResolve(Group mGroup) noexcept	{ delGroupNoResolve(mGroup); }
 
-			inline void clearGroups() noexcept							{ groups.reset(); }
-			inline void clearGroupsToCheck() noexcept					{ groupsToCheck.reset(); }
-			inline void clearGroupsNoResolve() noexcept					{ groupsNoResolve.reset(); }
+			inline void clearGroups() noexcept						{ groups.reset(); }
+			inline void clearGroupsToCheck() noexcept				{ groupsToCheck.reset(); }
+			inline void clearGroupsNoResolve() noexcept				{ groupsNoResolve.reset(); }
 
 			constexpr inline bool hasGroup(Group mGroup) const noexcept				{ return groups[mGroup]; }
 			constexpr inline bool hasGroupToCheck(Group mGroup) const noexcept		{ return groupsToCheck[mGroup]; }
@@ -50,12 +50,12 @@ namespace ssvsc
 			inline bool hasAnyGroupToCheck(const GroupBitset& mGroups) const noexcept	{ return (groupsToCheck & mGroups).any(); }
 			inline bool hasAnyGroupNoResolve(const GroupBitset& mGroups) const noexcept	{ return (groupsNoResolve & mGroups).any(); }
 
-			inline bool hasAllGroups(const GroupBitset& mGroups) const noexcept			{ return (groups & mGroups).all(); }
-			inline bool hasAllGroupsToCheck(const GroupBitset& mGroups) const noexcept	{ return (groupsToCheck & mGroups).all(); }
+			inline bool hasAllGroups(const GroupBitset& mGroups) const noexcept				{ return (groups & mGroups).all(); }
+			inline bool hasAllGroupsToCheck(const GroupBitset& mGroups) const noexcept		{ return (groupsToCheck & mGroups).all(); }
 			inline bool hasAllGroupsNoResolve(const GroupBitset& mGroups) const noexcept	{ return (groupsNoResolve & mGroups).all(); }
 
-			inline const GroupBitset& getGroups() const noexcept				{ return groups; }
-			inline const GroupBitset& getGroupsToCheck()	const noexcept		{ return groupsToCheck; }
+			inline const GroupBitset& getGroups() const noexcept			{ return groups; }
+			inline const GroupBitset& getGroupsToCheck()	const noexcept	{ return groupsToCheck; }
 			inline const GroupBitset& getGroupsNoResolve() const noexcept	{ return groupsNoResolve; }
 	};
 }
