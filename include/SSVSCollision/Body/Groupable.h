@@ -36,7 +36,7 @@ namespace ssvsc
 
 			inline void delGroup(Group mGroup) noexcept				{ delGroups(mGroup); }
 			inline void delGroupToCheck(Group mGroup) noexcept		{ delGroupsToCheck(mGroup); }
-			inline void delGroupNoResolve(Group mGroup) noexcept	{ delGroupNoResolve(mGroup); }
+			inline void delGroupNoResolve(Group mGroup) noexcept	{ delGroupsNoResolve(mGroup); }
 
 			inline void clearGroups() noexcept						{ groups.reset(); }
 			inline void clearGroupsToCheck() noexcept				{ groupsToCheck.reset(); }
