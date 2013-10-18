@@ -30,17 +30,9 @@ namespace ssvsc
 			template<typename... TGroups> inline void addGroupsNoResolve(Group mGroup, TGroups... mGroups) noexcept	{ addGroupsNoResolve(mGroup); addGroupsNoResolve(mGroups...); }
 			template<typename... TGroups> inline void delGroupsNoResolve(Group mGroup, TGroups... mGroups) noexcept	{ delGroupsNoResolve(mGroup); delGroupsNoResolve(mGroups...); }
 
-			inline void addGroup(Group mGroup) noexcept				{ addGroups(mGroup); }
-			inline void addGroupToCheck(Group mGroup) noexcept		{ addGroupsToCheck(mGroup); }
-			inline void addGroupNoResolve(Group mGroup)	noexcept 	{ addGroupsNoResolve(mGroup); }
-
-			inline void delGroup(Group mGroup) noexcept				{ delGroups(mGroup); }
-			inline void delGroupToCheck(Group mGroup) noexcept		{ delGroupsToCheck(mGroup); }
-			inline void delGroupNoResolve(Group mGroup) noexcept	{ delGroupsNoResolve(mGroup); }
-
-			inline void clearGroups() noexcept						{ groups.reset(); }
-			inline void clearGroupsToCheck() noexcept				{ groupsToCheck.reset(); }
-			inline void clearGroupsNoResolve() noexcept				{ groupsNoResolve.reset(); }
+			inline void clearGroups() noexcept			{ groups.reset(); }
+			inline void clearGroupsToCheck() noexcept	{ groupsToCheck.reset(); }
+			inline void clearGroupsNoResolve() noexcept	{ groupsNoResolve.reset(); }
 
 			constexpr inline bool hasGroup(Group mGroup) const noexcept				{ return groups[mGroup]; }
 			constexpr inline bool hasGroupToCheck(Group mGroup) const noexcept		{ return groupsToCheck[mGroup]; }
