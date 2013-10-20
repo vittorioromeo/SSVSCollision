@@ -24,8 +24,8 @@ namespace ssvsc
 		public:
 			inline void add(BaseType* mBase, BodyTag) { bodies.push_back(reinterpret_cast<BodyType*>(mBase)); }
 			inline void del(BaseType* mBase, BodyTag) { ssvu::eraseRemove(bodies, reinterpret_cast<BodyType*>(mBase)); }
-			inline void add(BaseType* mBase, SensorTag) { }
-			inline void del(BaseType* mBase, SensorTag) { }
+			inline void add(BaseType*, SensorTag) { }
+			inline void del(BaseType*, SensorTag) { }
 
 			inline const decltype(bodies)& getBodies() const noexcept { return bodies; }
 	};
