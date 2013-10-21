@@ -15,20 +15,26 @@ namespace ssvsc
 			GroupBitset groups, groupsToCheck, groupsNoResolve;
 
 		public:
-			inline void addGroups(Group mGroup)	noexcept													{ groups[mGroup] = true; }
-			inline void delGroups(Group mGroup)	noexcept													{ groups[mGroup] = false; }
-			template<typename... TGroups> inline void addGroups(Group mGroup, TGroups... mGroups) noexcept	{ addGroups(mGroup); addGroups(mGroups...); }
-			template<typename... TGroups> inline void delGroups(Group mGroup, TGroups... mGroups) noexcept	{ delGroups(mGroup); delGroups(mGroups...); }
+			inline void setGroups(bool mOn, Group mGroup) noexcept														{ groups[mGroup] = mOn; }
+			inline void addGroups(Group mGroup) noexcept																{ setGroups(true, mGroup); }
+			inline void delGroups(Group mGroup) noexcept																{ setGroups(false, mGroup); }
+			template<typename... TGroups> inline void setGroups(bool mOn, Group mGroup, TGroups... mGroups) noexcept	{ setGroups(mOn, mGroup); setGroups(mOn, mGroups...); }
+			template<typename... TGroups> inline void addGroups(Group mGroup, TGroups... mGroups) noexcept				{ addGroups(mGroup); addGroups(mGroups...); }
+			template<typename... TGroups> inline void delGroups(Group mGroup, TGroups... mGroups) noexcept				{ delGroups(mGroup); delGroups(mGroups...); }
 
-			inline void addGroupsToCheck(Group mGroup) noexcept														{ groupsToCheck[mGroup] = true; }
-			inline void delGroupsToCheck(Group mGroup) noexcept	 													{ groupsToCheck[mGroup] = false; }
-			template<typename... TGroups> inline void addGroupsToCheck(Group mGroup, TGroups... mGroups) noexcept	{ addGroupsToCheck(mGroup); addGroupsToCheck(mGroups...); }
-			template<typename... TGroups> inline void delGroupsToCheck(Group mGroup, TGroups... mGroups) noexcept	{ delGroupsToCheck(mGroup); delGroupsToCheck(mGroups...); }
+			inline void setGroupsToCheck(bool mOn, Group mGroup) noexcept													{ groupsToCheck[mGroup] = mOn; }
+			inline void addGroupsToCheck(Group mGroup) noexcept																{ setGroupsToCheck(true, mGroup); }
+			inline void delGroupsToCheck(Group mGroup) noexcept																{ setGroupsToCheck(false, mGroup); }
+			template<typename... TGroups> inline void setGroupsToCheck(bool mOn, Group mGroup, TGroups... mGroups) noexcept	{ setGroupsToCheck(mOn, mGroup); setGroupsToCheck(mOn, mGroups...); }
+			template<typename... TGroups> inline void addGroupsToCheck(Group mGroup, TGroups... mGroups) noexcept			{ addGroupsToCheck(mGroup); addGroupsToCheck(mGroups...); }
+			template<typename... TGroups> inline void delGroupsToCheck(Group mGroup, TGroups... mGroups) noexcept			{ delGroupsToCheck(mGroup); delGroupsToCheck(mGroups...); }
 
-			inline void addGroupsNoResolve(Group mGroup) noexcept													{ groupsNoResolve[mGroup] = true; }
-			inline void delGroupsNoResolve(Group mGroup) noexcept													{ groupsNoResolve[mGroup] = false; }
-			template<typename... TGroups> inline void addGroupsNoResolve(Group mGroup, TGroups... mGroups) noexcept	{ addGroupsNoResolve(mGroup); addGroupsNoResolve(mGroups...); }
-			template<typename... TGroups> inline void delGroupsNoResolve(Group mGroup, TGroups... mGroups) noexcept	{ delGroupsNoResolve(mGroup); delGroupsNoResolve(mGroups...); }
+			inline void setGroupsNoResolve(bool mOn, Group mGroup) noexcept														{ groupsNoResolve[mGroup] = mOn; }
+			inline void addGroupsNoResolve(Group mGroup) noexcept																{ setGroupsNoResolve(true, mGroup); }
+			inline void delGroupsNoResolve(Group mGroup) noexcept																{ setGroupsNoResolve(false, mGroup); }
+			template<typename... TGroups> inline void setGroupsNoResolve(bool mOn, Group mGroup, TGroups... mGroups) noexcept	{ setGroupsNoResolve(mOn, mGroup); setGroupsNoResolve(mOn, mGroups...); }
+			template<typename... TGroups> inline void addGroupsNoResolve(Group mGroup, TGroups... mGroups) noexcept				{ addGroupsNoResolve(mGroup); addGroupsNoResolve(mGroups...); }
+			template<typename... TGroups> inline void delGroupsNoResolve(Group mGroup, TGroups... mGroups) noexcept				{ delGroupsNoResolve(mGroup); delGroupsNoResolve(mGroups...); }
 
 			inline void clearGroups() noexcept			{ groups.reset(); }
 			inline void clearGroupsToCheck() noexcept	{ groupsToCheck.reset(); }
