@@ -89,7 +89,7 @@ namespace ssvsc
 
 			inline bool isValid()										{ return !finished && this->grid.isIdxValid(this->index); }
 			inline void step()											{ finished = true; }
-			inline bool getSorting(const Body<TW>*, const Body<TW>*)			{ return true; }
+			inline bool getSorting(const Body<TW>*, const Body<TW>*)	{ return true; }
 			inline bool hits(const AABB& mShape)						{ return mShape.contains(Vec2i(this->pos)); }
 			inline void setOut(const AABB&)								{ }
 		};
@@ -113,11 +113,21 @@ namespace ssvsc
 					max.x /= dir.x;
 					deltaDist.x = cellSize / std::abs(dir.x);
 				}
+				else
+				{
+					next.x = 0;
+					deltaDist.x = cellSize;
+				}
 
 				if(dir.y != 0)
 				{
 					max.y /= dir.y;
 					deltaDist.y = cellSize / std::abs(dir.y);
+				}
+				else
+				{
+					next.y = 0;
+					deltaDist.y = cellSize;
 				}
 			}
 
@@ -132,11 +142,9 @@ namespace ssvsc
 			}
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)
 			{
-				const auto& aPos(mA->getPosition());
-				const auto& bPos(mB->getPosition());
-				return std::pow((aPos.x - this->startPos.x), 2) + std::pow((aPos.y - this->startPos.y), 2) > std::pow((bPos.x - this->startPos.x), 2) + std::pow((bPos.y - this->startPos.y), 2);
+				return ssvs::getDistEuclidean(mA->getPosition(), this->startPos) > ssvs::getDistEuclidean(mB->getPosition(), this->startPos);
 			}
-			bool hits(const AABB& mShape)
+			inline bool hits(const AABB& mShape)
 			{
 				Segment<float> ray{this->startPos, this->pos};
 				Vec2f intersection;
@@ -186,18 +194,15 @@ namespace ssvsc
 			}
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)
 			{
-				const auto& aPos(mA->getPosition());
-				const auto& bPos(mB->getPosition());
-				return pow((aPos.x - this->startPos.x), 2) + pow((aPos.y - this->startPos.y), 2) > pow((bPos.x - this->startPos.x), 2) + pow((bPos.y - this->startPos.y), 2);
+				return ssvs::getDistEuclidean(mA->getPosition(), this->startPos) > ssvs::getDistEuclidean(mB->getPosition(), this->startPos);
 			}
-			bool hits(const AABB& mShape)
+			inline bool hits(const AABB& mShape)
 			{
-				int testX{this->startPos.x < mShape.getX() ? mShape.getLeft() : mShape.getRight()};
-				int testY{this->startPos.y < mShape.getY() ? mShape.getTop() : mShape.getBottom()};
+				Vec2i test{this->startPos.x < mShape.getX() ? mShape.getLeft() : mShape.getRight(), this->startPos.y < mShape.getY() ? mShape.getTop() : mShape.getBottom()};
 
-				if(pow((testX - this->startPos.x), 2) + pow((testY - this->startPos.y), 2) > pow(distance, 2)) return false;
+				if(ssvs::getDistSquaredEuclidean(test, this->startPos) > pow(distance, 2)) return false;
 
-				this->lastPos = Vec2f(testX, testY);
+				this->lastPos = Vec2f(test);
 				return true;
 			}
 			inline void setOut(const AABB&) { }
