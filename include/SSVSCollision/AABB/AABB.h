@@ -14,11 +14,11 @@ namespace ssvsc
 	class AABB
 	{
 		private:
-			Vec2i position, halfSize, size; // size depends on halfSize
+			Vec2i position, halfSize;
 
 		public:
-			inline AABB(const Vec2i& mPosition, const Vec2i& mHalfSize) noexcept : position{mPosition}, halfSize{mHalfSize}, size{halfSize * 2} { }
-			inline AABB(int mLeft, int mRight, int mTop, int mBottom) noexcept : position{mLeft + (mRight - mLeft) / 2, mTop + (mBottom - mTop) / 2}, halfSize{(mRight - mLeft) / 2, (mBottom - mTop) / 2}, size{halfSize * 2} { }
+			inline AABB(const Vec2i& mPosition, const Vec2i& mHalfSize) noexcept : position{mPosition}, halfSize{mHalfSize} { }
+			inline AABB(int mLeft, int mRight, int mTop, int mBottom) noexcept : position{mLeft + (mRight - mLeft) / 2, mTop + (mBottom - mTop) / 2}, halfSize{(mRight - mLeft) / 2, (mBottom - mTop) / 2} { }
 
 			inline bool operator==(const AABB& mOther) const noexcept { return position == mOther.position && halfSize == mOther.halfSize; }
 			inline bool operator!=(const AABB& mOther) const noexcept { return !(*this == mOther); }
@@ -28,10 +28,10 @@ namespace ssvsc
 			inline void setPosition(const Vec2i& mPosition) noexcept	{ position = mPosition; }
 			inline void setX(int mX) noexcept							{ position.x = mX; }
 			inline void setY(int mY) noexcept							{ position.y = mY; }
-			inline void setHalfSize(const Vec2i& mHalfSize) noexcept	{ halfSize = mHalfSize;			size = halfSize * 2; }
-			inline void setSize(const Vec2i& mSize) noexcept			{ halfSize = mSize / 2;			size = mSize; }
-			inline void setWidth(int mWidth) noexcept					{ halfSize.x = mWidth / 2;		size.x = mWidth; }
-			inline void setHeight(int mHeight) noexcept					{ halfSize.y = mHeight / 2;		size.y = mHeight; }
+			inline void setHalfSize(const Vec2i& mHalfSize) noexcept	{ halfSize = mHalfSize; }
+			inline void setSize(const Vec2i& mSize) noexcept			{ halfSize = mSize / 2; }
+			inline void setWidth(int mWidth) noexcept					{ halfSize.x = mWidth / 2; }
+			inline void setHeight(int mHeight) noexcept					{ halfSize.y = mHeight / 2; }
 
 			inline const Vec2i& getPosition() const noexcept	{ return position; }
 			inline int getX() const noexcept					{ return position.x; }
@@ -43,9 +43,9 @@ namespace ssvsc
 			inline const Vec2i& getHalfSize() const noexcept	{ return halfSize; }
 			inline int getHalfWidth() const noexcept			{ return halfSize.x; }
 			inline int getHalfHeight() const noexcept			{ return halfSize.y; }
-			inline const Vec2i& getSize() const noexcept		{ return size; }
-			inline int getWidth() const noexcept				{ return size.x; }
-			inline int getHeight() const noexcept				{ return size.y; }
+			inline const Vec2i& getSize() const noexcept		{ return halfSize * 2; }
+			inline int getWidth() const noexcept				{ return halfSize.x * 2; }
+			inline int getHeight() const noexcept				{ return halfSize.y * 2; }
 
 			template<typename T> inline Vec2<T> getVertexNW() const noexcept			{ return Vec2<T>(getLeft(), getTop()); }
 			template<typename T> inline Vec2<T> getVertexNE() const noexcept			{ return Vec2<T>(getRight(), getTop()); }
