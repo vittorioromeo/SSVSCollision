@@ -24,25 +24,25 @@ namespace ssvsc
 
 			protected:
 				TContainer cells;
-				int columns, rows, cellSize, offset;
+				int cols, rows, cellSize, offset;
 
 			public:
-				inline GridBase(int mColumns, int mRows, int mCellSize, int mOffset = 0) : columns{mColumns}, rows{mRows}, cellSize{mCellSize}, offset{mOffset} { }
+				inline GridBase(int mCols, int mRows, int mCellSize, int mOffset = 0) : cols{mCols}, rows{mRows}, cellSize{mCellSize}, offset{mOffset} { }
 
 				inline int getIdxXMin() const noexcept	{ return 0 - offset; }
 				inline int getIdxYMin() const noexcept	{ return 0 - offset; }
-				inline int getIdxXMax() const noexcept	{ return columns - offset; }
+				inline int getIdxXMax() const noexcept	{ return cols - offset; }
 				inline int getIdxYMax() const noexcept	{ return rows - offset; }
 				inline int getRows() const noexcept		{ return rows; }
-				inline int getColumns() const noexcept	{ return columns; }
+				inline int getColumns() const noexcept	{ return cols; }
 				inline int getOffset() const noexcept	{ return offset; }
 				inline int getCellSize() const noexcept	{ return cellSize; }
 
 				inline int getIdx(int mValue) const noexcept			{ return mValue / cellSize; }
 				inline Vec2i getIdx(const Vec2i& mPos) const noexcept	{ return {getIdx(mPos.x), getIdx(mPos.y)}; }
 
-				inline const CellType& getCell(int mX, int mY) const	{ return cells.at(ssvu::get1DIdxFrom2D(mX + offset, mY + offset, columns)); }
-				inline CellType& getCell(int mX, int mY)				{ return cells[ssvu::get1DIdxFrom2D(mX + offset, mY + offset, columns)]; }
+				inline const CellType& getCell(int mX, int mY) const	{ return cells.at(ssvu::get1DIdxFrom2D(mX + offset, mY + offset, cols)); }
+				inline CellType& getCell(int mX, int mY)				{ return cells[ssvu::get1DIdxFrom2D(mX + offset, mY + offset, cols)]; }
 				inline const CellType& getCell(const Vec2i& mIdx) const	{ return getCell(mIdx.x, mIdx.y); }
 				inline CellType& getCell(const Vec2i& mIdx)				{ return getCell(mIdx.x, mIdx.y); }
 
@@ -56,11 +56,11 @@ namespace ssvsc
 
 	template<typename TW> struct Grid : public Internal::GridBase<TW, std::vector<Cell<TW>>, Grid<TW>>
 	{
-		Grid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<TW, std::vector<Cell<TW>>, Grid<TW>>{mColumns, mRows, mCellSize, mOffset} { this->cells.reserve(this->columns * this->rows); }
+		Grid(int mCols, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<TW, std::vector<Cell<TW>>, Grid<TW>>{mCols, mRows, mCellSize, mOffset} { this->cells.reserve(this->cols * this->rows); }
 	};
 	template<typename TW> struct HashGrid : public Internal::GridBase<TW, std::unordered_map<int, Cell<TW>>, HashGrid<TW>>
 	{
-		HashGrid(int mColumns, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<TW, std::unordered_map<int, Cell<TW>>, HashGrid<TW>>{mColumns, mRows, mCellSize, mOffset} { }
+		HashGrid(int mCols, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<TW, std::unordered_map<int, Cell<TW>>, HashGrid<TW>>{mCols, mRows, mCellSize, mOffset} { }
 	};
 
 	namespace GridQueryTypes
