@@ -43,7 +43,7 @@ namespace ssvsc
 			inline const Vec2i& getHalfSize() const noexcept	{ return halfSize; }
 			inline int getHalfWidth() const noexcept			{ return halfSize.x; }
 			inline int getHalfHeight() const noexcept			{ return halfSize.y; }
-			inline const Vec2i& getSize() const noexcept		{ return halfSize * 2; }
+			inline Vec2i getSize() const noexcept				{ return halfSize * 2; }
 			inline int getWidth() const noexcept				{ return halfSize.x * 2; }
 			inline int getHeight() const noexcept				{ return halfSize.y * 2; }
 
