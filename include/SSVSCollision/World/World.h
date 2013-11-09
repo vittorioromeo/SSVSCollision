@@ -16,7 +16,7 @@ namespace ssvsc
 	template<typename TW> class DetectionInfo;
 	template<typename TW> class ResolutionInfo;
 
-	template<template<typename> class TS, template<typename> class TR> class World
+	template<template<typename> class TS, template<typename> class TR> class World : ssvu::NoCopy
 	{
 		public:
 			using SpatialType = TS<World>;

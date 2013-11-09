@@ -5,9 +5,9 @@
 #ifndef SSVSCOLLISION_GLOBAL_TYPEDEFS
 #define SSVSCOLLISION_GLOBAL_TYPEDEFS
 
-#include <SSVStart/SSVStart.h>
 #include <bitset>
 #include <memory>
+#include <SSVStart/SSVStart.h>
 
 namespace ssvsc
 {

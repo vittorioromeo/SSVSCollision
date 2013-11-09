@@ -17,9 +17,14 @@ namespace ssvsc
 	template<typename TW> class Body : public Base<TW>, public TW::ResolverInfoType, public RestitutionData
 	{
 		public:
+			using SpatialInfoType = typename TW::SpatialInfoType;
+			using DetectionInfoType = typename TW::DetectionInfoType;
 			using ResolverType = typename TW::ResolverType;
 			using ResolverInfoType = typename TW::ResolverInfoType;
 			using ResolutionInfoType = typename TW::ResolutionInfoType;
+
+			friend TW;
+			friend SpatialInfoType;
 			friend ResolverType;
 			friend ResolverInfoType;
 
@@ -39,17 +44,6 @@ namespace ssvsc
 				shape.move(Vec2i(velocity * mFT));
 				ssvs::nullify(acceleration);
 			}
-
-		public:
-			using RestitutionData::RestitutionData;
-			using ResolverInfoType::ResolverInfoType;
-
-			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
-			ssvu::Delegate<void(const ResolutionInfoType&)> onResolution;
-
-			inline Body(TW& mWorld, bool mIsStatic, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, ResolverInfoType{*this}, shape{mPos, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
-			inline ~Body() noexcept { destroy(); }
-			inline void destroy() { this->spatialInfo.template destroy<BodyTag>(); this->world.delBody(*this); }
 
 			inline void update(float mFT)
 			{
@@ -74,6 +68,7 @@ namespace ssvsc
 
 				this->spatialInfo.postUpdate(); onPostUpdate();
 			}
+
 			inline void handleCollision(float mFT, Body* mBody)
 			{
 				if(mBody == this || !this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
@@ -83,6 +78,17 @@ namespace ssvsc
 
 				if(mustResolveAgainst(*mBody)) toResolve.push_back(mBody);
 			}
+
+		public:
+			using RestitutionData::RestitutionData;
+			using ResolverInfoType::ResolverInfoType;
+
+			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
+			ssvu::Delegate<void(const ResolutionInfoType&)> onResolution;
+
+			inline Body(TW& mWorld, bool mIsStatic, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, ResolverInfoType{*this}, shape{mPos, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
+			inline ~Body() noexcept { destroy(); }
+			inline void destroy() { this->spatialInfo.template destroy<BodyTag>(); this->world.delBody(*this); }
 
 			inline void applyForce(const Vec2f& mForce) noexcept		{ acceleration += mForce; }
 			inline void resolvePosition(const Vec2i& mOffset) noexcept	{ shape.move(mOffset); lastResolution += mOffset; }

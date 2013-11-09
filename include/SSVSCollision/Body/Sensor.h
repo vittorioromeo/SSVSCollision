@@ -15,13 +15,20 @@ namespace ssvsc
 {
 	template<typename TW> class Sensor : public Base<TW>
 	{
+		public:
+			using SpatialInfoType = typename TW::SpatialInfoType;
+			using DetectionInfoType = typename TW::DetectionInfoType;
+			using ResolverType = typename TW::ResolverType;
+			using ResolverInfoType = typename TW::ResolverInfoType;
+			using ResolutionInfoType = typename TW::ResolutionInfoType;
+
+			friend TW;
+			friend SpatialInfoType;
+			friend ResolverType;
+			friend ResolverInfoType;
+
 		private:
 			AABB shape;
-
-		public:
-			inline Sensor(TW& mWorld, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, shape{mPos, mSize / 2} { this->spatialInfo.template preUpdate<SensorTag>(); }
-			inline ~Sensor() noexcept { destroy(); }
-			inline void destroy() { this->spatialInfo.template destroy<SensorTag>(); this->world.delSensor(*this); }
 
 			inline void update(float mFT)
 			{
@@ -36,6 +43,11 @@ namespace ssvsc
 				if(!this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 				this->onDetection({*mBody, mBody->getUserData(), mFT});
 			}
+
+		public:
+			inline Sensor(TW& mWorld, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, shape{mPos, mSize / 2} { this->spatialInfo.template preUpdate<SensorTag>(); }
+			inline ~Sensor() noexcept { destroy(); }
+			inline void destroy() { this->spatialInfo.template destroy<SensorTag>(); this->world.delSensor(*this); }
 
 			inline void setPosition(const Vec2i& mPos)
 			{

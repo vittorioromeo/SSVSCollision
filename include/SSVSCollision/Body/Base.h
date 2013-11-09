@@ -14,11 +14,14 @@ namespace ssvsc
 	class AABB;
 	template<typename TW> class Body;
 
-	template<typename TW> class Base : public ssvu::MemoryManageable, public Groupable
+	template<typename TW> class Base : ssvu::NoCopy, public ssvu::MemoryManageable, public Groupable
 	{
 		public:
 			using SpatialInfoType = typename TW::SpatialInfoType;
 			using DetectionInfoType = typename TW::DetectionInfoType;
+			using ResolverType = typename TW::ResolverType;
+			using ResolverInfoType = typename TW::ResolverInfoType;
+			using ResolutionInfoType = typename TW::ResolutionInfoType;
 
 		protected:
 			TW& world;
