@@ -28,11 +28,11 @@ namespace ssvsc
 
 			inline void applyImpulse(const Vec2f& mImpulse) noexcept
 			{
-				body.velocity.x += body.getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult)));
-				body.velocity.y += body.getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult)));
+				//body.velocity.x += body.getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult)));
+				//body.velocity.y += body.getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult)));
 			}
 			inline void applyImpulse(const BodyType& mBody, const Vec2f& mImpulse) noexcept	{ if(body.mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
-			inline void applyStress(const Vec2f& mStress) noexcept							{ nextStress += ssvs::getAbs(body.getInvMass() * mStress * stressMult); }
+			inline void applyStress(const Vec2f& mStress) noexcept							{ }//nextStress += ssvs::getAbs(body.getInvMass() * mStress * stressMult); }
 			inline void applyStress(const BodyType& mBody, const Vec2f& mStress) noexcept	{ if(body.mustResolveAgainst(mBody)) applyStress(mStress); }
 
 			inline void setVelTransferMultX(float mValue) noexcept					{ velTransferMult.x = mValue; }
@@ -90,7 +90,7 @@ namespace ssvsc
 
 				mBody.onResolution({*b, b->getUserData(), resolution, noResolvePosition, noResolveVelocity});
 
-				if(!noResolvePosition) mBody.resolvePosition(resolution);
+				//if(!noResolvePosition) mBody.resolvePosition(resolution);
 				if(noResolveVelocity) continue;
 
 				bool oldShapeLeftOfS{oldShape.isLeftOf(s)}, oldShapeRightOfS{oldShape.isRightOf(s)};
@@ -150,8 +150,8 @@ namespace ssvsc
 				b->applyImpulse(mBody, impulse);
 				b->applyStress(mBody, (mBody.stress + impulse) * mBody.getMass());
 
-				mBody.velocity.x = std::abs(desiredX) * ssvu::getSign(mBody.velocity.x);
-				mBody.velocity.y = std::abs(desiredY) * ssvu::getSign(mBody.velocity.y);
+				//mBody.velocity.x = std::abs(desiredX) * ssvu::getSign(mBody.velocity.x);
+				//mBody.velocity.y = std::abs(desiredY) * ssvu::getSign(mBody.velocity.y);
 			}
 		}
 		inline void postUpdate(TW& mWorld) const
