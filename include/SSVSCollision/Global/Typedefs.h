@@ -7,7 +7,7 @@
 
 #include <bitset>
 #include <memory>
-#include <SSVStart/SSVStart.h>
+#include <SSVStart/SSVStart.hpp>
 
 namespace ssvsc
 {
