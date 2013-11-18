@@ -1,5 +1,5 @@
 FIND_PATH(SSVSCOLLISION_INCLUDE_DIR
-  NAMES SSVSCollision/SSVSCollision.h
+  NAMES SSVSCollision/SSVSCollision.hpp
   PATH_SUFFIXES include/
   PATHS "${PROJECT_SOURCE_DIR}/../SSVSCollision/"
   "${PROJECT_SOURCE_DIR}/extlibs/SSVSCollision/"
