@@ -90,7 +90,7 @@ namespace ssvsc
 			inline ~Body() noexcept { destroy(); }
 			inline void destroy() { this->spatialInfo.template destroy<BodyTag>(); this->world.delBody(*this); }
 
-			inline void applyForce(const Vec2f& mForce) noexcept		{ acceleration += mForce; }
+			inline void applyAccel(const Vec2f& mAccel) noexcept		{ acceleration += mAccel; }
 			inline void resolvePosition(const Vec2i& mOffset) noexcept	{ shape.move(mOffset); lastResolution += mOffset; }
 
 			inline void setPosition(const Vec2i& mPos)					{ oldShape = shape; shape.setPosition(mPos);	this->spatialInfo.invalidate(); }
