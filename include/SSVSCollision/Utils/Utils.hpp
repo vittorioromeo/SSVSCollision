@@ -18,18 +18,18 @@ namespace ssvsc
 		}
 		template<typename T> inline bool isSegmentInsersecting(const Segment<T>& mA, const Segment<T>& mB) noexcept
 		{
-			float a1{getSigned2DTriangleArea(mA.start, mA.end, mB.end)}, a2{getSigned2DTriangleArea(mA.start, mA.end, mB.start)};
+			float a1(getSigned2DTriangleArea(mA.start, mA.end, mB.end)), a2(getSigned2DTriangleArea(mA.start, mA.end, mB.start));
 			if(a1 * a2 > 0.f) return false;
 
-			float a3{getSigned2DTriangleArea(mB.start, mB.end, mA.start)}, a4{a3 + a2 - a1};
+			float a3(getSigned2DTriangleArea(mB.start, mB.end, mA.start)), a4{a3 + a2 - a1};
 			return a3 * a4 > 0.f || a3 - a4 == 0;
 		}
 		template<typename T> inline bool isSegmentInsersecting(const Segment<T>& mA, const Segment<T>& mB, Vec2<T>& mIntersection) noexcept
 		{
-			float a1{getSigned2DTriangleArea(mA.start, mA.end, mB.end)}, a2{getSigned2DTriangleArea(mA.start, mA.end, mB.start)};
+			float a1(getSigned2DTriangleArea(mA.start, mA.end, mB.end)), a2(getSigned2DTriangleArea(mA.start, mA.end, mB.start));
 			if(a1 * a2 > 0.f) return false;
 
-			float a3{getSigned2DTriangleArea(mB.start, mB.end, mA.start)}, a4{a3 + a2 - a1};
+			float a3(getSigned2DTriangleArea(mB.start, mB.end, mA.start)), a4{a3 + a2 - a1};
 			if(a3 * a4 > 0.f || a3 - a4 == 0) return false;
 
 			mIntersection = mA.start + (a3 / (a3 - a4)) * (mA.end - mA.start);

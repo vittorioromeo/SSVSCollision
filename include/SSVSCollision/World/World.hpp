@@ -13,8 +13,8 @@ namespace ssvsc
 	template<typename TW> class Base;
 	template<typename TW> class Body;
 	template<typename TW> class Sensor;
-	template<typename TW> class DetectionInfo;
-	template<typename TW> class ResolutionInfo;
+	template<typename TW> struct DetectionInfo;
+	template<typename TW> struct ResolutionInfo;
 
 	template<template<typename> class TS, template<typename> class TR> class World : ssvu::NoCopy
 	{

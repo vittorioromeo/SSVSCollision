@@ -116,7 +116,7 @@ namespace ssvsc
 			inline const Vec2i& getOldPosition() const noexcept					{ return oldShape.getPosition(); }
 			inline const Vec2f& getOldVelocity() const noexcept					{ return oldVelocity; }
 			inline const Vec2f& getAcceleration() const noexcept				{ return acceleration; }
-			inline const Vec2i& getSize() const noexcept						{ return shape.getSize(); }
+			inline Vec2i getSize() const noexcept								{ return shape.getSize(); }
 			inline float getMass() const noexcept								{ return _static ? 0 : massData.getMass(); }
 			inline float getInvMass() const noexcept							{ return _static ? 0 : massData.getInvMass(); }
 			inline int getWidth() const noexcept								{ return shape.getWidth(); }
