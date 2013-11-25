@@ -29,8 +29,6 @@ namespace ssvsc
 
 			inline const decltype(bodies)& getBodies() const noexcept { return bodies; }
 	};
-
-	// TODO: dirtycells
 }
 
 #endif
