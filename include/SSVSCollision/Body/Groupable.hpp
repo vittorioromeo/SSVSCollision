@@ -40,9 +40,9 @@ namespace ssvsc
 			inline void clearGroupsToCheck() noexcept	{ groupsToCheck.reset(); }
 			inline void clearGroupsNoResolve() noexcept	{ groupsNoResolve.reset(); }
 
-			constexpr inline bool hasGroup(Group mGroup) const noexcept				{ return groups[mGroup]; }
-			constexpr inline bool hasGroupToCheck(Group mGroup) const noexcept		{ return groupsToCheck[mGroup]; }
-			constexpr inline bool hasGroupNoResolve(Group mGroup) const noexcept	{ return groupsNoResolve[mGroup]; }
+			inline constexpr bool hasGroup(Group mGroup) const noexcept				{ return groups[mGroup]; }
+			inline constexpr bool hasGroupToCheck(Group mGroup) const noexcept		{ return groupsToCheck[mGroup]; }
+			inline constexpr bool hasGroupNoResolve(Group mGroup) const noexcept	{ return groupsNoResolve[mGroup]; }
 
 			inline bool hasAnyGroup(const GroupBitset& mGroups) const noexcept			{ return (groups & mGroups).any(); }
 			inline bool hasAnyGroupToCheck(const GroupBitset& mGroups) const noexcept	{ return (groupsToCheck & mGroups).any(); }
