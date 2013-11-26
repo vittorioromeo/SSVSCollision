@@ -30,7 +30,7 @@ namespace ssvsc
 		private:
 			AABB shape;
 
-			inline void update(float mFT)
+			inline void update(FT mFT)
 			{
 				this->onPreUpdate();
 				if(this->outOfBounds) { this->outOfBounds = false; return; };
@@ -38,7 +38,7 @@ namespace ssvsc
 				this->spatialInfo.template handleCollisions<SensorTag>(mFT);
 				this->spatialInfo.postUpdate();
 			}
-			inline void handleCollision(float mFT, Body<TW>* mBody)
+			inline void handleCollision(FT mFT, Body<TW>* mBody)
 			{
 				if(!this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 				this->onDetection({*mBody, mBody->getUserData(), mFT});

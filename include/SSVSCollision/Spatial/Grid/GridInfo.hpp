@@ -28,8 +28,8 @@ namespace ssvsc
 
 			inline const AABB& getShapeImpl(BodyTag) const noexcept		{ return reinterpret_cast<BodyType&>(base).getShape(); }
 			inline const AABB& getShapeImpl(SensorTag) const noexcept	{ return reinterpret_cast<SensorType&>(base).getShape(); }
-			inline void handleCollisionImpl(float mFT, BodyType* mBody, BodyTag) const noexcept		{ return reinterpret_cast<BodyType&>(base).handleCollision(mFT, mBody); }
-			inline void handleCollisionImpl(float mFT, BodyType* mBody, SensorTag) const noexcept	{ return reinterpret_cast<SensorType&>(base).handleCollision(mFT, mBody); }
+			inline void handleCollisionImpl(FT mFT, BodyType* mBody, BodyTag) const noexcept		{ return reinterpret_cast<BodyType&>(base).handleCollision(mFT, mBody); }
+			inline void handleCollisionImpl(FT mFT, BodyType* mBody, SensorTag) const noexcept	{ return reinterpret_cast<SensorType&>(base).handleCollision(mFT, mBody); }
 
 			template<typename TTag> inline void calcEdges()
 			{
@@ -77,7 +77,7 @@ namespace ssvsc
 			template<typename TTag> inline void preUpdate()	{ if(invalid) calcEdges<TTag>(); }
 			inline void postUpdate() const noexcept			{ }
 			template<typename TTag> inline void destroy()	{ clear<TTag>(); }
-			template<typename TTag> inline void handleCollisions(float mFT)
+			template<typename TTag> inline void handleCollisions(FT mFT)
 			{
 				static int lastPaint{-1};
 				++lastPaint;

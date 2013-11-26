@@ -48,7 +48,7 @@ namespace ssvsc
 			inline BodyType& create(const Vec2i& mPos, const Vec2i& mSize, bool mStatic)	{ return bodies.create(*this, mStatic, mPos, mSize); }
 			inline SensorType& createSensor(const Vec2i& mPos, const Vec2i& mSize)			{ return sensors.create(*this, mPos, mSize); }
 
-			inline void update(float mFT)
+			inline void update(FT mFT)
 			{
 				bodies.refresh();
 				sensors.refresh();

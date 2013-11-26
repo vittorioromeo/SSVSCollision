@@ -38,14 +38,14 @@ namespace ssvsc
 			Vec2i lastResolution;
 			bool mustInit{true};
 
-			inline void integrate(float mFT)
+			inline void integrate(FT mFT)
 			{
 				velocity += acceleration * mFT;
 				shape.move(Vec2i(velocity * mFT));
 				ssvs::nullify(acceleration);
 			}
 
-			inline void update(float mFT)
+			inline void update(FT mFT)
 			{
 				if(mustInit) { this->spatialInfo.template init<BodyTag>(); mustInit = false; }
 
@@ -69,7 +69,7 @@ namespace ssvsc
 				this->spatialInfo.postUpdate(); onPostUpdate();
 			}
 
-			inline void handleCollision(float mFT, Body* mBody)
+			inline void handleCollision(FT mFT, Body* mBody)
 			{
 				if(mBody == this || !this->mustCheck(*mBody) || !shape.isOverlapping(mBody->getShape())) return;
 
