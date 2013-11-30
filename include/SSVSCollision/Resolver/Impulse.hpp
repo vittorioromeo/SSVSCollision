@@ -32,7 +32,15 @@ namespace ssvsc
 				body.velocity.y += body.getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult)));
 			}
 			inline void applyImpulse(const BodyType& mBody, const Vec2f& mImpulse) noexcept	{ if(body.mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
-			inline void applyStress(const Vec2f& mStress) noexcept							{ nextStress += ssvs::getAbs(body.getInvMass() * mStress * stressMult); }
+			inline void applyStress(const Vec2f& mStress) noexcept
+			{
+				const auto& newStress(nextStress + ssvs::getAbs(body.getInvMass() * mStress * stressMult));
+
+				// If the operation would result in an overflow, return
+				if(newStress.x > std::numeric_limits<float>::max() || newStress.y > std::numeric_limits<float>::max()) return;
+
+				nextStress = newStress;
+			}
 			inline void applyStress(const BodyType& mBody, const Vec2f& mStress) noexcept	{ if(body.mustResolveAgainst(mBody)) applyStress(mStress); }
 
 			inline void setVelTransferMultX(float mValue) noexcept					{ velTransferMult.x = mValue; }
@@ -126,10 +134,12 @@ namespace ssvsc
 
 				Vec2f velDiff{b->velocity - mBody.velocity};
 				float velAlongNormal{ssvs::getDotProduct(velDiff, normal)};
-				if(velAlongNormal > 0) continue;
+				if(velAlongNormal > 0 || isnan(velAlongNormal)) continue;
 				float invMassSum{mBody.getInvMass() + b->getInvMass()};
+
+				assert(invMassSum != 0);
 				float computedVel{velAlongNormal / invMassSum};
-				Vec2f impulse{-(1.f + mBody.getRestitutionX()) * computedVel * normal.x , -(1.f + mBody.getRestitutionY()) * computedVel * normal.y};
+				Vec2f impulse{-(1.f + mBody.getRestitutionX()) * computedVel * normal.x, -(1.f + mBody.getRestitutionY()) * computedVel * normal.y};
 
 				if(normal.y != 0)
 				{
