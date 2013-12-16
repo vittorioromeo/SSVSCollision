@@ -28,7 +28,7 @@ namespace ssvsc
 
 			inline const AABB& getShapeImpl(BodyTag) const noexcept		{ return reinterpret_cast<BodyType&>(base).getShape(); }
 			inline const AABB& getShapeImpl(SensorTag) const noexcept	{ return reinterpret_cast<SensorType&>(base).getShape(); }
-			inline void handleCollisionImpl(FT mFT, BodyType* mBody, BodyTag) const noexcept		{ return reinterpret_cast<BodyType&>(base).handleCollision(mFT, mBody); }
+			inline void handleCollisionImpl(FT mFT, BodyType* mBody, BodyTag) const noexcept	{ return reinterpret_cast<BodyType&>(base).handleCollision(mFT, mBody); }
 			inline void handleCollisionImpl(FT mFT, BodyType* mBody, SensorTag) const noexcept	{ return reinterpret_cast<SensorType&>(base).handleCollision(mFT, mBody); }
 
 			template<typename TTag> inline void calcEdges()

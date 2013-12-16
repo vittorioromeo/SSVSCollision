@@ -31,7 +31,6 @@ namespace ssvsc
 				body.velocity.x += body.getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult)));
 				body.velocity.y += body.getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult)));
 			}
-			inline void applyImpulse(const BodyType& mBody, const Vec2f& mImpulse) noexcept	{ if(body.mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
 			inline void applyStress(const Vec2f& mStress) noexcept
 			{
 				const auto& newStress(nextStress + ssvs::getAbs(body.getInvMass() * mStress * stressMult));
@@ -41,20 +40,21 @@ namespace ssvsc
 
 				nextStress = newStress;
 			}
+			inline void applyImpulse(const BodyType& mBody, const Vec2f& mImpulse) noexcept	{ if(body.mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
 			inline void applyStress(const BodyType& mBody, const Vec2f& mStress) noexcept	{ if(body.mustResolveAgainst(mBody)) applyStress(mStress); }
 
-			inline void setVelTransferMultX(float mValue) noexcept					{ velTransferMult.x = mValue; }
-			inline void setVelTransferMultY(float mValue) noexcept					{ velTransferMult.y = mValue; }
-			inline void setStressMult(float mValue) noexcept						{ stressMult = mValue; }
-			inline void setStressPropagationMult(float mValue) noexcept				{ stressPropagationMult = mValue; }
+			inline void setVelTransferMultX(float mValue) noexcept			{ velTransferMult.x = mValue; }
+			inline void setVelTransferMultY(float mValue) noexcept			{ velTransferMult.y = mValue; }
+			inline void setStressMult(float mValue) noexcept				{ stressMult = mValue; }
+			inline void setStressPropagationMult(float mValue) noexcept		{ stressPropagationMult = mValue; }
 
-			inline float getVelTransferMultX() const noexcept						{ return velTransferMult.x; }
-			inline float getVelTransferMultY() const noexcept						{ return velTransferMult.y; }
-			inline Vec2f& getVelTransferImpulse() noexcept							{ return velTransferImpulse; }
-			inline const Vec2f& getVelTransferImpulse() const noexcept				{ return velTransferImpulse; }
-			inline const Vec2f& getStress() const noexcept							{ return stress; }
-			inline float getStressMult() const noexcept								{ return stressMult; }
-			inline float getStressPropagationMult() const noexcept					{ return stressPropagationMult; }
+			inline float getVelTransferMultX() const noexcept				{ return velTransferMult.x; }
+			inline float getVelTransferMultY() const noexcept				{ return velTransferMult.y; }
+			inline Vec2f& getVelTransferImpulse() noexcept					{ return velTransferImpulse; }
+			inline const Vec2f& getVelTransferImpulse() const noexcept		{ return velTransferImpulse; }
+			inline const Vec2f& getStress() const noexcept					{ return stress; }
+			inline float getStressMult() const noexcept						{ return stressMult; }
+			inline float getStressPropagationMult() const noexcept			{ return stressPropagationMult; }
 	};
 
 	template<typename TW> struct Impulse

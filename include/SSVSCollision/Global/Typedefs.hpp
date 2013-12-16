@@ -24,8 +24,8 @@ namespace ssvsc
 	enum class QueryType{Point, Distance, RayCast, OrthoLeft, OrthoRight, OrthoUp, OrthoDown};
 	enum class QueryMode{All, ByGroup};
 
-	class BodyTag { };
-	class SensorTag { };
+	struct BodyTag { };
+	struct SensorTag { };
 }
 
 #endif

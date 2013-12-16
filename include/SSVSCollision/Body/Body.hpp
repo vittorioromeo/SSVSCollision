@@ -109,28 +109,28 @@ namespace ssvsc
 			inline void setResolve(bool mResolve) noexcept				{ resolve = mResolve; }
 			inline void setMass(float mMass) noexcept					{ massData.setMass(mMass); }
 
-			inline AABB& getShape() noexcept									{ return shape; }
-			inline AABB& getOldShape() noexcept									{ return oldShape; }
-			inline const Vec2i& getPosition() const noexcept					{ return shape.getPosition(); }
-			inline const Vec2f& getVelocity() const noexcept					{ return velocity; }
-			inline const Vec2i& getOldPosition() const noexcept					{ return oldShape.getPosition(); }
-			inline const Vec2f& getOldVelocity() const noexcept					{ return oldVelocity; }
-			inline const Vec2f& getAcceleration() const noexcept				{ return acceleration; }
-			inline Vec2i getSize() const noexcept								{ return shape.getSize(); }
-			inline float getMass() const noexcept								{ return _static ? 0 : massData.getMass(); }
-			inline float getInvMass() const noexcept							{ return _static ? 0 : massData.getInvMass(); }
-			inline int getWidth() const noexcept								{ return shape.getWidth(); }
-			inline int getHeight() const noexcept								{ return shape.getHeight(); }
-			inline bool isStatic() const noexcept								{ return _static; }
-			inline void* getUserData() const noexcept							{ return userData; }
-			inline bool hasMovedLeft() const noexcept							{ return shape.getX() < oldShape.getX(); }
-			inline bool hasMovedRight() const noexcept							{ return shape.getX() > oldShape.getX(); }
-			inline bool hasMovedUp() const noexcept								{ return shape.getY() < oldShape.getY(); }
-			inline bool hasMovedDown() const noexcept							{ return shape.getY() > oldShape.getY(); }
-			inline bool getResolve() const noexcept								{ return resolve; }
-			inline const Vec2i& getLastResolution() const noexcept				{ return lastResolution; }
+			inline AABB& getShape() noexcept							{ return shape; }
+			inline AABB& getOldShape() noexcept							{ return oldShape; }
+			inline const Vec2i& getPosition() const noexcept			{ return shape.getPosition(); }
+			inline const Vec2f& getVelocity() const noexcept			{ return velocity; }
+			inline const Vec2i& getOldPosition() const noexcept			{ return oldShape.getPosition(); }
+			inline const Vec2f& getOldVelocity() const noexcept			{ return oldVelocity; }
+			inline const Vec2f& getAcceleration() const noexcept		{ return acceleration; }
+			inline Vec2i getSize() const noexcept						{ return shape.getSize(); }
+			inline float getMass() const noexcept						{ return _static ? 0 : massData.getMass(); }
+			inline float getInvMass() const noexcept					{ return _static ? 0 : massData.getInvMass(); }
+			inline int getWidth() const noexcept						{ return shape.getWidth(); }
+			inline int getHeight() const noexcept						{ return shape.getHeight(); }
+			inline bool isStatic() const noexcept						{ return _static; }
+			inline void* getUserData() const noexcept					{ return userData; }
+			inline bool hasMovedLeft() const noexcept					{ return shape.getX() < oldShape.getX(); }
+			inline bool hasMovedRight() const noexcept					{ return shape.getX() > oldShape.getX(); }
+			inline bool hasMovedUp() const noexcept						{ return shape.getY() < oldShape.getY(); }
+			inline bool hasMovedDown() const noexcept					{ return shape.getY() > oldShape.getY(); }
+			inline bool getResolve() const noexcept						{ return resolve; }
+			inline const Vec2i& getLastResolution() const noexcept		{ return lastResolution; }
 
-			inline bool mustResolveAgainst(const Body& mBody) const noexcept	{ return resolve && !this->mustIgnoreResolution(mBody); }
+			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return resolve && !this->mustIgnoreResolution(mBody); }
 	};
 }
 
