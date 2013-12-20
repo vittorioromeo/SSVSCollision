@@ -135,3 +135,5 @@ namespace ssvsc
 }
 
 #endif
+
+// TODO: bodystate data-only class
