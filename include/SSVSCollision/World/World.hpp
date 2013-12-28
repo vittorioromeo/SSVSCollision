@@ -56,7 +56,7 @@ namespace ssvsc
 				for(const auto& s : sensors) s->update(mFT);
 				resolver.postUpdate(*this);
 			}
-			inline void clear() { bodies.clear(); sensors.clear(); }
+			inline void clear() noexcept { bodies.clear(); sensors.clear(); }
 
 			inline const decltype(bodies)& getBodies() const noexcept	{ return bodies; }
 			inline const decltype(sensors)& getSensors() const noexcept	{ return sensors; }
