@@ -38,7 +38,7 @@ namespace ssvsc
 				template<typename T> inline static void getBodies(std::vector<Body<TW>*>& mBodies, const T& mInternal, Group mGroup)
 				{
 					std::vector<Body<TW>*> result;
-					for(const auto& b : mInternal.grid.getCell(mInternal.index).getBodies()) if(b->hasGroup(mGroup)) result.push_back(b);
+					for(const auto& b : mInternal.grid.getCell(mInternal.index).getBodies()) if(b->hasGroup(mGroup)) result.emplace_back(b);
 					mBodies = result;
 				}
 			};

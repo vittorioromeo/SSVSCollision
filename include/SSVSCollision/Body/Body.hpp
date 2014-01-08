@@ -76,7 +76,7 @@ namespace ssvsc
 				this->onDetection({*mBody, mBody->getUserData(), mFT});
 				mBody->onDetection({*this, userData, mFT});
 
-				if(mustResolveAgainst(*mBody)) toResolve.push_back(mBody);
+				if(mustResolveAgainst(*mBody)) toResolve.emplace_back(mBody);
 			}
 
 		public:

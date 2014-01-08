@@ -22,7 +22,7 @@ namespace ssvsc
 			std::vector<BodyType*> bodies;
 
 		public:
-			inline void add(BaseType* mBase, BodyTag) { bodies.push_back(reinterpret_cast<BodyType*>(mBase)); }
+			inline void add(BaseType* mBase, BodyTag) { bodies.emplace_back(reinterpret_cast<BodyType*>(mBase)); }
 			inline void del(BaseType* mBase, BodyTag) { ssvu::eraseRemove(bodies, reinterpret_cast<BodyType*>(mBase)); }
 			inline void add(BaseType*, SensorTag) { }
 			inline void del(BaseType*, SensorTag) { }

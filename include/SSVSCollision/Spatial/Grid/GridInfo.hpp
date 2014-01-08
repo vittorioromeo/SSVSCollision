@@ -57,7 +57,7 @@ namespace ssvsc
 					for(int iY{startY}; iY <= endY; ++iY)
 					{
 						auto& c(grid.getCell(iX, iY));
-						cells.push_back(&c);
+						cells.emplace_back(&c);
 						c.add(&base, TTag{});
 					}
 
