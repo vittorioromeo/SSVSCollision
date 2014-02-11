@@ -14,18 +14,7 @@
 
 namespace ssvsc
 {
-	struct BodyData
-	{
-		AABB shape, oldShape;
-		bool _static, resolve{true};
-		Vec2f velocity, oldVelocity, acceleration;
-		MassData massData;
-		Vec2i lastResolution;
-
-		inline BodyData(bool mIsStatic, const Vec2i& mPos, const Vec2i& mSize) noexcept : shape{mPos, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
-	};
-
-	template<typename TW> class Body : public Base<TW>, public TW::ResolverInfoType, public RestitutionData
+	template<typename TW> class Body : public Base<TW>, public TW::ResolverInfoType
 	{
 		public:
 			using SpatialInfoType = typename TW::SpatialInfoType;
@@ -41,9 +30,8 @@ namespace ssvsc
 
 		protected:
 			BodyData bodyData;
-			MassData massData;
-			void* userData{nullptr};
 			std::vector<Body*> toResolve;
+			void* userData{nullptr};
 			bool mustInit{true};
 
 			inline void integrate(FT mFT) noexcept
@@ -88,7 +76,6 @@ namespace ssvsc
 			}
 
 		public:
-			using RestitutionData::RestitutionData;
 			using ResolverInfoType::ResolverInfoType;
 
 			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
@@ -115,7 +102,9 @@ namespace ssvsc
 			inline void setVelocityX(float mX) noexcept					{ bodyData.velocity.x = mX; }
 			inline void setVelocityY(float mY) noexcept					{ bodyData.velocity.y = mY; }
 			inline void setResolve(bool mResolve) noexcept				{ bodyData.resolve = mResolve; }
-			inline void setMass(float mMass) noexcept					{ massData.setMass(mMass); }
+			inline void setMass(float mMass) noexcept					{ bodyData.setMass(mMass); }
+			inline void setRestitutionX(float mX) noexcept				{ bodyData.restitution.x = mX; }
+			inline void setRestitutionY(float mY) noexcept				{ bodyData.restitution.y = mY; }
 
 			inline AABB& getShape() noexcept							{ return bodyData.shape; }
 			inline AABB& getOldShape() noexcept							{ return bodyData.oldShape; }
@@ -127,8 +116,8 @@ namespace ssvsc
 			inline const Vec2f& getOldVelocity() const noexcept			{ return bodyData.oldVelocity; }
 			inline const Vec2f& getAcceleration() const noexcept		{ return bodyData.acceleration; }
 			inline Vec2i getSize() const noexcept						{ return getShape().getSize(); }
-			inline float getMass() const noexcept						{ return isStatic() ? 0 : massData.getMass(); }
-			inline float getInvMass() const noexcept					{ return isStatic() ? 0 : massData.getInvMass(); }
+			inline float getMass() const noexcept						{ return isStatic() ? 0 : bodyData.mass; }
+			inline float getInvMass() const noexcept					{ return isStatic() ? 0 : bodyData.invMass; }
 			inline int getWidth() const noexcept						{ return getShape().getWidth(); }
 			inline int getHeight() const noexcept						{ return getShape().getHeight(); }
 			inline bool isStatic() const noexcept						{ return bodyData._static; }
@@ -139,6 +128,8 @@ namespace ssvsc
 			inline bool hasMovedDown() const noexcept					{ return getShape().getY() > getOldShape().getY(); }
 			inline bool getResolve() const noexcept						{ return bodyData.resolve; }
 			inline const Vec2i& getLastResolution() const noexcept		{ return bodyData.lastResolution; }
+			inline float getRestitutionX() const noexcept				{ return bodyData.restitution.x; }
+			inline float getRestitutionY() const noexcept				{ return bodyData.restitution.y; }
 
 			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return getResolve() && !this->mustIgnoreResolution(mBody); }
 	};

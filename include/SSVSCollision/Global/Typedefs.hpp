@@ -11,7 +11,7 @@
 
 namespace ssvsc
 {
-	constexpr std::size_t maxGroups = 32;
+	constexpr std::size_t maxGroups{32};
 	using Group = unsigned int;
 	using GroupBitset = std::bitset<maxGroups>;
 

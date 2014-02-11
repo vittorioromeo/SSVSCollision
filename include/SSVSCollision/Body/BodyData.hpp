@@ -5,29 +5,21 @@
 #ifndef SSVSC_BODY_BODYDATA
 #define SSVSC_BODY_BODYDATA
 
+#include "SSVSCollision/AABB/AABB.hpp"
+
 namespace ssvsc
 {
-	class MassData
+	struct BodyData
 	{
-		private:
-			float mass{1.f}, invMass{1.f};
+		AABB shape, oldShape;
+		Vec2f velocity, oldVelocity, acceleration, restitution;
+		Vec2i lastResolution;
+		float mass{1.f}, invMass{1.f};
+		bool _static, resolve{true};
 
-		public:
-			inline void setMass(float mMass) noexcept	{ mass = mMass; invMass = (mMass == 0 ? 0 : (1.f / mMass)); }
-			inline float getMass() const noexcept		{ return mass; }
-			inline float getInvMass() const noexcept	{ return invMass; }
-	};
+		inline BodyData(bool mIsStatic, const Vec2i& mPos, const Vec2i& mSize) noexcept : shape{mPos, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 
-	class RestitutionData
-	{
-		private:
-			float x{0.f}, y{0.f};
-
-		public:
-			inline void setRestitutionX(float mX) noexcept	{ x = mX; }
-			inline void setRestitutionY(float mY) noexcept	{ y = mY; }
-			inline float getRestitutionX() const noexcept	{ return x; }
-			inline float getRestitutionY() const noexcept	{ return y; }
+		inline void setMass(float mMass) noexcept { mass = mMass; invMass = (mMass == 0 ? 0 : (1.f / mMass)); }
 	};
 }
 
