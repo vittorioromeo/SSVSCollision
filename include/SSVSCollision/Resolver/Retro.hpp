@@ -56,7 +56,7 @@ namespace ssvsc
 
 				// TODO: consider when two different bodies with two different rest. collide
 				const auto& velocity(mBody.velocity);
-				const AABB& os(b->oldShape);
+				const AABB& os(b->getOldShape());
 
 				if	((resolution.y < 0 && velocity.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) ||
 					(resolution.y > 0 && velocity.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))))

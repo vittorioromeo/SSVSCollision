@@ -28,8 +28,9 @@ namespace ssvsc
 
 			inline void applyImpulse(const Vec2f& mImpulse) noexcept
 			{
-				body.velocity.x += body.getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult)));
-				body.velocity.y += body.getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult)));
+				const auto& vel(body.getVelocity());
+				body.setVelocityX(vel.x + body.getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult))));
+				body.setVelocityY(vel.y + body.getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult))));
 			}
 			inline void applyStress(const Vec2f& mStress) noexcept
 			{
@@ -64,16 +65,16 @@ namespace ssvsc
 
 		inline void resolve(BodyType& mBody, std::vector<BodyType*>& mToResolve) const
 		{
-			AABB& shape(mBody.shape);
-			const AABB& oldShape(mBody.oldShape);
+			AABB& shape(mBody.getShape());
+			const AABB& oldShape(mBody.getOldShape());
 
-			ssvu::sort(mToResolve, [&shape](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->shape) > Utils::getOverlapArea(shape, mB->shape); });
+			ssvu::sort(mToResolve, [&shape](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
 			int resXNeg{0}, resXPos{0}, resYNeg{0}, resYPos{0};
 			constexpr int tolerance{20};
 
 			for(const auto& b : mToResolve)
 			{
-				int iX{Utils::getMinIntersectionX(shape, b->shape)}, iY{Utils::getMinIntersectionY(shape, b->shape)};
+				int iX{Utils::getMinIntersectionX(shape, b->getShape())}, iY{Utils::getMinIntersectionY(shape, b->getShape())};
 
 				if(std::abs(iX) < std::abs(iY))
 				{
@@ -89,7 +90,7 @@ namespace ssvsc
 
 			for(const auto& b : mToResolve)
 			{
-				const AABB& s(b->shape);
+				const AABB& s(b->getShape());
 				if(!shape.isOverlapping(s)) continue;
 
 				int iX{Utils::getMinIntersectionX(shape, s)}, iY{Utils::getMinIntersectionY(shape, s)};
@@ -105,8 +106,8 @@ namespace ssvsc
 				bool oldShapeAboveS{oldShape.isAbove(s)}, oldShapeBelowS{oldShape.isBelow(s)};
 				bool oldHOverlap{!(oldShapeLeftOfS || oldShapeRightOfS)}, oldVOverlap{!(oldShapeAboveS || oldShapeBelowS)};
 
-				const auto& velocity(mBody.velocity);
-				const AABB& os(b->oldShape);
+				const auto& velocity(mBody.getVelocity());
+				const AABB& os(b->getOldShape());
 				float desiredX{velocity.x}, desiredY{velocity.y};
 
 				Vec2f normal;
@@ -132,7 +133,7 @@ namespace ssvsc
 					desiredX *= mBody.getRestitutionX();
 				}
 
-				Vec2f velDiff{b->velocity - mBody.velocity};
+				Vec2f velDiff{b->getVelocity() - mBody.getVelocity()};
 				float velAlongNormal{ssvs::getDotProduct(velDiff, normal)};
 				if(velAlongNormal > 0 || isnan(velAlongNormal)) continue;
 				float invMassSum{mBody.getInvMass() + b->getInvMass()};
@@ -143,14 +144,14 @@ namespace ssvsc
 
 				if(normal.y != 0)
 				{
-					float velTransferX{b->velocity.x - mBody.velocity.x};
+					float velTransferX{b->getVelocity().x - mBody.getVelocity().x};
 					velTransferX /= invMassSum;
 					if(b->velTransferMult.x != 0) velTransferX *= std::sqrt(mBody.velTransferMult.x * b->velTransferMult.x); else velTransferX *= 0;
 					mBody.velTransferImpulse.x += velTransferX;
 				}
 				if(normal.x != 0)
 				{
-					float velTransferY{b->velocity.y - mBody.velocity.y};
+					float velTransferY{b->getVelocity().y - mBody.getVelocity().y};
 					velTransferY /= invMassSum;
 					if(b->velTransferMult.y != 0) velTransferY *= std::sqrt(mBody.velTransferMult.y * b->velTransferMult.y); else velTransferY *= 0;
 					mBody.velTransferImpulse.y += velTransferY;
@@ -160,8 +161,8 @@ namespace ssvsc
 				b->applyImpulse(mBody, impulse);
 				b->applyStress(mBody, (mBody.stress + impulse) * mBody.getMass());
 
-				mBody.velocity.x = std::abs(desiredX) * ssvu::getSign(mBody.velocity.x);
-				mBody.velocity.y = std::abs(desiredY) * ssvu::getSign(mBody.velocity.y);
+				mBody.setVelocityX(std::abs(desiredX) * ssvu::getSign(mBody.getVelocity().x));
+				mBody.setVelocityY(std::abs(desiredY) * ssvu::getSign(mBody.getVelocity().y));
 			}
 		}
 		inline void postUpdate(TW& mWorld) const
