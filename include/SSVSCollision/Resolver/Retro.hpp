@@ -34,7 +34,7 @@ namespace ssvsc
 		{
 			AABB& shape(mBody.getShape());
 			const AABB& oldShape(mBody.getOldShape());
-			ssvu::sort(mToResolve, [&](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
+			ssvu::sort(mToResolve, [&shape](BodyType* mA, BodyType* mB){ return Utils::getOverlapArea(shape, mA->getShape()) > Utils::getOverlapArea(shape, mB->getShape()); });
 
 			for(const auto& b : mToResolve)
 			{
