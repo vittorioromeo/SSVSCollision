@@ -138,7 +138,7 @@ namespace ssvsc
 				if(velAlongNormal > 0 || isnan(velAlongNormal)) continue;
 				float invMassSum{mBody.getInvMass() + b->getInvMass()};
 
-				assert(invMassSum != 0);
+				SSVU_ASSERT(invMassSum != 0);
 				float computedVel{velAlongNormal / invMassSum};
 				Vec2f impulse{-(1.f + mBody.getRestitutionX()) * computedVel * normal.x, -(1.f + mBody.getRestitutionY()) * computedVel * normal.y};
 

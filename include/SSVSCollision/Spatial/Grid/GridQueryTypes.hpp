@@ -111,7 +111,7 @@ namespace ssvsc
 				if(dir.x != 0)
 				{
 					max.x /= dir.x;
-					assert(dir.x != 0);
+					SSVU_ASSERT(dir.x != 0);
 					deltaDist.x = cellSize / std::abs(dir.x);
 				}
 				else
@@ -123,7 +123,7 @@ namespace ssvsc
 				if(dir.y != 0)
 				{
 					max.y /= dir.y;
-					assert(dir.y != 0);
+					SSVU_ASSERT(dir.y != 0);
 					deltaDist.y = cellSize / std::abs(dir.y);
 				}
 				else
@@ -172,7 +172,7 @@ namespace ssvsc
 
 			Distance(TGrid& mGrid, const Vec2i& mPos, int mDistance) : Base<TW, TGrid>{mGrid, mPos}, cellSize{this->grid.getCellSize()}, distance{mDistance}, cellRadius{distance / cellSize}
 			{
-				assert(cellSize != 0);
+				SSVU_ASSERT(cellSize != 0);
 
 				for(int iRadius{0}; iRadius < cellRadius + 1; ++iRadius)
 				{

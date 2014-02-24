@@ -38,7 +38,7 @@ namespace ssvsc
 				inline int getOffset() const noexcept	{ return offset; }
 				inline int getCellSize() const noexcept	{ return cellSize; }
 
-				inline int getIdx(int mValue) const noexcept			{ assert(cellSize != 0); return mValue / cellSize; }
+				inline int getIdx(int mValue) const noexcept			{ SSVU_ASSERT(cellSize != 0); return mValue / cellSize; }
 				inline Vec2i getIdx(const Vec2i& mPos) const noexcept	{ return {getIdx(mPos.x), getIdx(mPos.y)}; }
 
 				inline const CellType& getCell(int mX, int mY) const	{ return cells.at(ssvu::get1DIdxFrom2D(mX + offset, mY + offset, cols)); }
