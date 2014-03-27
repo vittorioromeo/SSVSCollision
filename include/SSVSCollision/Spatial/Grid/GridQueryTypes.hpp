@@ -100,7 +100,7 @@ namespace ssvsc
 			Vec2i next;
 			Vec2f dir, deltaDist, increment, max;
 
-			RayCast(TGrid& mGrid, const Vec2i& mPos, const Vec2f& mDir) : Base<TW, TGrid>{mGrid, mPos}, cellSize{this->grid.getCellSize()}, dir{ssvs::getNormalized(mDir)},
+			RayCast(TGrid& mGrid, const Vec2i& mPos, const Vec2f& mDir) : Base<TW, TGrid>{mGrid, mPos}, cellSize{this->grid.getCellSize()}, dir{mDir},
 				increment{dir * static_cast<float>(cellSize)}, max{Vec2f(this->startIndex * cellSize) - this->startPos}
 			{
 				next.x = dir.x < 0 ? -1 : 1;
