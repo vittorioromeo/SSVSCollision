@@ -79,7 +79,7 @@ namespace ssvsc
 			template<typename TTag> inline void destroy()	{ clear<TTag>(); }
 			template<typename TTag> inline void handleCollisions(FT mFT)
 			{
-				static int lastPaint{-1};
+				static int lastPaint;
 				++lastPaint;
 
 				for(const auto& c : cells)

@@ -52,15 +52,36 @@ namespace ssvsc
 				inline bool isIdxValid(const Vec2i& mIdx) const noexcept					{ return mIdx.x >= getIdxXMin() && mIdx.x < getIdxXMax() && mIdx.y >= getIdxYMin() && mIdx.y < getIdxYMax(); }
 				inline bool isIdxValid(int mX1, int mY1, int mX2, int mY2) const noexcept	{ return mX1 >= getIdxXMin() && mX2 < getIdxXMax() && mY1 >= getIdxYMin() && mY2 < getIdxYMax(); }
 		};
+
+		struct HashGridHash
+		{
+			inline std::size_t operator()(int mKey) const noexcept { return mKey; }
+		};
+		struct HashGridEqual
+		{
+			inline bool operator()(int mA, int mB) const noexcept { return mA == mB; }
+		};
+
+		template<typename TW> using HashGridType = std::unordered_map<int, Cell<TW>, HashGridHash, HashGridEqual>;
+		template<typename TW> using GridType = std::vector<Cell<TW>>;
 	}
 
-	template<typename TW> struct Grid : public Internal::GridBase<TW, std::vector<Cell<TW>>, Grid<TW>>
+	template<typename TW> struct Grid : public Internal::GridBase<TW, Internal::GridType<TW>, Grid<TW>>
 	{
-		Grid(int mCols, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<TW, std::vector<Cell<TW>>, Grid<TW>>{mCols, mRows, mCellSize, mOffset} { this->cells.reserve(this->cols * this->rows); }
+		inline Grid(int mCols, int mRows, int mCellSize, int mOffset = 0)
+			: Internal::GridBase<TW, Internal::GridType<TW>, Grid<TW>>{mCols, mRows, mCellSize, mOffset}
+		{
+			this->cells.reserve(this->cols * this->rows);
+		}
 	};
-	template<typename TW> struct HashGrid : public Internal::GridBase<TW, std::unordered_map<int, Cell<TW>>, HashGrid<TW>>
+
+	template<typename TW> struct HashGrid : public Internal::GridBase<TW, Internal::HashGridType<TW>, HashGrid<TW>>
 	{
-		HashGrid(int mCols, int mRows, int mCellSize, int mOffset = 0) : Internal::GridBase<TW, std::unordered_map<int, Cell<TW>>, HashGrid<TW>>{mCols, mRows, mCellSize, mOffset} { }
+		inline HashGrid(int mCols, int mRows, int mCellSize, int mOffset = 0)
+			: Internal::GridBase<TW, Internal::HashGridType<TW>, HashGrid<TW>>{mCols, mRows, mCellSize, mOffset}
+		{
+
+		}
 	};
 
 	namespace GridQueryTypes
