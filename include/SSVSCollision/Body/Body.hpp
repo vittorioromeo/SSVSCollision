@@ -136,5 +136,3 @@ namespace ssvsc
 }
 
 #endif
-
-// TODO: cleanup, separate data and behavior
