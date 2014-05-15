@@ -66,7 +66,7 @@ namespace ssvsc
 		template<typename TW> using GridType = std::vector<Cell<TW>>;
 	}
 
-	template<typename TW> struct Grid : public Internal::GridBase<TW, Internal::GridType<TW>, Grid<TW>>
+	template<typename TW> struct Grid final : public Internal::GridBase<TW, Internal::GridType<TW>, Grid<TW>>
 	{
 		inline Grid(int mCols, int mRows, int mCellSize, int mOffset = 0)
 			: Internal::GridBase<TW, Internal::GridType<TW>, Grid<TW>>{mCols, mRows, mCellSize, mOffset}
@@ -75,7 +75,7 @@ namespace ssvsc
 		}
 	};
 
-	template<typename TW> struct HashGrid : public Internal::GridBase<TW, Internal::HashGridType<TW>, HashGrid<TW>>
+	template<typename TW> struct HashGrid final : public Internal::GridBase<TW, Internal::HashGridType<TW>, HashGrid<TW>>
 	{
 		inline HashGrid(int mCols, int mRows, int mCellSize, int mOffset = 0)
 			: Internal::GridBase<TW, Internal::HashGridType<TW>, HashGrid<TW>>{mCols, mRows, mCellSize, mOffset}
