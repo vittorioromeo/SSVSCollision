@@ -5,12 +5,10 @@
 #ifndef SSVSC_BODY
 #define SSVSC_BODY
 
-#include "SSVSCollision/AABB/AABB.hpp"
 #include "SSVSCollision/Body/CallbackInfo.hpp"
 #include "SSVSCollision/Body/BodyData.hpp"
+#include "SSVSCollision/Body/Groupable.hpp"
 #include "SSVSCollision/Body/Base.hpp"
-#include "SSVSCollision/Utils/UtilsAABB.hpp"
-#include "SSVSCollision/Utils/Utils.hpp"
 
 namespace ssvsc
 {
@@ -134,5 +132,7 @@ namespace ssvsc
 			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return getResolve() && !this->mustIgnoreResolution(mBody); }
 	};
 }
+
+#include "SSVSCollision/Body/Sensor.hpp"
 
 #endif

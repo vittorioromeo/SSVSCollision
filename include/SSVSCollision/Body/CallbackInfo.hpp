@@ -5,8 +5,6 @@
 #ifndef SSVSC_BODY_CALLBACKINFO
 #define SSVSC_BODY_CALLBACKINFO
 
-#include "SSVSCollision/Global/Typedefs.hpp"
-
 namespace ssvsc
 {
 	template<typename TW> class Body;

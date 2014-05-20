@@ -5,12 +5,6 @@
 #ifndef SSVSC_SENSOR
 #define SSVSC_SENSOR
 
-#include "SSVSCollision/AABB/AABB.hpp"
-#include "SSVSCollision/Body/CallbackInfo.hpp"
-#include "SSVSCollision/Body/Base.hpp"
-#include "SSVSCollision/Body/Body.hpp"
-#include "SSVSCollision/Utils/Utils.hpp"
-
 namespace ssvsc
 {
 	template<typename TW> class Sensor : public Base<TW>

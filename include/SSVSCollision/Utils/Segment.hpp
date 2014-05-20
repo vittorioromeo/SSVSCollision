@@ -5,8 +5,6 @@
 #ifndef SSVSC_UTILS_SEGMENT
 #define SSVSC_UTILS_SEGMENT
 
-#include "SSVSCollision/Global/Typedefs.hpp"
-
 namespace ssvsc
 {
 	template<typename T> struct Segment

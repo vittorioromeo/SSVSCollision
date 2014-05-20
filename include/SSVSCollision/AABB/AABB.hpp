@@ -5,10 +5,6 @@
 #ifndef SSVSC_AABB
 #define SSVSC_AABB
 
-#include "SSVSCollision/Global/Typedefs.hpp"
-#include "SSVSCollision/Utils/Segment.hpp"
-#include "SSVSCollision/Utils/Utils.hpp"
-
 namespace ssvsc
 {
 	class AABB

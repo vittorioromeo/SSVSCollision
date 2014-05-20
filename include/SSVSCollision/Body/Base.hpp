@@ -5,10 +5,6 @@
 #ifndef SSVSC_BASE
 #define SSVSC_BASE
 
-#include "SSVSCollision/Global/Typedefs.hpp"
-#include "SSVSCollision/World/World.hpp"
-#include "SSVSCollision/Body/Groupable.hpp"
-
 namespace ssvsc
 {
 	class AABB;

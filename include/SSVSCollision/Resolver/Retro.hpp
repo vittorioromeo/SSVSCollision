@@ -5,10 +5,6 @@
 #ifndef SSVSC_RESOLVER_RETRO
 #define SSVSC_RESOLVER_RETRO
 
-#include "SSVSCollision/Body/Body.hpp"
-#include "SSVSCollision/Utils/Utils.hpp"
-#include "SSVSCollision/Global/Typedefs.hpp"
-
 namespace ssvsc
 {
 	template<typename TW> struct RetroInfo

@@ -5,9 +5,6 @@
 #ifndef SSVSC_UTILSAABB
 #define SSVSC_UTILSAABB
 
-#include "SSVSCollision/Global/Typedefs.hpp"
-#include "SSVSCollision/AABB/AABB.hpp"
-
 namespace ssvsc
 {
 	namespace Utils

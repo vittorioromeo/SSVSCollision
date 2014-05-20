@@ -5,9 +5,6 @@
 #ifndef SSVSC_SPATIAL_GRIDINFO
 #define SSVSC_SPATIAL_GRIDINFO
 
-#include <vector>
-#include "SSVSCollision/Spatial/Grid/Cell.hpp"
-
 namespace ssvsc
 {
 	template<typename TW> class GridInfo

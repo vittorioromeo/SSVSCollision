@@ -5,10 +5,6 @@
 #ifndef SSVSCOLLISION_GLOBAL_TYPEDEFS
 #define SSVSCOLLISION_GLOBAL_TYPEDEFS
 
-#include <bitset>
-#include <memory>
-#include <SSVStart/SSVStart.hpp>
-
 namespace ssvsc
 {
 	constexpr std::size_t maxGroups{32};

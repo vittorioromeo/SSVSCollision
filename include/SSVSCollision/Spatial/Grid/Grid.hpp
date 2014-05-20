@@ -5,10 +5,8 @@
 #ifndef SSVSC_SPATIAL_GRID
 #define SSVSC_SPATIAL_GRID
 
-#include <vector>
+#include "SSVSCollision/Spatial/Grid/Cell.hpp"
 #include "SSVSCollision/Spatial/Grid/GridInfo.hpp"
-#include "SSVSCollision/Global/Typedefs.hpp"
-#include "SSVSCollision/Query/Query.hpp"
 
 namespace ssvsc
 {
@@ -107,5 +105,7 @@ namespace ssvsc
 	template<typename TW, typename TGrid> struct QueryModeDispatcher<TW, TGrid, QueryMode::All>			{ using Type = GridQueryTypes::Bodies::All<TW>; };
 	template<typename TW, typename TGrid> struct QueryModeDispatcher<TW, TGrid, QueryMode::ByGroup>		{ using Type = GridQueryTypes::Bodies::ByGroup<TW>; };
 }
+
+#include "SSVSCollision/Spatial/Grid/GridQueryTypes.hpp"
 
 #endif

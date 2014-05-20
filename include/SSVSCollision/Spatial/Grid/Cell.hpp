@@ -5,11 +5,6 @@
 #ifndef SSVSC_SPATIAL_GRID_CELL
 #define SSVSC_SPATIAL_GRID_CELL
 
-#include <vector>
-#include "SSVSCollision/AABB/AABB.hpp"
-#include "SSVSCollision/Global/Typedefs.hpp"
-#include "SSVSCollision/Body/Body.hpp"
-
 namespace ssvsc
 {
 	template<typename TW> class Cell

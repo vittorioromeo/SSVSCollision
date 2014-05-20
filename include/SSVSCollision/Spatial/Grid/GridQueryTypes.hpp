@@ -5,12 +5,6 @@
 #ifndef SSVSC_SPATIAL_GRIDQUERYTYPES
 #define SSVSC_SPATIAL_GRIDQUERYTYPES
 
-#include <vector>
-#include <queue>
-#include "SSVSCollision/Global/Typedefs.hpp"
-#include "SSVSCollision/Body/Body.hpp"
-#include "SSVSCollision/Utils/Utils.hpp"
-
 namespace ssvsc
 {
 	namespace GridQueryTypes

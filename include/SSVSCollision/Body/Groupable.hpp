@@ -5,8 +5,6 @@
 #ifndef SSVSC_BODY_GROUPABLE
 #define SSVSC_BODY_GROUPABLE
 
-#include "SSVSCollision/Global/Typedefs.hpp"
-
 namespace ssvsc
 {
 	class Groupable

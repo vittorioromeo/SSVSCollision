@@ -5,9 +5,6 @@
 #ifndef SSVSC_QUERY
 #define SSVSC_QUERY
 
-#include <vector>
-#include "SSVSCollision/Global/Typedefs.hpp"
-
 namespace ssvsc
 {
 	template<typename TW> class Body;

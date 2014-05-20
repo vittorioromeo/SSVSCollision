@@ -5,17 +5,20 @@
 #ifndef SSVSCOLLISION
 #define SSVSCOLLISION
 
+#include <bitset>
+#include <queue>
+#include <SSVUtils/SSVUtils.hpp>
+#include <SSVStart/SSVStart.hpp>
 #include "SSVSCollision/Global/Typedefs.hpp"
-#include "SSVSCollision/Body/Body.hpp"
-#include "SSVSCollision/Body/Sensor.hpp"
-#include "SSVSCollision/Body/CallbackInfo.hpp"
-#include "SSVSCollision/World/World.hpp"
 #include "SSVSCollision/Utils/Segment.hpp"
 #include "SSVSCollision/Utils/Utils.hpp"
-#include "SSVSCollision/Resolver/Impulse.hpp"
-#include "SSVSCollision/Resolver/Retro.hpp"
+#include "SSVSCollision/AABB/AABB.hpp"
+#include "SSVSCollision/Body/Body.hpp"
+#include "SSVSCollision/Query/Query.hpp"
+#include "SSVSCollision/World/World.hpp"
+#include "SSVSCollision/Utils/UtilsAABB.hpp"
+#include "SSVSCollision/Resolver/Resolver.hpp"
 #include "SSVSCollision/Spatial/Grid/Grid.hpp"
-#include "SSVSCollision/Spatial/Grid/GridQueryTypes.hpp"
 #include "SSVSCollision/Query/Query.hpp"
 
 #endif

@@ -5,9 +5,6 @@
 #ifndef SSVSC_WORLD
 #define SSVSC_WORLD
 
-#include "SSVSCollision/Global/Typedefs.hpp"
-#include "SSVSCollision/Query/Query.hpp"
-
 namespace ssvsc
 {
 	template<typename TW> class Base;

@@ -5,8 +5,6 @@
 #ifndef SSVSC_BODY_BODYDATA
 #define SSVSC_BODY_BODYDATA
 
-#include "SSVSCollision/AABB/AABB.hpp"
-
 namespace ssvsc
 {
 	struct BodyData
