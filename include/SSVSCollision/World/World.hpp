@@ -30,8 +30,8 @@ namespace ssvsc
 			friend SensorType;
 
 		private:
-			ssvu::MemoryManager<BodyType> bodies;
-			ssvu::MemoryManager<SensorType> sensors;
+			ssvu::MonoManager<BodyType> bodies;
+			ssvu::MonoManager<SensorType> sensors;
 
 			SpatialType spatial;
 			ResolverType resolver;

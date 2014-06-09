@@ -10,7 +10,7 @@ namespace ssvsc
 	class AABB;
 	template<typename TW> class Body;
 
-	template<typename TW> class Base : ssvu::NoCopy, public ssvu::MemoryManageable, public Groupable
+	template<typename TW> class Base : ssvu::NoCopy, public Groupable
 	{
 		public:
 			using SpatialInfoType = typename TW::SpatialInfoType;
