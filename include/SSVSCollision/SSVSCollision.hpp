@@ -5,7 +5,6 @@
 #ifndef SSVSCOLLISION
 #define SSVSCOLLISION
 
-#include <bitset>
 #include <queue>
 #include <SSVUtils/SSVUtils.hpp>
 #include <SSVStart/SSVStart.hpp>
