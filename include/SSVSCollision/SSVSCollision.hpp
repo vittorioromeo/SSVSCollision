@@ -21,3 +21,5 @@
 #include "SSVSCollision/Query/Query.hpp"
 
 #endif
+
+// TODO: try out the compile/runtime settings pattern and maybe implement it here?
