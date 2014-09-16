@@ -22,7 +22,7 @@ namespace ssvsc
 			inline void add(BaseType*, SensorTag) { }
 			inline void del(BaseType*, SensorTag) { }
 
-			inline const decltype(bodies)& getBodies() const noexcept { return bodies; }
+			inline const auto& getBodies() const noexcept { return bodies; }
 	};
 }
 

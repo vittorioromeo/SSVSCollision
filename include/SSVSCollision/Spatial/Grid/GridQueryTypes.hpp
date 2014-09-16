@@ -18,7 +18,7 @@ namespace ssvsc
 			Base(TGrid& mGrid, const Vec2i& mPos) : grid(mGrid), startPos{mPos}, pos{mPos}, startIndex{grid.getIdx(Vec2i(mPos))}, index{startIndex} { }
 
 			inline void reset() noexcept { pos = startPos; index = startIndex; }
-			inline const Vec2f& getLastPos() const noexcept	{ return lastPos; }
+			inline const auto& getLastPos() const noexcept	{ return lastPos; }
 		};
 
 		namespace Bodies
@@ -40,7 +40,7 @@ namespace ssvsc
 
 		template<typename TW, typename TGrid> struct OrthoLeft : public Base<TW, TGrid>
 		{
-			template<typename... TArgs> OrthoLeft(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> OrthoLeft(TArgs&&... mArgs) : Base<TW, TGrid>(ssvu::fwd<TArgs>(mArgs)...) { }
 			inline bool isValid()									{ return this->index.x >= this->grid.getIdxXMin(); }
 			inline void step()										{ --this->index.x; }
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)	{ return mA->getPosition().x < mB->getPosition().x; }
@@ -49,7 +49,7 @@ namespace ssvsc
 		};
 		template<typename TW, typename TGrid> struct OrthoRight : public Base<TW, TGrid>
 		{
-			template<typename... TArgs> OrthoRight(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> OrthoRight(TArgs&&... mArgs) : Base<TW, TGrid>(ssvu::fwd<TArgs>(mArgs)...) { }
 			inline bool isValid()									{ return this->index.x < this->grid.getIdxXMax(); }
 			inline void step()										{ ++this->index.x; }
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)	{ return mA->getPosition().x > mB->getPosition().x; }
@@ -58,7 +58,7 @@ namespace ssvsc
 		};
 		template<typename TW, typename TGrid> struct OrthoUp : public Base<TW, TGrid>
 		{
-			template<typename... TArgs> OrthoUp(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> OrthoUp(TArgs&&... mArgs) : Base<TW, TGrid>(ssvu::fwd<TArgs>(mArgs)...) { }
 			inline bool isValid()									{ return this->index.y >= this->grid.getIdxYMin(); }
 			inline void step()										{ --this->index.y; }
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)	{ return mA->getPosition().y < mB->getPosition().y; }
@@ -67,7 +67,7 @@ namespace ssvsc
 		};
 		template<typename TW, typename TGrid> struct OrthoDown : public Base<TW, TGrid>
 		{
-			template<typename... TArgs> OrthoDown(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> OrthoDown(TArgs&&... mArgs) : Base<TW, TGrid>(ssvu::fwd<TArgs>(mArgs)...) { }
 			inline bool isValid()									{ return this->index.y < this->grid.getIdxYMax(); }
 			inline void step()										{ ++this->index.y; }
 			inline bool getSorting(const Body<TW>* mA, const Body<TW>* mB)	{ return mA->getPosition().y > mB->getPosition().y; }
@@ -79,7 +79,7 @@ namespace ssvsc
 		{
 			bool finished{false};
 
-			template<typename... TArgs> Point(TArgs&&... mArgs) : Base<TW, TGrid>(std::forward<TArgs>(mArgs)...) { }
+			template<typename... TArgs> Point(TArgs&&... mArgs) : Base<TW, TGrid>(ssvu::fwd<TArgs>(mArgs)...) { }
 
 			inline bool isValid()										{ return !finished && this->grid.isIdxValid(this->index); }
 			inline void step()											{ finished = true; }

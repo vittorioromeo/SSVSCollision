@@ -40,10 +40,10 @@ namespace ssvsc
 			inline void delSensor(SensorType& mBase) noexcept	{ sensors.del(mBase); }
 
 		public:
-			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial{std::forward<TArgs>(mArgs)...} { }
+			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial{ssvu::fwd<TArgs>(mArgs)...} { }
 
-			inline BodyType& create(const Vec2i& mPos, const Vec2i& mSize, bool mStatic)	{ return bodies.create(*this, mStatic, mPos, mSize); }
-			inline SensorType& createSensor(const Vec2i& mPos, const Vec2i& mSize)			{ return sensors.create(*this, mPos, mSize); }
+			inline auto& create(const Vec2i& mPos, const Vec2i& mSize, bool mStatic)	{ return bodies.create(*this, mStatic, mPos, mSize); }
+			inline auto& createSensor(const Vec2i& mPos, const Vec2i& mSize)			{ return sensors.create(*this, mPos, mSize); }
 
 			inline void update(FT mFT)
 			{
@@ -55,15 +55,14 @@ namespace ssvsc
 			}
 			inline void clear() noexcept { bodies.clear(); sensors.clear(); }
 
-			inline const decltype(bodies)& getBodies() const noexcept	{ return bodies; }
-			inline const decltype(sensors)& getSensors() const noexcept	{ return sensors; }
-			inline const SpatialType& getSpatial() const noexcept		{ return spatial; }
-			inline const ResolverType& getResolver() const noexcept		{ return resolver; }
+			inline const auto& getBodies() const noexcept	{ return bodies; }
+			inline const auto& getSensors() const noexcept	{ return sensors; }
+			inline const auto& getSpatial() const noexcept	{ return spatial; }
+			inline const auto& getResolver() const noexcept	{ return resolver; }
 
-			template<QueryType TType, QueryMode TMode = QueryMode::All, typename... TArgs>
-			inline Query<World, typename QueryTypeDispatcher<World, SpatialType, TType>::Type, typename QueryModeDispatcher<World, SpatialType, TMode>::Type> getQuery(TArgs&&... mArgs) noexcept
+			template<QueryType TType, QueryMode TMode = QueryMode::All, typename... TArgs> inline auto getQuery(TArgs&&... mArgs) noexcept
 			{
-				return {spatial, std::forward<TArgs>(mArgs)...};
+				return Query<World, typename QueryTypeDispatcher<World, SpatialType, TType>::Type, typename QueryModeDispatcher<World, SpatialType, TMode>::Type> {spatial, ssvu::fwd<TArgs>(mArgs)...};
 			}
 	};
 }

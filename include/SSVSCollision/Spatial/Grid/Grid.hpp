@@ -39,10 +39,10 @@ namespace ssvsc
 				inline int getIdx(int mValue) const noexcept			{ SSVU_ASSERT(cellSize != 0); return mValue / cellSize; }
 				inline Vec2i getIdx(const Vec2i& mPos) const noexcept	{ return {getIdx(mPos.x), getIdx(mPos.y)}; }
 
-				inline const CellType& getCell(int mX, int mY) const	{ return cells.at(ssvu::get1DIdxFrom2D(mX + offset, mY + offset, cols)); }
-				inline CellType& getCell(int mX, int mY)				{ return cells[ssvu::get1DIdxFrom2D(mX + offset, mY + offset, cols)]; }
-				inline const CellType& getCell(const Vec2i& mIdx) const	{ return getCell(mIdx.x, mIdx.y); }
-				inline CellType& getCell(const Vec2i& mIdx)				{ return getCell(mIdx.x, mIdx.y); }
+				inline const auto& getCell(int mX, int mY) const	{ return cells.at(ssvu::get1DIdxFrom2D(mX + offset, mY + offset, cols)); }
+				inline auto& getCell(int mX, int mY)				{ return cells[ssvu::get1DIdxFrom2D(mX + offset, mY + offset, cols)]; }
+				inline const auto& getCell(const Vec2i& mIdx) const	{ return getCell(mIdx.x, mIdx.y); }
+				inline auto& getCell(const Vec2i& mIdx)				{ return getCell(mIdx.x, mIdx.y); }
 
 				inline const decltype(cells)& getCells() const noexcept { return cells; }
 				inline decltype(cells)& getCells() noexcept				{ return cells; }

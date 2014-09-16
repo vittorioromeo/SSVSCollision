@@ -34,8 +34,8 @@ namespace ssvsc
 
 			inline void setOutOfBounds(bool mValue) noexcept					{ outOfBounds = mValue; }
 
-			inline TW& getWorld() const noexcept								{ return world; }
-			inline SpatialInfoType& getSpatialInfo() noexcept					{ return spatialInfo; }
+			inline auto& getWorld() const noexcept								{ return world; }
+			inline auto& getSpatialInfo() noexcept								{ return spatialInfo; }
 			inline bool mustCheck(const Base& mBase) const noexcept				{ return mBase.hasAnyGroup(getGroupsToCheck()); }
 			inline bool mustIgnoreResolution(const Base& mBase) const noexcept	{ return mBase.hasAnyGroup(getGroupsNoResolve()); }
 	};

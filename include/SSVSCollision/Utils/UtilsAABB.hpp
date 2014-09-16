@@ -13,15 +13,15 @@ namespace ssvsc
 
 		inline int getMinIntersectionX(const AABB& mA, const AABB& mB) noexcept { return getMinAbs(mB.getLeft() - mA.getRight(), mB.getRight() - mA.getLeft()); }
 		inline int getMinIntersectionY(const AABB& mA, const AABB& mB) noexcept { return getMinAbs(mB.getTop() - mA.getBottom(), mB.getBottom() - mA.getTop()); }
-		inline Vec2i getMin1DIntersection(const AABB& mA, const AABB& mB) noexcept
+		inline auto getMin1DIntersection(const AABB& mA, const AABB& mB) noexcept
 		{
 			int iX{getMinIntersectionX(mA, mB)}, iY{getMinIntersectionY(mA, mB)};
 			return abs(iX) < abs(iY) ? Vec2i{iX, 0} : Vec2i{0, iY};
 		}
-		inline Vec2i getMinIntersection(const AABB& mA, const AABB& mB) noexcept	{ return {getMinIntersectionX(mA, mB), getMinIntersectionY(mA, mB)}; }
-		inline int getOverlapX(const AABB& mA, const AABB& mB) noexcept				{ return mA.getLeft() < mB.getLeft() ? mA.getRight() - mB.getLeft() : mB.getRight() - mA.getLeft(); }
-		inline int getOverlapY(const AABB& mA, const AABB& mB) noexcept				{ return mA.getTop() < mB.getTop() ? mA.getBottom() - mB.getTop() : mB.getBottom() - mA.getTop(); }
-		inline int getOverlapArea(const AABB& mA, const AABB& mB) noexcept			{ return getOverlapX(mA, mB) * getOverlapY(mA, mB); }
+		inline auto getMinIntersection(const AABB& mA, const AABB& mB) noexcept	{ return Vec2i{getMinIntersectionX(mA, mB), getMinIntersectionY(mA, mB)}; }
+		inline int getOverlapX(const AABB& mA, const AABB& mB) noexcept			{ return mA.getLeft() < mB.getLeft() ? mA.getRight() - mB.getLeft() : mB.getRight() - mA.getLeft(); }
+		inline int getOverlapY(const AABB& mA, const AABB& mB) noexcept			{ return mA.getTop() < mB.getTop() ? mA.getBottom() - mB.getTop() : mB.getBottom() - mA.getTop(); }
+		inline int getOverlapArea(const AABB& mA, const AABB& mB) noexcept		{ return getOverlapX(mA, mB) * getOverlapY(mA, mB); }
 	}
 }
 

@@ -104,30 +104,30 @@ namespace ssvsc
 			inline void setRestitutionX(float mX) noexcept				{ data.restitution.x = mX; }
 			inline void setRestitutionY(float mY) noexcept				{ data.restitution.y = mY; }
 
-			inline AABB& getShape() noexcept							{ return data.shape; }
-			inline AABB& getOldShape() noexcept							{ return data.oldShape; }
-			inline const AABB& getShape() const noexcept				{ return data.shape; }
-			inline const AABB& getOldShape() const noexcept				{ return data.oldShape; }
-			inline const Vec2i& getPosition() const noexcept			{ return getShape().getPosition(); }
-			inline const Vec2f& getVelocity() const noexcept			{ return data.velocity; }
-			inline const Vec2i& getOldPosition() const noexcept			{ return getOldShape().getPosition(); }
-			inline const Vec2f& getOldVelocity() const noexcept			{ return data.oldVelocity; }
-			inline const Vec2f& getAcceleration() const noexcept		{ return data.acceleration; }
-			inline Vec2i getSize() const noexcept						{ return getShape().getSize(); }
-			inline float getMass() const noexcept						{ return isStatic() ? 0 : data.mass; }
-			inline float getInvMass() const noexcept					{ return isStatic() ? 0 : data.invMass; }
-			inline int getWidth() const noexcept						{ return getShape().getWidth(); }
-			inline int getHeight() const noexcept						{ return getShape().getHeight(); }
-			inline bool isStatic() const noexcept						{ return data._static; }
-			inline void* getUserData() const noexcept					{ return userData; }
-			inline bool hasMovedLeft() const noexcept					{ return getShape().getX() < getOldShape().getX(); }
-			inline bool hasMovedRight() const noexcept					{ return getShape().getX() > getOldShape().getX(); }
-			inline bool hasMovedUp() const noexcept						{ return getShape().getY() < getOldShape().getY(); }
-			inline bool hasMovedDown() const noexcept					{ return getShape().getY() > getOldShape().getY(); }
-			inline bool getResolve() const noexcept						{ return data.resolve; }
-			inline const Vec2i& getLastResolution() const noexcept		{ return data.lastResolution; }
-			inline float getRestitutionX() const noexcept				{ return data.restitution.x; }
-			inline float getRestitutionY() const noexcept				{ return data.restitution.y; }
+			inline AABB& getShape() noexcept						{ return data.shape; }
+			inline AABB& getOldShape() noexcept						{ return data.oldShape; }
+			inline const AABB& getShape() const noexcept			{ return data.shape; }
+			inline const AABB& getOldShape() const noexcept			{ return data.oldShape; }
+			inline const auto& getPosition() const noexcept			{ return getShape().getPosition(); }
+			inline const auto& getVelocity() const noexcept			{ return data.velocity; }
+			inline const auto& getOldPosition() const noexcept		{ return getOldShape().getPosition(); }
+			inline const auto& getOldVelocity() const noexcept		{ return data.oldVelocity; }
+			inline const auto& getAcceleration() const noexcept		{ return data.acceleration; }
+			inline auto getSize() const noexcept					{ return getShape().getSize(); }
+			inline auto getMass() const noexcept					{ return isStatic() ? 0 : data.mass; }
+			inline auto getInvMass() const noexcept					{ return isStatic() ? 0 : data.invMass; }
+			inline int getWidth() const noexcept					{ return getShape().getWidth(); }
+			inline int getHeight() const noexcept					{ return getShape().getHeight(); }
+			inline bool isStatic() const noexcept					{ return data._static; }
+			inline void* getUserData() const noexcept				{ return userData; }
+			inline bool hasMovedLeft() const noexcept				{ return getShape().getX() < getOldShape().getX(); }
+			inline bool hasMovedRight() const noexcept				{ return getShape().getX() > getOldShape().getX(); }
+			inline bool hasMovedUp() const noexcept					{ return getShape().getY() < getOldShape().getY(); }
+			inline bool hasMovedDown() const noexcept				{ return getShape().getY() > getOldShape().getY(); }
+			inline bool getResolve() const noexcept					{ return data.resolve; }
+			inline const auto& getLastResolution() const noexcept	{ return data.lastResolution; }
+			inline float getRestitutionX() const noexcept			{ return data.restitution.x; }
+			inline float getRestitutionY() const noexcept			{ return data.restitution.y; }
 
 			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return getResolve() && !this->mustIgnoreResolution(mBody); }
 	};

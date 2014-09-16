@@ -50,9 +50,9 @@ namespace ssvsc
 			inline bool hasAllGroupsToCheck(const GroupBitset& mGroups) const noexcept		{ return (groupsToCheck & mGroups).all(); }
 			inline bool hasAllGroupsNoResolve(const GroupBitset& mGroups) const noexcept	{ return (groupsNoResolve & mGroups).all(); }
 
-			inline const GroupBitset& getGroups() const noexcept			{ return groups; }
-			inline const GroupBitset& getGroupsToCheck() const noexcept		{ return groupsToCheck; }
-			inline const GroupBitset& getGroupsNoResolve() const noexcept	{ return groupsNoResolve; }
+			inline const auto& getGroups() const noexcept			{ return groups; }
+			inline const auto& getGroupsToCheck() const noexcept	{ return groupsToCheck; }
+			inline const auto& getGroupsNoResolve() const noexcept	{ return groupsNoResolve; }
 	};
 }
 

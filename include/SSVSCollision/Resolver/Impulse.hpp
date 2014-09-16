@@ -45,13 +45,13 @@ namespace ssvsc
 			inline void setStressMult(float mValue) noexcept				{ stressMult = mValue; }
 			inline void setStressPropagationMult(float mValue) noexcept		{ stressPropagationMult = mValue; }
 
-			inline float getVelTransferMultX() const noexcept				{ return velTransferMult.x; }
-			inline float getVelTransferMultY() const noexcept				{ return velTransferMult.y; }
-			inline Vec2f& getVelTransferImpulse() noexcept					{ return velTransferImpulse; }
-			inline const Vec2f& getVelTransferImpulse() const noexcept		{ return velTransferImpulse; }
-			inline const Vec2f& getStress() const noexcept					{ return stress; }
-			inline float getStressMult() const noexcept						{ return stressMult; }
-			inline float getStressPropagationMult() const noexcept			{ return stressPropagationMult; }
+			inline float getVelTransferMultX() const noexcept			{ return velTransferMult.x; }
+			inline float getVelTransferMultY() const noexcept			{ return velTransferMult.y; }
+			inline auto& getVelTransferImpulse() noexcept				{ return velTransferImpulse; }
+			inline const auto& getVelTransferImpulse() const noexcept	{ return velTransferImpulse; }
+			inline const auto& getStress() const noexcept				{ return stress; }
+			inline float getStressMult() const noexcept					{ return stressMult; }
+			inline float getStressPropagationMult() const noexcept		{ return stressPropagationMult; }
 	};
 
 	template<typename TW> struct Impulse
