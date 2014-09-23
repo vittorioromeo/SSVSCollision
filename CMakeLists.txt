@@ -8,8 +8,4 @@ SSVCMake_setDefaults()
 SSVCMake_findSFML()
 SSVCMake_findExtlib(SSVUtils)
 SSVCMake_findExtlib(SSVStart)
-
-add_library(HEADER_ONLY_TARGET STATIC ${SRC_LIST})
-set_target_properties(HEADER_ONLY_TARGET PROPERTIES LINKER_LANGUAGE CXX)
-
-install(DIRECTORY ${INC_DIR} DESTINATION .)
+SSVCMake_setAndInstallHeaderOnly()
