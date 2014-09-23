@@ -4,3 +4,6 @@
 [submodule "extlibs/SSVStart"]
 	path = extlibs/SSVStart
 	url = https://github.com/SuperV1234/SSVStart
+[submodule "extlibs/SSVCMake"]
+	path = extlibs/SSVCMake
+	url = https://github.com/SuperV1234/SSVCMake.git
