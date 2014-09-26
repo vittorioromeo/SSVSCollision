@@ -10,7 +10,7 @@ namespace ssvsc
 	class AABB;
 	template<typename TW> class Body;
 
-	template<typename TW> class Base : ssvu::NoCopy, public Groupable
+	template<typename TW> class Base : public Groupable
 	{
 		public:
 			using SpatialInfoType = typename TW::SpatialInfoType;
@@ -28,6 +28,11 @@ namespace ssvsc
 
 		public:
 			using Groupable::Groupable;
+
+			inline Base() = default;
+
+			inline Base(const Base&) = delete;
+			inline Base& operator=(const Base&) = delete;
 
 			ssvu::Delegate<void()> onPreUpdate;
 			ssvu::Delegate<void(const DetectionInfoType&)> onDetection;
