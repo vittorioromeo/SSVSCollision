@@ -53,7 +53,7 @@ namespace ssvsc
 
 		struct HashGridHash
 		{
-			inline std::size_t operator()(int mKey) const noexcept { return mKey; }
+			inline SizeT operator()(int mKey) const noexcept { return mKey; }
 		};
 		struct HashGridEqual
 		{
