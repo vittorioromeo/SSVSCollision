@@ -66,6 +66,8 @@ namespace ssvsc
 				cells.clear();
 			}
 
+			inline auto& getLastPaint() const noexcept { static int lastPaint{0}; return lastPaint; }
+
 		public:
 			inline GridInfo(SpatialType& mGrid, BaseType& mBase) noexcept : grid(mGrid), base(mBase) { }
 
@@ -76,15 +78,14 @@ namespace ssvsc
 			template<typename TTag> inline void destroy()	{ clear<TTag>(); }
 			template<typename TTag> inline void handleCollisions(FT mFT)
 			{
-				static int lastPaint;
-				++lastPaint;
+				++(getLastPaint());
 
 				for(const auto& c : cells)
 					for(const auto& b : c->getBodies())
 					{
-						if(b->getSpatialInfo().spatialPaint == lastPaint) continue;
+						if(b->getSpatialInfo().spatialPaint == getLastPaint()) continue;
 						handleCollisionImpl(mFT, b, TTag{});
-						b->getSpatialInfo().spatialPaint = lastPaint;
+						b->getSpatialInfo().spatialPaint = getLastPaint();
 					}
 			}
 	};
