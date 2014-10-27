@@ -41,7 +41,7 @@ namespace ssvsc
 		public:
 			inline Sensor(TW& mWorld, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, shape{mPos, mSize / 2} { this->spatialInfo.template preUpdate<SensorTag>(); }
 			inline ~Sensor() noexcept { destroy(); }
-			inline void destroy() { this->spatialInfo.template destroy<SensorTag>(); this->world.delSensor(*this); }
+			inline void destroy() { this->spatialInfo.template destroy<SensorTag>(); this->world.delSensor(this); }
 
 			inline void setPosition(const Vec2i& mPos)
 			{

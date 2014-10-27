@@ -81,7 +81,7 @@ namespace ssvsc
 
 			inline Body(TW& mWorld, bool mIsStatic, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, ResolverInfoType{*this}, data{mIsStatic, mPos, mSize} { }
 			inline ~Body() noexcept { destroy(); }
-			inline void destroy() { this->spatialInfo.template destroy<BodyTag>(); this->world.delBody(*this); }
+			inline void destroy() { this->spatialInfo.template destroy<BodyTag>(); this->world.delBody(this); }
 
 			inline void applyAccel(const Vec2f& mAccel) noexcept		{ data.acceleration += mAccel; }
 			inline void resolvePosition(const Vec2i& mOffset) noexcept	{ data.shape.move(mOffset); data.lastResolution += mOffset; }

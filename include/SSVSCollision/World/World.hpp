@@ -36,8 +36,9 @@ namespace ssvsc
 			SpatialType spatial;
 			ResolverType resolver;
 
-			inline void delBody(BodyType& mBase) noexcept		{ bodies.del(mBase); }
-			inline void delSensor(SensorType& mBase) noexcept	{ sensors.del(mBase); }
+			// TODO: BUG: calling these twice causes SIGSEV
+			inline void delBody(BodyType* mBase) noexcept		{ SSVU_ASSERT(mBase != nullptr); bodies.del(*mBase); }
+			inline void delSensor(SensorType* mBase) noexcept	{ SSVU_ASSERT(mBase != nullptr); sensors.del(*mBase); }
 
 		public:
 			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial{ssvu::fwd<TArgs>(mArgs)...} { }
