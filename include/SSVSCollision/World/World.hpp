@@ -42,6 +42,7 @@ namespace ssvsc
 
 		public:
 			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial{ssvu::fwd<TArgs>(mArgs)...} { }
+			inline ~World() noexcept { clear(); }
 
 			inline auto& create(const Vec2i& mPos, const Vec2i& mSize, bool mStatic)	{ return bodies.create(*this, mStatic, mPos, mSize); }
 			inline auto& createSensor(const Vec2i& mPos, const Vec2i& mSize)			{ return sensors.create(*this, mPos, mSize); }
