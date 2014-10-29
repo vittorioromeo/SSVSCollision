@@ -36,7 +36,6 @@ namespace ssvsc
 			SpatialType spatial;
 			ResolverType resolver;
 
-			// TODO: BUG: calling these twice causes SIGSEV
 			inline void delBody(BodyType* mBase) noexcept		{ SSVU_ASSERT(mBase != nullptr); bodies.del(*mBase); }
 			inline void delSensor(SensorType* mBase) noexcept	{ SSVU_ASSERT(mBase != nullptr); sensors.del(*mBase); }
 
