@@ -15,30 +15,30 @@ namespace ssvsc
 			friend ResolverType;
 
 		protected:
-			BodyType& body;
 			Vec2f velTransferMult, velTransferImpulse, stress, nextStress;
 			float stressMult{1.f}, stressPropagationMult{0.1f};
 
-		public:
-			inline ImpulseInfo(BodyType& mBody) : body(mBody) { }
+			inline auto& getBody() noexcept { return ssvu::castUp<BodyType>(*this); }
+			inline const auto& getBody() const noexcept { return ssvu::castUp<BodyType>(*this); }
 
+		public:
 			inline void applyImpulse(const Vec2f& mImpulse) noexcept
 			{
-				const auto& vel(body.getVelocity());
-				body.setVelocityX(vel.x + body.getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult))));
-				body.setVelocityY(vel.y + body.getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult))));
+				const auto& vel(getBody().getVelocity());
+				getBody().setVelocityX(vel.x + getBody().getInvMass() * (mImpulse.x / (1.f + (stress.y * stressPropagationMult))));
+				getBody().setVelocityY(vel.y + getBody().getInvMass() * (mImpulse.y / (1.f + (stress.x * stressPropagationMult))));
 			}
 			inline void applyStress(const Vec2f& mStress) noexcept
 			{
-				const auto& newStress(nextStress + ssvs::getAbs(body.getInvMass() * mStress * stressMult));
+				const auto& newStress(nextStress + ssvs::getAbs(getBody().getInvMass() * mStress * stressMult));
 
 				// If the operation would result in an overflow, return
 				if(newStress.x > std::numeric_limits<float>::max() || newStress.y > std::numeric_limits<float>::max()) return;
 
 				nextStress = newStress;
 			}
-			inline void applyImpulse(const BodyType& mBody, const Vec2f& mImpulse) noexcept	{ if(body.mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
-			inline void applyStress(const BodyType& mBody, const Vec2f& mStress) noexcept	{ if(body.mustResolveAgainst(mBody)) applyStress(mStress); }
+			inline void applyImpulse(const BodyType& mBody, const Vec2f& mImpulse) noexcept	{ if(getBody().mustResolveAgainst(mBody)) applyImpulse(mImpulse); }
+			inline void applyStress(const BodyType& mBody, const Vec2f& mStress) noexcept	{ if(getBody().mustResolveAgainst(mBody)) applyStress(mStress); }
 
 			inline void setVelTransferMultX(float mValue) noexcept			{ velTransferMult.x = mValue; }
 			inline void setVelTransferMultY(float mValue) noexcept			{ velTransferMult.y = mValue; }

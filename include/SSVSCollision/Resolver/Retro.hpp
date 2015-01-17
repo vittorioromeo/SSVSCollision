@@ -15,10 +15,8 @@ namespace ssvsc
 			friend ResolverType;
 
 		protected:
-			BodyType& body;
-
-		public:
-			inline RetroInfo(BodyType& mBody) : body(mBody) { }
+			inline auto& getBody() noexcept { return ssvu::castUp<BodyType>(*this); }
+			inline const auto& getBody() const noexcept { return ssvu::castUp<BodyType>(*this); }
 	};
 
 	template<typename TW> struct Retro
@@ -54,6 +52,7 @@ namespace ssvsc
 				const auto& vel(mBody.getVelocity());
 				const AABB& os(b->getOldShape());
 
+				// TODO: benchmark multiplying by bool instead of if?
 				if	((resolution.y < 0 && vel.y > 0 && (oldShapeAboveS || (os.isBelow(shape) && oldHOverlap))) ||
 					(resolution.y > 0 && vel.y < 0 && (oldShapeBelowS || (os.isAbove(shape) && oldHOverlap))))
 						mBody.setVelocityY(vel.y * -mBody.getRestitutionY());

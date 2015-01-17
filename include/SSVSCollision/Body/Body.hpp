@@ -79,7 +79,7 @@ namespace ssvsc
 			ssvu::Delegate<void()> onPostUpdate, onOutOfBounds;
 			ssvu::Delegate<void(const ResolutionInfoType&)> onResolution;
 
-			inline Body(TW& mWorld, bool mIsStatic, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, ResolverInfoType{*this}, data{mIsStatic, mPos, mSize} { }
+			inline Body(TW& mWorld, bool mIsStatic, const Vec2i& mPos, const Vec2i& mSize) noexcept : Base<TW>{mWorld}, data{mIsStatic, mPos, mSize} { }
 			inline ~Body() noexcept { destroy(); }
 			inline void destroy() { this->spatialInfo.template destroy<BodyTag>(); this->world.delBody(this); }
 
