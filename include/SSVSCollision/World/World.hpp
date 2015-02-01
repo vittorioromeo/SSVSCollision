@@ -40,7 +40,7 @@ namespace ssvsc
 			inline void delSensor(SensorType* mBase) noexcept	{ SSVU_ASSERT(mBase != nullptr); sensors.del(*mBase); }
 
 		public:
-			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial{ssvu::fwd<TArgs>(mArgs)...} { }
+			template<typename... TArgs> inline World(TArgs&&... mArgs) : spatial{SSVU_FWD(mArgs)...} { }
 			inline ~World() noexcept { clear(); }
 
 			inline auto& create(const Vec2i& mPos, const Vec2i& mSize, bool mStatic)	{ return bodies.create(*this, mStatic, mPos, mSize); }
@@ -63,7 +63,7 @@ namespace ssvsc
 
 			template<QueryType TType, QueryMode TMode = QueryMode::All, typename... TArgs> inline auto getQuery(TArgs&&... mArgs) noexcept
 			{
-				return Query<World, typename QueryTypeDispatcher<World, SpatialType, TType>::Type, typename QueryModeDispatcher<World, SpatialType, TMode>::Type> {spatial, ssvu::fwd<TArgs>(mArgs)...};
+				return Query<World, typename QueryTypeDispatcher<World, SpatialType, TType>::Type, typename QueryModeDispatcher<World, SpatialType, TMode>::Type> {spatial, SSVU_FWD(mArgs)...};
 			}
 	};
 }
