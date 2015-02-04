@@ -12,7 +12,7 @@ namespace ssvsc
 {
 	template<typename TW> class Cell;
 
-	namespace Internal
+	namespace Impl
 	{
 		template<typename TW, typename TContainer, typename TDerived> class GridBase
 		{
@@ -64,19 +64,19 @@ namespace ssvsc
 		template<typename TW> using GridType = std::vector<Cell<TW>>;
 	}
 
-	template<typename TW> struct Grid final : public Internal::GridBase<TW, Internal::GridType<TW>, Grid<TW>>
+	template<typename TW> struct Grid final : public Impl::GridBase<TW, Impl::GridType<TW>, Grid<TW>>
 	{
 		inline Grid(int mCols, int mRows, int mCellSize, int mOffset = 0)
-			: Internal::GridBase<TW, Internal::GridType<TW>, Grid<TW>>{mCols, mRows, mCellSize, mOffset}
+			: Impl::GridBase<TW, Impl::GridType<TW>, Grid<TW>>{mCols, mRows, mCellSize, mOffset}
 		{
 			this->cells.reserve(this->cols * this->rows);
 		}
 	};
 
-	template<typename TW> struct HashGrid final : public Internal::GridBase<TW, Internal::HashGridType<TW>, HashGrid<TW>>
+	template<typename TW> struct HashGrid final : public Impl::GridBase<TW, Impl::HashGridType<TW>, HashGrid<TW>>
 	{
 		inline HashGrid(int mCols, int mRows, int mCellSize, int mOffset = 0)
-			: Internal::GridBase<TW, Internal::HashGridType<TW>, HashGrid<TW>>{mCols, mRows, mCellSize, mOffset}
+			: Impl::GridBase<TW, Impl::HashGridType<TW>, HashGrid<TW>>{mCols, mRows, mCellSize, mOffset}
 		{
 
 		}
