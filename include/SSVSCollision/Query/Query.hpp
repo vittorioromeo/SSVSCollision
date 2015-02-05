@@ -23,7 +23,7 @@ namespace ssvsc
 			TInternal internal;
 
 		public:
-			template<typename... TArgs> inline Query(TArgs&&... mArgs) noexcept : internal{SSVU_FWD(mArgs)...} { }
+			template<typename... TArgs> inline Query(TArgs&&... mArgs) noexcept : internal{FWD(mArgs)...} { }
 			template<typename... TArgs> BodyType* next(TArgs&&... mArgs)
 			{
 				while(internal.isValid())
@@ -31,7 +31,7 @@ namespace ssvsc
 					// If the body stack is empty, 'refill' it using TMode::getBodies, then sort
 					if(bodies.empty())
 					{
-						TMode::getBodies(bodies, internal, SSVU_FWD(mArgs)...);
+						TMode::getBodies(bodies, internal, FWD(mArgs)...);
 						ssvu::sort(bodies, [this](const BodyType* mA, const BodyType* mB){ return internal.getSorting(mA, mB); });
 						internal.step();
 					}
