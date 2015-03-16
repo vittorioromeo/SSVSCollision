@@ -7,7 +7,6 @@
 
 namespace ssvsc
 {
-	// TODO: use this syntax in other projects as well!
 	using ssvu::SizeT;
 	using ssvu::FT;
 	using ssvs::Vec2;
