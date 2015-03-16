@@ -9,7 +9,7 @@ namespace ssvsc
 {
 	namespace Utils
 	{
-		template<typename T> inline constexpr T getSigned2DTriangleArea(const Vec2<T>& mA, const Vec2<T>& mB, const Vec2<T>& mC) noexcept
+		template<typename T> inline constexpr auto getSigned2DTriangleArea(const Vec2<T>& mA, const Vec2<T>& mB, const Vec2<T>& mC) noexcept
 		{
 			return (mA.x - mC.x) * (mB.y - mC.y) - (mA.y - mC.y) * (mB.x - mC.x);
 		}

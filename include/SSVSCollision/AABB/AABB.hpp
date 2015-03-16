@@ -52,17 +52,17 @@ namespace ssvsc
 			template<typename T> inline auto getSegmentTop() const noexcept		{ return Segment<T>{getVertexNW<T>(), getVertexNE<T>()}; }
 			template<typename T> inline auto getSegmentBottom() const noexcept	{ return Segment<T>{getVertexSW<T>(), getVertexSE<T>()}; }
 
-			inline bool isLeftOf(const AABB& mAABB) const noexcept	{ return getRight() <= mAABB.getLeft(); }
-			inline bool isRightOf(const AABB& mAABB) const noexcept	{ return getLeft() >= mAABB.getRight(); }
-			inline bool isAbove(const AABB& mAABB) const noexcept	{ return getBottom() <= mAABB.getTop(); }
-			inline bool isBelow(const AABB& mAABB) const noexcept	{ return getTop() >= mAABB.getBottom(); }
+			inline bool isLeftOf(const AABB& mX) const noexcept		{ return getRight() <= mX.getLeft(); }
+			inline bool isRightOf(const AABB& mX) const noexcept	{ return getLeft() >= mX.getRight(); }
+			inline bool isAbove(const AABB& mX) const noexcept		{ return getBottom() <= mX.getTop(); }
+			inline bool isBelow(const AABB& mX) const noexcept		{ return getTop() >= mX.getBottom(); }
 
-			inline bool isOverlapping(const Vec2i& mPoint) const noexcept			{ return mPoint.x >= getLeft() && mPoint.x < getRight() && mPoint.y >= getTop() && mPoint.y < getBottom(); }
-			inline bool isOverlapping(const Segment<int>& mSegment) const noexcept	{ return Utils::isSegmentInsersecting(mSegment, getSegmentLeft<int>()) || Utils::isSegmentInsersecting(mSegment, getSegmentRight<int>()) || Utils::isSegmentInsersecting(mSegment, getSegmentTop<int>()) || Utils::isSegmentInsersecting(mSegment, getSegmentBottom<int>()); }
-			inline bool isOverlapping(const AABB& mAABB) const noexcept				{ return !isLeftOf(mAABB) && !isRightOf(mAABB) && !isAbove(mAABB) && !isBelow(mAABB); }
-			inline bool contains(const Vec2i& mPoint) const noexcept				{ return isOverlapping(mPoint); }
-			inline bool contains(const Segment<int>& mSegment) const noexcept		{ return contains(mSegment.start) && contains(mSegment.end); }
-			inline bool contains(const AABB& mAABB) const noexcept					{ return mAABB.getLeft() >= getLeft() && mAABB.getRight() < getRight() && mAABB.getTop() >= getTop() && mAABB.getBottom() < getBottom(); }
+			inline bool isOverlapping(const Vec2i& mX) const noexcept			{ return mX.x >= getLeft() && mX.x < getRight() && mX.y >= getTop() && mX.y < getBottom(); }
+			inline bool isOverlapping(const Segment<int>& mX) const noexcept	{ return Utils::isSegmentInsersecting(mX, getSegmentLeft<int>()) || Utils::isSegmentInsersecting(mX, getSegmentRight<int>()) || Utils::isSegmentInsersecting(mX, getSegmentTop<int>()) || Utils::isSegmentInsersecting(mX, getSegmentBottom<int>()); }
+			inline bool isOverlapping(const AABB& mX) const noexcept			{ return !isLeftOf(mX) && !isRightOf(mX) && !isAbove(mX) && !isBelow(mX); }
+			inline bool contains(const Vec2i& mX) const noexcept				{ return isOverlapping(mX); }
+			inline bool contains(const Segment<int>& mX) const noexcept			{ return contains(mX.start) && contains(mX.end); }
+			inline bool contains(const AABB& mX) const noexcept					{ return mX.getLeft() >= getLeft() && mX.getRight() < getRight() && mX.getTop() >= getTop() && mX.getBottom() < getBottom(); }
 	};
 }
 

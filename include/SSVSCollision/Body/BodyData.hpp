@@ -17,7 +17,7 @@ namespace ssvsc
 
 		inline BodyData(bool mIsStatic, const Vec2i& mPos, const Vec2i& mSize) noexcept : shape{mPos, mSize / 2}, oldShape{shape}, _static{mIsStatic} { }
 
-		inline void setMass(float mMass) noexcept { mass = mMass; invMass = (mMass == 0 ? 0 : (1.f / mMass)); }
+		inline void setMass(float mX) noexcept { mass = mX; invMass = (mX == 0 ? 0 : (1.f / mX)); }
 	};
 }
 

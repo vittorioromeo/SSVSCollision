@@ -119,7 +119,6 @@ namespace ssvsc
 			inline int getWidth() const noexcept					{ return getShape().getWidth(); }
 			inline int getHeight() const noexcept					{ return getShape().getHeight(); }
 			inline bool isStatic() const noexcept					{ return data._static; }
-			inline void* getUserData() const noexcept				{ return userData; }
 			inline bool hasMovedLeft() const noexcept				{ return getShape().getX() < getOldShape().getX(); }
 			inline bool hasMovedRight() const noexcept				{ return getShape().getX() > getOldShape().getX(); }
 			inline bool hasMovedUp() const noexcept					{ return getShape().getY() < getOldShape().getY(); }
@@ -128,6 +127,9 @@ namespace ssvsc
 			inline const auto& getLastResolution() const noexcept	{ return data.lastResolution; }
 			inline float getRestitutionX() const noexcept			{ return data.restitution.x; }
 			inline float getRestitutionY() const noexcept			{ return data.restitution.y; }
+
+			inline void* getUserData() const noexcept { return userData; }
+			template<typename T> inline T getUserData() const noexcept { return static_cast<T>(userData); }
 
 			inline bool mustResolveAgainst(const Body& mBody) const noexcept { return getResolve() && !this->mustIgnoreResolution(mBody); }
 	};

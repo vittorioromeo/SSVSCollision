@@ -37,12 +37,12 @@ namespace ssvsc
 			ssvu::Delegate<void()> onPreUpdate;
 			ssvu::Delegate<void(const DetectionInfoType&)> onDetection;
 
-			inline void setOutOfBounds(bool mValue) noexcept					{ outOfBounds = mValue; }
+			inline void setOutOfBounds(bool mValue) noexcept				{ outOfBounds = mValue; }
 
-			inline auto& getWorld() const noexcept								{ return world; }
-			inline auto& getSpatialInfo() noexcept								{ return spatialInfo; }
-			inline bool mustCheck(const Base& mBase) const noexcept				{ return mBase.hasAnyGroup(getGroupsToCheck()); }
-			inline bool mustIgnoreResolution(const Base& mBase) const noexcept	{ return mBase.hasAnyGroup(getGroupsNoResolve()); }
+			inline auto& getWorld() const noexcept							{ return world; }
+			inline auto& getSpatialInfo() noexcept							{ return spatialInfo; }
+			inline bool mustCheck(const Base& mX) const noexcept			{ return mX.hasAnyGroup(getGroupsToCheck()); }
+			inline bool mustIgnoreResolution(const Base& mX) const noexcept	{ return mX.hasAnyGroup(getGroupsNoResolve()); }
 	};
 }
 
