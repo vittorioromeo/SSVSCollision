@@ -33,7 +33,7 @@ namespace ssvsc
 				const auto& newStress(nextStress + ssvs::getAbs(getBody().getInvMass() * mStress * stressMult));
 
 				// If the operation would result in an overflow, return
-				if(newStress.x > std::numeric_limits<float>::max() || newStress.y > std::numeric_limits<float>::max()) return;
+				if(newStress.x > ssvu::NumLimits<float>::max() || newStress.y > ssvu::NumLimits<float>::max()) return;
 
 				nextStress = newStress;
 			}
@@ -165,7 +165,7 @@ namespace ssvsc
 		{
 			for(const auto& b : mWorld.getBodies())
 			{
-				b->stress = ssvs::getCClamped(b->nextStress, std::numeric_limits<float>::min(), std::numeric_limits<float>::max());
+				b->stress = ssvs::getCClamped(b->nextStress, ssvu::NumLimits<float>::min(), ssvu::NumLimits<float>::max());
 				ssvs::nullify(b->nextStress);
 
 				b->applyImpulse(b->velTransferImpulse);
