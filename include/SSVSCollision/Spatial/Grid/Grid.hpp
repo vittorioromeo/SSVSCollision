@@ -14,14 +14,14 @@ namespace ssvsc
 
 	namespace Impl
 	{
-		template<typename TW, typename TContainer, typename TDerived> class GridBase
+		template<typename TW, typename TC, typename TDerived> class GridBase
 		{
 			public:
 				using CellType = Cell<TW>;
 				using SpatialInfoType = GridInfo<TW>;
 
 			protected:
-				TContainer cells;
+				TC cells;
 				int cols, rows, cellSize, offset;
 
 			public:
