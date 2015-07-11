@@ -131,7 +131,7 @@ namespace ssvsc
 
 				Vec2f velDiff{b->getVelocity() - mBody.getVelocity()};
 				float velAlongNormal{ssvs::getDotProduct(velDiff, normal)};
-				if(velAlongNormal > 0 || isnan(velAlongNormal)) continue;
+				if(velAlongNormal > 0 || std::isnan(velAlongNormal)) continue;
 				float invMassSum{mBody.getInvMass() + b->getInvMass()};
 
 				SSVU_ASSERT(invMassSum != 0);
