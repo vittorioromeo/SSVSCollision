@@ -22,4 +22,5 @@
 
 #endif
 
-// TODO: try out the compile/runtime settings pattern and maybe implement it here?
+// TODO: try out the compile/runtime settings pattern and maybe implement it
+// here?
