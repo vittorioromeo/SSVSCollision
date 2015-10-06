@@ -7,32 +7,32 @@
 
 namespace ssvsc
 {
-template <typename T>
-struct Segment
-{
-    Vec2<T> start, end;
+    template <typename T>
+    struct Segment
+    {
+        Vec2<T> start, end;
 
-    inline Segment() noexcept {}
-    inline Segment(const Vec2<T>& mStart, const Vec2<T>& mEnd) noexcept
-    : start{mStart},
-      end{mEnd}
-    {
-    }
+        inline Segment() noexcept {}
+        inline Segment(const Vec2<T>& mStart, const Vec2<T>& mEnd) noexcept
+            : start{mStart},
+              end{mEnd}
+        {
+        }
 
-    inline auto getPointCrossProduct(const Vec2<T>& mPoint) const noexcept
-    {
-        return ((end.x - start.x) * (mPoint.y - start.y) -
-                (end.y - start.y) * (mPoint.x - start.x));
-    }
-    inline bool isPointLeft(const Vec2<T>& mPoint) const noexcept
-    {
-        return getPointCrossProduct(mPoint) > 0;
-    }
-    inline bool isPointRight(const Vec2<T>& mPoint) const noexcept
-    {
-        return getPointCrossProduct(mPoint) < 0;
-    }
-};
+        inline auto getPointCrossProduct(const Vec2<T>& mPoint) const noexcept
+        {
+            return ((end.x - start.x) * (mPoint.y - start.y) -
+                    (end.y - start.y) * (mPoint.x - start.x));
+        }
+        inline bool isPointLeft(const Vec2<T>& mPoint) const noexcept
+        {
+            return getPointCrossProduct(mPoint) > 0;
+        }
+        inline bool isPointRight(const Vec2<T>& mPoint) const noexcept
+        {
+            return getPointCrossProduct(mPoint) < 0;
+        }
+    };
 }
 
 #endif

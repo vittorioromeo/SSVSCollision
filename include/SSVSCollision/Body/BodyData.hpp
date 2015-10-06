@@ -7,27 +7,27 @@
 
 namespace ssvsc
 {
-struct BodyData
-{
-    AABB shape, oldShape;
-    Vec2f velocity, oldVelocity, acceleration, restitution;
-    Vec2i lastResolution;
-    float mass{1.f}, invMass{1.f};
-    bool _static, resolve{true};
-
-    inline BodyData(bool mIsStatic, const Vec2i& mPos,
-    const Vec2i& mSize) noexcept : shape{mPos, mSize / 2},
-                                   oldShape{shape},
-                                   _static{mIsStatic}
+    struct BodyData
     {
-    }
+        AABB shape, oldShape;
+        Vec2f velocity, oldVelocity, acceleration, restitution;
+        Vec2i lastResolution;
+        float mass{1.f}, invMass{1.f};
+        bool _static, resolve{true};
 
-    inline void setMass(float mX) noexcept
-    {
-        mass = mX;
-        invMass = (mX == 0 ? 0 : (1.f / mX));
-    }
-};
+        inline BodyData(bool mIsStatic, const Vec2i& mPos,
+            const Vec2i& mSize) noexcept : shape{mPos, mSize / 2},
+                                           oldShape{shape},
+                                           _static{mIsStatic}
+        {
+        }
+
+        inline void setMass(float mX) noexcept
+        {
+            mass = mX;
+            invMass = (mX == 0 ? 0 : (1.f / mX));
+        }
+    };
 }
 
 #endif

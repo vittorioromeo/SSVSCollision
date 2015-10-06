@@ -7,26 +7,26 @@
 
 namespace ssvsc
 {
-template <typename TW>
-class Body;
+    template <typename TW>
+    class Body;
 
-template <typename TW>
-struct DetectionInfo
-{
-    Body<TW>& body;
-    void* userData;
-    float frameTime;
-};
+    template <typename TW>
+    struct DetectionInfo
+    {
+        Body<TW>& body;
+        void* userData;
+        float frameTime;
+    };
 
-template <typename TW>
-struct ResolutionInfo
-{
-    Body<TW>& body;
-    void* userData;
-    const Vec2i& resolution;
-    bool& noResolvePosition;
-    bool& noResolveVelocity;
-};
+    template <typename TW>
+    struct ResolutionInfo
+    {
+        Body<TW>& body;
+        void* userData;
+        const Vec2i& resolution;
+        bool& noResolvePosition;
+        bool& noResolveVelocity;
+    };
 }
 
 #endif

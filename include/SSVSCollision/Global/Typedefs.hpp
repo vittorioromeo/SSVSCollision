@@ -7,39 +7,39 @@
 
 namespace ssvsc
 {
-using ssvu::SizeT;
-using ssvu::FT;
-using ssvs::Vec2;
-using ssvs::Vec2i;
-using ssvs::Vec2f;
-using ssvs::UPtr;
+    using ssvu::SizeT;
+    using ssvu::FT;
+    using ssvs::Vec2;
+    using ssvs::Vec2i;
+    using ssvs::Vec2f;
+    using ssvs::UPtr;
 
-constexpr SizeT maxGroups{32};
-using Group = unsigned int;
-using GroupBitset = std::bitset<maxGroups>;
+    constexpr SizeT maxGroups{32};
+    using Group = unsigned int;
+    using GroupBitset = std::bitset<maxGroups>;
 
-enum class QueryType
-{
-    Point,
-    Distance,
-    RayCast,
-    OrthoLeft,
-    OrthoRight,
-    OrthoUp,
-    OrthoDown
-};
-enum class QueryMode
-{
-    All,
-    ByGroup
-};
+    enum class QueryType
+    {
+        Point,
+        Distance,
+        RayCast,
+        OrthoLeft,
+        OrthoRight,
+        OrthoUp,
+        OrthoDown
+    };
+    enum class QueryMode
+    {
+        All,
+        ByGroup
+    };
 
-struct BodyTag
-{
-};
-struct SensorTag
-{
-};
+    struct BodyTag
+    {
+    };
+    struct SensorTag
+    {
+    };
 }
 
 #endif
