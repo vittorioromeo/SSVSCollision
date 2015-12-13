@@ -6,6 +6,7 @@ include(SSVCMake)
 
 SSVCMake_setDefaults()
 SSVCMake_findSFML()
+SSVCMake_findExtlib(vrm_pp)
 SSVCMake_findExtlib(SSVUtils)
 SSVCMake_findExtlib(SSVStart)
 SSVCMake_setAndInstallHeaderOnly()
